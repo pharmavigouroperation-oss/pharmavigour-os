@@ -1,4 +1,3 @@
-html
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -92,7 +91,6 @@ html
 </div>
 
 <script>
-    // ক্লাউড ডেটাবেস কানেক্টিভিটি কনফিগারেশন
     const SUPABASE_BASE_URL = "https://fhoqtdnmfubqtfgyzjao.supabase.co/rest/v1";
     const SUPABASE_ANON_KEY = "sb_publishable_f46uf5RHAQZPI3qiCHa3x4_btmxzROU";
 
@@ -104,34 +102,32 @@ html
     const billingBody = document.getElementById('billingBody');
     const emptyRow = document.getElementById('emptyRow');
 
-    // পেজ লোড হওয়ার সাথে সাথেই সুপাবেস থেকে ডাটা টানবে
     window.onload = function() {
         fetchLiveSupabaseInventory();
     };
 
     async function fetchLiveSupabaseInventory() {
         try {
-                    const res = await fetch(`${SUPABASE_BASE_URL}/products?select=*`, {
-            method: "GET",
-            headers: {
-                "apikey": SUPABASE_ANON_KEY,
-                "Authorization": "Bearer " + SUPABASE_ANON_KEY
-            }
-        });
+            const res = await fetch(`${SUPABASE_BASE_URL}/products?select=*`, {
+                method: "GET",
+                headers: { 
+                    "apikey": SUPABASE_ANON_KEY, 
+                    "Authorization": "Bearer " + SUPABASE_ANON_KEY 
+                }
+            });
             globalStock = await res.json();
             if(emptyRow) {
                 emptyRow.innerHTML = '<td colspan="10">No products added yet. Ready to search.</td>';
             }
-            console.log("Cloud Database Connection Successful! Total products loaded:", globalStock.length);
+            console.log("Cloud Database Connection Successful! Loaded:", globalStock.length);
         } catch (e) {
-            console.error("Stock master sync crash", e);
+            console.error("Database sync error", e);
             if(emptyRow) {
-                emptyRow.innerHTML = '<td colspan="10" style="color:red;">Database Sync Error! Check API connection keys.</td>';
+                emptyRow.innerHTML = '<td colspan="10" style="color:red;">Database Sync Error! Please refresh.</td>';
             }
         }
     }
 
-    // রিয়েল-টাইম লাইভ সার্চ ফিল্টার ইঞ্জিন
     searchBox.addEventListener('input', function() {
         const query = this.value.toLowerCase().trim();
         suggestionsBox.innerHTML = '';
