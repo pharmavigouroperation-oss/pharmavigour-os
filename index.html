@@ -149,7 +149,7 @@
         var query = this.value.toLowerCase().trim();
         suggestionsBox.innerHTML = '';
         if (query.length < 3) { suggestionsBox.style.display = 'none'; return; }
-        var matches = systemProducts.filter(function(p) { return p.name.toLowerCase().indexOf(query) !== -1; });
+        var matches = globalStock.filter(function(p) { return p.name.toLowerCase().indexOf(query) !== -1; });
         if (matches.length > 0) {
             matches.forEach(function(product) {
                 var div = document.createElement('div');
