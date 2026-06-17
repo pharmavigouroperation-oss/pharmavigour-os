@@ -161,6 +161,53 @@
             suggestionsBox.style.display = 'block';
         } else { suggestionsBox.style.display = 'none'; }
     });
+    const SUPABASE_BASE_URL = "https://fhoqtdnmfubqtfgyzjao.supabase.co/rest/v1";
+    const SUPABASE_ANON_KEY = "sb_publishable_f46ufSRHAQZPI3qiCHa3xA_btmxzROU";
+
+    let globalStock = [];
+
+    async function validateDatabaseLogin() {
+        const u = document.getElementById('userInput').value.trim();
+        const p = document.getElementById('passInput').value.trim();
+        const lBtn = document.getElementById('loginBtn');
+        const errBox = document.getElementById('errorBox');
+        
+        if(!u || !p) return;
+        lBtn.innerText = "Authorizing...";
+        errBox.style.display = 'none';
+
+        try {
+            const res = await fetch(`${SUPABASE_BASE_URL}/users?username=eq.${u}&password=eq.${p}`, {
+                method: "GET",
+                headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": `Bearer ${SUPABASE_ANON_KEY}` }
+            });
+            const users = await res.json();
+            if (users && users.length > 0) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('billingScreen').style.display = 'block';
+                fetchLiveSupabaseInventory();
+            } else {
+                errBox.style.display = 'block';
+                lBtn.innerText = "Authorize & Enter";
+            }
+        } catch (error) {
+            errBox.innerText = "Network Communication Timeout Engine Error!";
+            errBox.style.display = 'block';
+            lBtn.innerText = "Authorize & Enter";
+        }
+    }
+
+    async function fetchLiveSupabaseInventory() {
+        try {
+            const res = await fetch(`${SUPABASE_BASE_URL}/products?select=*`, {
+                method: "GET",
+                headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": `Bearer ${SUPABASE_ANON_KEY}` }
+            });
+            globalStock = await res.json();
+        } catch (e) {
+            console.error("Stock master sync crash", e);
+        }
+    }
 
     function addProductToCart(product) {
         searchBox.value = ''; suggestionsBox.style.display = 'none';
