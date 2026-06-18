@@ -37,7 +37,6 @@
         .submenu-item { padding: 10px 20px 10px 35px; font-size: 13px; color: #94a3b8; cursor: pointer; }
         .submenu-item:hover, .submenu-item.active { color: #fef08a; background: #0f172a; }
 
-        /* Content Workspace Watermark */
         .main-content { flex: 1; padding: 25px; overflow-y: auto; position: relative; background-color: #f5f4f0; }
         .main-content::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('logo.jpg'); background-repeat: no-repeat; background-position: center center; background-size: 450px; opacity: 0.035; pointer-events: none; z-index: 0; }
         
@@ -83,23 +82,14 @@
             .print-text-val { display: inline-block !important; }
             body, .main-content, .card-box { background: white !important; padding: 0; margin: 0; box-shadow: none; border: none; }
             .bill-header-print { display: flex !important; align-items: center; justify-content: space-between; border-bottom: 2px solid #064e3b; padding-bottom: 15px; margin-bottom: 25px; }
-            
-            .billing-container::before {
-                content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-                background-image: url('logo.jpg') !important; background-repeat: no-repeat !important; background-position: center 50% !important; background-size: 380px !important;
-                opacity: 0.05 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; z-index: 0;
-            }
-            
             th { background-color: #f1f5f9 !important; color: black !important; border: 1px solid #94a3b8 !important; }
             td { border: 1px solid #cbd5e1 !important; background: transparent !important; }
-            .summary-box { display: flex !important; visibility: visible !important; opacity: 1 !important; }
             .total-row { background-color: #f8fafc !important; color: #064e3b !important; border: 1px solid #94a3b8 !important; }
         }
     </style>
 </head>
 <body>
 
-<!-- 🔐 1. LOGIN MODULE -->
 <div id="loginScreen">
     <div class="login-card">
         <img class="login-logo" src="logo.jpg" alt="PharmaVigour Logo">
@@ -113,7 +103,6 @@
     </div>
 </div>
 
-<!-- 🏠 2. ENTERPRISE DASHBOARD RUNTIME -->
 <div id="dashboardScreen">
     <div class="top-navbar">
         <div class="navbar-brand" onclick="showView('homeView')">
@@ -128,7 +117,6 @@
     </div>
 
     <div class="workspace">
-        <!-- SIDEBAR OPTIONS NAVIGATION -->
         <div class="sidebar">
             <div class="menu-item" onclick="toggleSubmenu('saleSub')">1. Sale <span>▼</span></div>
             <div id="saleSub" class="submenu-list">
@@ -161,10 +149,7 @@
             </div>
         </div>
 
-        <!-- DYNAMIC DESK PANEL CONTROLLER -->
         <div class="main-content">
-            
-            <!-- 🏠 VIEW: HOMEPAGE CORE -->
             <div id="homeView" class="view-panel active">
                 <h2>Welcome Back, Rahul Chakraborty</h2>
                 <p style="color: #64748b; margin-bottom: 20px; font-style: italic;">PharmaVigour Operations Dashboard Network</p>
@@ -175,7 +160,6 @@
                 </div>
             </div>
 
-            <!-- 🛒 VIEW: 1.1 NEW SALE -->
             <div id="newSaleView" class="view-panel">
                 <div class="card-box billing-container">
                     <div class="bill-header-print">
@@ -222,7 +206,6 @@
                 </div>
             </div>
 
-            <!-- 👥 VIEW: 1.2 PATIENT DETAILS -->
             <div id="patientDetailsView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Patient Management System</div>
@@ -240,11 +223,10 @@
                 </div>
             </div>
 
-            <!-- 📥 VIEW: 2.1 NEW PURCHASE -->
             <div id="newPurchaseView" class="view-panel">
                 <div class="csv-upload-box">
                     <h3 style="color:#064e3b; margin-bottom:10px;">📦 Bulk Stock Inward via CSV File</h3>
-                    <input type="file" id="csvFileInput" accept=".csv" style="display:none;" onchange="handleBulkCSVUpload(event)">
+                    <input type="file" id="csvFileInput" accept=".csv" style="display:none;" onchange="handleSmartCSVUpload(event)">
                     <div style="display: flex; gap: 15px; justify-content: center;">
                         <button class="btn btn-primary" onclick="document.getElementById('csvFileInput').click()">📤 Upload CSV Invoice</button>
                         <button id="deleteCsvBtn" class="btn btn-danger" style="display:none;" onclick="deleteUploadedCSVProcess()">🗑️ Clear CSV Entry</button>
@@ -294,7 +276,6 @@
                 </div>
             </div>
 
-            <!-- 📊 VIEW: 2.2 LIVE INVENTORY MONITOR MODULE -->
             <div id="stockInventoryView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Live Node Stock Inventory Manager</div>
@@ -303,22 +284,18 @@
                             <thead>
                                 <tr><th>Product ID</th><th>Medicine Name</th><th>Rack Location</th><th>Batch Code</th><th>Expiry</th><th>Unit Rate (₹)</th><th>GST %</th><th>Current Stock Balance</th></tr>
                             </thead>
-                            <tbody id="inventoryTableBody">
-                                <!-- Loaded dynamically via JS -->
-                            </tbody>
+                            <tbody id="inventoryTableBody"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- 🏢 OTHER LIVE PLACES FOR COMPLIANCE -->
             <div id="vendorListView" class="view-panel"><div class="card-box"><h2>Distributors List Node</h2></div></div>
             <div id="saleReturnView" class="view-panel"><div class="card-box"><h2>Return Engine</h2></div></div>
             <div id="dailySalesView" class="view-panel"><div class="card-box"><h2>Sales Book Book</h2></div></div>
             <div id="expiryDashboardView" class="view-panel"><div class="card-box"><h2>Shelf alerts active</h2></div></div>
             <div id="gstr1View" class="view-panel"><div class="card-box"><h2>Tax ledgers compile Node</h2></div></div>
             <div id="storeConfigView" class="view-panel"><div class="card-box"><h2>Config node active</h2></div></div>
-
         </div>
     </div>
 </div>
@@ -346,14 +323,11 @@
         document.querySelectorAll('.submenu-item').forEach(i => i.classList.remove('active')); 
         if(element) element.classList.add('active'); 
     }
-    function toggleSubmenu(id) { 
-        const target = document.getElementById(id); 
-        target.classList.toggle('open'); 
-    }
+    function toggleSubmenu(id) { document.getElementById(id).classList.toggle('open'); }
 
-    // 🛒 MASTER IN-MEMORY REPOSITORY
+    // REPOSITORY ENGINE
     const globalStock = [
-        { id: 1, product_name: "Rantac 300mg Tab", rack: "R-02", batch: "RAN548904HJ", expiry: "6/27", rate: 40.00, gst: 5, stock: 500, source: "default" },
+        { id: 1, product_name: "Rantac 300mg Tab", rack: "R-02", batch: "RAN548904HJ", expiry: "06/27", rate: 40.00, gst: 5, stock: 500, source: "default" },
         { id: 2, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1300, source: "default" }
     ];
     let activeCart = [];
@@ -381,11 +355,8 @@
         const gst = parseInt(document.getElementById('purGst').value) || 5;
         const qty = parseInt(document.getElementById('purStock').value) || 0;
 
-        if (!name || rate <= 0 || qty <= 0) {
-            alert('অনুগ্রহ করে ওষুধের নাম, রেট এবং সঠিক কোয়ান্টিটি এন্ট্রি করুন!'); return;
-        }
+        if (!name || rate <= 0 || qty <= 0) { alert('সঠিক ওষুধের তথ্য পূরণ করুন!'); return; }
         temporaryPurchaseCart.push({ product_name: name, rack: rack, batch: batch, expiry: expiry, rate: rate, gst: gst, qty: qty, source: "manual" });
-        
         document.getElementById('purName').value = ''; document.getElementById('purBatch').value = '';
         document.getElementById('purRate').value = ''; document.getElementById('purStock').value = '';
         renderPurchaseCartTable();
@@ -421,40 +392,64 @@
     }
 
     function saveEntirePurchaseCartToStock() {
-        if (temporaryPurchaseCart.length === 0) { alert('সেভ করার আগে বিলে অন্তত একটি ওষুধ যোগ করুন!'); return; }
+        if (temporaryPurchaseCart.length === 0) { alert('কার্ট খালি!'); return; }
         temporaryPurchaseCart.forEach(item => {
             let existing = globalStock.find(s => s.product_name.toLowerCase() === item.product_name.toLowerCase() && s.batch === item.batch);
             if (existing) { existing.stock += item.qty; } else {
-                globalStock.push({ id: globalStock.length + 1, product_name: item.product_name, rack: item.rack, batch: item.batch, expiry: item.expiry, rate: item.rate, gst: item.gst, stock: item.qty, source: item.source || "manual" });
+                globalStock.push({ id: globalStock.length + 1, product_name: item.product_name, rack: item.rack, batch: item.batch, expiry: item.expiry, rate: item.rate, gst: item.gst, stock: item.qty, source: "csv_upload" });
             }
         });
         alert(`🎉 সফলভাবে স্টক আপডেট হয়েছে!`);
         temporaryPurchaseCart = []; renderPurchaseCartTable(); renderInventoryTable(); showView('stockInventoryView');
     }
 
-    // 📤 🌟 ১০০% ফুলপ্রুফ ইন্ডেক্সড সিএসভি পার্সার (বানান ও হেডার জট চিরতরে মুক্ত!)
-    function handleBulkCSVUpload(event) {
+    // 🧠 🌟 SMART INTELLIGENT HEADER AUTO-MATCHING ENGINE
+    function handleSmartCSVUpload(event) {
         const file = event.target.files[0];
         if (!file) return;
         const reader = new FileReader();
         reader.onload = function(e) {
             const text = e.target.result;
             const lines = text.split('\n');
-            let addedCount = 0;
+            if (lines.length < 2) { alert('ফাইলে কোনো ডাটা পাওয়া যায়নি!'); return; }
 
+            // প্রথম লাইনের হেডারগুলো বের করে ক্লিন করা
+            const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/"/g, ''));
+            
+            // ইন্টেলিজেন্ট ইনডেক্স ডিটেকশন লুকআপ ম্যাপিং
+            let prodIdx = headers.findIndex(h => h.includes('product') || h.includes('medicine') || h.includes('item'));
+            let rackIdx = headers.findIndex(h => h.includes('rack') || h.includes('location'));
+            let batchIdx = headers.findIndex(h => h.includes('batch') || h.includes('lot'));
+            let expIdx = headers.findIndex(h => h.includes('expiry') || h.includes('exp'));
+            let rateIdx = headers.findIndex(h => h.includes('rate') || h.includes('price') || h.includes('mrp'));
+            let gstIdx = headers.findIndex(h => h.includes('gst') || h.includes('tax'));
+            let qtyIdx = headers.findIndex(h => h.includes('qty') || h.includes('stock') || h.includes('quantity') || h.includes('amount'));
+
+            // ব্যাকআপ ফলব্যাক চেকিং (যদি কোনো কলামের নাম ম্যাচ না করে তবে ডিফল্ট ইনডেক্স ধরে নেবে)
+            if (prodIdx === -1) prodIdx = 2; 
+            if (rackIdx === -1) rackIdx = 3;
+            if (batchIdx === -1) batchIdx = 4;
+            if (expIdx === -1) expIdx = 5;
+            if (rateIdx === -1) rateIdx = 6;
+            if (gstIdx === -1) gstIdx = 7;
+            if (qtyIdx === -1) qtyIdx = 8;
+
+            let addedCount = 0;
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue;
                 const cols = lines[i].split(',');
-                
-                // আপনার CSV ফাইল স্ট্রাকচারের নিখুঁত ইনডেক্স পজিশন ম্যাপিং (Id=0, Created_at=1, Product_name=2, Rack=3, Batch=4, Expiry=5, Rate=6, Gst=7, Stock/Qty=8)
-                if (cols.length >= 7) {
-                    const name = cols[2] ? cols[2].trim().replace(/"/g, '') : '';
-                    const rack = cols[3] ? cols[3].trim().replace(/"/g, '') : 'A-01';
-                    const batch = cols[4] ? cols[4].trim().replace(/"/g, '') : 'N/A';
-                    const expiry = cols[5] ? cols[5].trim().replace(/"/g, '') : '12/29';
-                    const rate = parseFloat(cols[6]) || 0;
-                    const gst = parseInt(cols[7]) || 5;
-                    const stockAmt = parseInt(cols[8]) || 0;
+
+                if (cols.length > prodIdx) {
+                    const name = cols[prodIdx] ? cols[prodIdx].trim().replace(/"/g, '') : '';
+                    // যদি ভুল করে কোম্পানি নাম প্রোডাকশন কলামে বসে, তাকে ফিল্টার করতে বা স্কিপ করতে চেক
+                    if (!name || name.toLowerCase() === 'id' || name.toLowerCase() === 'company') continue;
+
+                    const rack = cols[rackIdx] ? cols[rackIdx].trim().replace(/"/g, '') : 'A-01';
+                    const batch = cols[batchIdx] ? cols[batchIdx].trim().replace(/"/g, '') : 'N/A';
+                    const expiry = cols[expIdx] ? cols[expIdx].trim().replace(/"/g, '') : '12/29';
+                    const rate = parseFloat(cols[rateIdx]) || 0;
+                    const gst = parseInt(cols[gstIdx]) || 5;
+                    const qty = parseInt(cols[qtyIdx]) || 0;
 
                     if (name && rate > 0) {
                         temporaryPurchaseCart.push({
@@ -464,7 +459,7 @@
                             expiry: expiry,
                             rate: rate,
                             gst: gst,
-                            qty: stockAmt,
+                            qty: qty,
                             source: "csv_upload"
                         });
                         addedCount++;
@@ -474,10 +469,10 @@
             
             if (addedCount > 0) {
                 document.getElementById('deleteCsvBtn').style.display = 'inline-block';
-                renderPurchaseCartTable(); // সাথে সাথে বিল স্ক্রিনে রি-রেন্ডার হবে!
-                alert(`🎉 CSV সফলভাবে লোড হয়েছে! ${addedCount}টি ওষুধের ডিটেলস নিচে পারচেজ কার্ট টেবিলে যোগ করা হলো।`);
+                renderPurchaseCartTable();
+                alert(`🎉 সফল স্বয়ংক্রিয় ম্যাপিং! ডেটার কলাম ট্র্যাক করে মোট ${addedCount}টি ওষুধের তালিকা সঠিকভাবে নিচে সাজানো হয়েছে।`);
             } else {
-                alert('দুঃখিত, ফাইলের ভেতরের কলাম বা ডাটা স্ট্রাকচার মেলেনি।');
+                alert('দুঃখিত, CSV ফাইলের কলামের নাম বা ভেতরের স্ট্রাকচার রিড করা সম্ভব হয়নি।');
             }
         };
         reader.readAsText(file);
@@ -487,7 +482,6 @@
         temporaryPurchaseCart = []; renderPurchaseCartTable();
         document.getElementById('deleteCsvBtn').style.display = 'none';
         document.getElementById('csvFileInput').value = '';
-        alert("🗑️ Current purchase cart cleared.");
     }
 
     // SALE BILLING ENGINE
@@ -503,7 +497,7 @@
         if (matches.length > 0) {
             matches.forEach(product => {
                 const div = document.createElement('div'); div.className = 'suggestion-item';
-                div.innerText = `${product.product_name} [Rack: ${product.rack}] [Batch: ${product.batch}] - Balance: ${product.stock} Strips`;
+                div.innerText = `${product.product_name} [Rack: ${product.rack}] [Batch: ${product.batch}] - Balance: ${product.stock}`;
                 div.onclick = function() { addProductToCart(product); };
                 suggestionsBox.appendChild(div);
             });
