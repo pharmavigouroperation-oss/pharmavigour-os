@@ -8,7 +8,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
         body { background-color: #f5f4f0; color: #1e293b; min-height: 100vh; }
         
-        /* 🎨 MOBILE-OPTIMIZED CONTAINER DISP FIX */
+        /* 🎨 MOBILE CONTAINER FIX */
         #loginScreen { display: block; background: linear-gradient(135deg, #022c22 0%, #064e3b 100%); min-height: 100vh; padding: 40px 15px; }
         .login-card { background: #fdfdfb; width: 100%; max-width: 400px; margin: 0 auto; padding: 30px 20px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); text-align: center; border-top: 5px solid #d97706; }
         .login-logo { width: 120px; height: auto; margin-bottom: 12px; }
@@ -18,9 +18,9 @@
         .login-btn { width: 100%; padding: 12px; background: #064e3b; color: #fef08a; border: 1px solid #d97706; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; display: block; margin-bottom: 10px; }
         .login-error { color: #ef4444; font-size: 13px; margin-bottom: 12px; display: none; }
         .demo-btn-group { display: flex; gap: 10px; margin-top: 15px; width: 100%; }
-        .quick-demo-btn { flex: 1; background: #0f172a; color: #ffffff; border: 1px solid #d97706; padding: 10px 4px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+        .quick-demo-btn { flex: 1; background: #0f172a; color: #ffffff; border: 1px solid #d97706; padding: 10px 4px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; }
 
-        /* 🏠 MAIN DASHBOARD INTERFACE */
+        /* 🏠 DASHBOARD INTERFACE CONTAINER */
         #dashboardScreen { display: none; min-height: 100vh; flex-direction: column; }
         .top-navbar { background: #064e3b; color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #d97706; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
         .navbar-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
@@ -44,7 +44,7 @@
         .view-panel { display: none; position: relative; z-index: 1; }
         .view-panel.active { display: block; }
 
-        /* UI Table layouts */
+        /* UI Tables components styling */
         .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
         .module-card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); text-align: center; cursor: pointer; border: 1px solid #e2e8f0; }
         .module-card:hover { transform: translateY(-3px); border-color: #d97706; box-shadow: 0 10px 15px rgba(0,0,0,0.05); }
@@ -66,22 +66,22 @@
         .btn { padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 14px; }
         .btn-primary { background: #064e3b; color: #fef08a; border: 1px solid #d97706; }
         .btn-success { background: #d97706; color: white; border: 1px solid #b45309; }
-        .btn-danger { background: #ef4444; color: white; border: 1px solid #dc2626; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; }
+        .btn-danger { background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; }
         .btn-edit { background: #3b82f6; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; font-weight: bold; margin-right: 5px; }
         .role-badge { padding: 3px 8px; border-radius: 20px; font-size: 12px; font-weight: bold; background: #fef08a; color: #854d0e; }
     </style>
 </head>
 <body>
 
-<!-- 🔐 1. MOBILE SAFE FLUID LOGIN MODULE -->
+<!-- 🔐 1. LOGIN SCREEN -->
 <div id="loginScreen">
     <div class="login-card">
         <img class="login-logo" src="logo.jpg" alt="PharmaVigour Logo">
         <h2>PharmaVigour OS</h2>
         <p>Bridging Expertise with Expansion</p>
         <div id="loginError" class="login-error">ভুল ইউজার আইডি বা পাসওয়ার্ড!</div>
-        <input type="text" id="username" class="login-field" placeholder="Operator User ID" value="superadmin">
-        <input type="password" id="password" class="login-field" placeholder="Security Password" value="admin123">
+        <input type="text" id="username" class="login-field" placeholder="Operator User ID">
+        <input type="password" id="password" class="login-field" placeholder="Security Password">
         <button class="login-btn" onclick="handleLogin()">Secure Sign In</button>
         
         <div class="demo-btn-group">
@@ -91,7 +91,7 @@
     </div>
 </div>
 
-<!-- 🏠 2. ENTERPRISE DASHBOARD RUNTIME -->
+<!-- 🏠 2. DASHBOARD SCREREN -->
 <div id="dashboardScreen">
     <div class="top-navbar">
         <div class="navbar-brand" onclick="showView('homeView')">
@@ -285,7 +285,7 @@
 </div>
 
 <script>
-    // BROWSER DATABASE CONFIGURATION
+    // 🧠 REALTIME BROWSER DATABASE ENGINE HARD-LOCKS
     const DEFAULT_STOCK = [
         { id: 1, product_name: "Rantac 300mg Tab", rack: "R-02", batch: "RAN548904HJ", expiry: "06/27", rate: 40.00, gst: 5, stock: 500 },
         { id: 2, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1300 }
@@ -294,6 +294,7 @@
         { invoice: "PV-2026-00481", patient: "Rahul Chakraborty", doctor: "Dr. P. Maitra", value: 1688.10 }
     ];
 
+    // Enforce instant local database setup on browser runtime boot
     if (!localStorage.getItem('PV_STOCK')) { localStorage.setItem('PV_STOCK', JSON.stringify(DEFAULT_STOCK)); }
     if (!localStorage.getItem('PV_SALES')) { localStorage.setItem('PV_SALES', JSON.stringify(DEFAULT_SALES)); }
 
@@ -309,12 +310,12 @@
             localStorage.clear();
             localStorage.setItem('PV_STOCK', JSON.stringify(DEFAULT_STOCK));
             localStorage.setItem('PV_SALES', JSON.stringify(DEFAULT_SALES));
+            sessionStorage.clear(); // clear active session too
             alert("ডাটাবেস রিসেট সফল হয়েছে!");
             location.reload();
         }
     }
 
-    let currentUserRole = "superadmin";
     const usersDatabase = {
         'superadmin': { pass: 'admin123', role: 'superadmin', permissions: ['sale', 'purchase', 'reports', 'management'] },
         'staff': { pass: 'staff123', role: 'staff', permissions: ['sale', 'purchase'] }
@@ -323,20 +324,48 @@
     let activeCart = [];
     let temporaryPurchaseCart = []; 
 
+    // 🔒 🚀 ⚡ FINAL HARD-LOCKED STATE LOADER ENGINE (Prevents logout on refresh!)
+    window.onload = function() {
+        const savedSessionUser = sessionStorage.getItem('PV_ACTIVE_USER');
+        if (savedSessionUser && usersDatabase[savedSessionUser]) {
+            currentUserRole = usersDatabase[savedSessionUser].role;
+            executeSessionUIBoot(savedSessionUser);
+        } else {
+            // No active session, stay on login panel
+            document.getElementById('loginScreen').style.display = 'block';
+            document.getElementById('dashboardScreen').style.display = 'none';
+        }
+    };
+
     function handleLogin() {
         const u = document.getElementById('username').value.trim();
         const p = document.getElementById('password').value.trim();
         if (usersDatabase[u] && usersDatabase[u].pass === p) {
             currentUserRole = usersDatabase[u].role;
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('dashboardScreen').style.display = 'flex';
-            document.getElementById('activeRoleBadge').innerText = currentUserRole === 'superadmin' ? 'Admin 👑' : 'Staff 🧑';
-            applyRolePermissionsMatrix(usersDatabase[u].permissions);
-            showView('homeView');
+            sessionStorage.setItem('PV_ACTIVE_USER', u); // 🚀 Lock active session state tightly
+            executeSessionUIBoot(u);
         } else { document.getElementById('loginError').style.display = 'block'; }
     }
-    function triggerQuickLogin(u, p) { document.getElementById('username').value = u; document.getElementById('password').value = p; handleLogin(); }
-    function handleLogout() { document.getElementById('dashboardScreen').style.display = 'none'; document.getElementById('loginScreen').style.display = 'block'; }
+
+    function executeSessionUIBoot(username) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('dashboardScreen').style.display = 'flex';
+        document.getElementById('activeRoleBadge').innerText = currentUserRole === 'superadmin' ? 'Admin 👑' : 'Staff 🧑';
+        applyRolePermissionsMatrix(usersDatabase[username].permissions);
+        showView('homeView');
+    }
+
+    function triggerQuickLogin(u, p) { 
+        document.getElementById('username').value = u; 
+        document.getElementById('password').value = p; 
+        handleLogin(); 
+    }
+    
+    function handleLogout() { 
+        sessionStorage.clear(); // Wipe only active session, keep DB intact
+        document.getElementById('dashboardScreen').style.display = 'none'; 
+        document.getElementById('loginScreen').style.display = 'block'; 
+    }
 
     function applyRolePermissionsMatrix(allowedModules) {
         document.getElementById('side_management').style.display = allowedModules.includes('management') ? 'flex' : 'none';
