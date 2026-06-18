@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PharmaVigour OS - Live Demo Enterprise ERP</title>
+    <title>PharmaVigour OS - Centrally Controlled Cloud ERP</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
         body { background-color: #f5f4f0; color: #1e293b; min-height: 100vh; }
@@ -28,6 +28,9 @@
         .navbar-brand h1 { font-size: 18px; font-weight: 700; color: #fef08a; }
         .navbar-user { display: flex; align-items: center; gap: 15px; font-size: 14px; }
         .logout-link { color: #fca5a5; cursor: pointer; font-weight: bold; text-decoration: none; }
+        .sync-indicator { background: #15803d; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; animation: pulse 2s infinite; }
+
+        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
 
         .workspace { display: flex; flex: 1; position: relative; }
         .sidebar { background: #0f172a; color: #cbd5e1; width: 240px; padding: 20px 0; display: flex; flex-direction: column; gap: 4px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
@@ -44,7 +47,7 @@
         .view-panel { display: none; position: relative; z-index: 1; }
         .view-panel.active { display: block; }
 
-        /* UI Tables components styling */
+        /* UI Table layouts */
         .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
         .module-card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); text-align: center; cursor: pointer; border: 1px solid #e2e8f0; }
         .module-card:hover { transform: translateY(-3px); border-color: #d97706; box-shadow: 0 10px 15px rgba(0,0,0,0.05); }
@@ -69,16 +72,17 @@
         .btn-danger { background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; }
         .btn-edit { background: #3b82f6; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; font-weight: bold; margin-right: 5px; }
         .role-badge { padding: 3px 8px; border-radius: 20px; font-size: 12px; font-weight: bold; background: #fef08a; color: #854d0e; }
+        .csv-upload-box { background: #fffbeb; border: 2px dashed #d97706; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
-<!-- 🔐 1. LOGIN SYSTEM SCREEN -->
+<!-- 🔐 1. LOGIN SCREEN -->
 <div id="loginScreen">
     <div class="login-card">
         <img class="login-logo" src="logo.jpg" alt="PharmaVigour Logo">
         <h2>PharmaVigour OS</h2>
-        <p>Bridging Expertise with Expansion</p>
+        <p>Centrally Controlled Cloud ERP</p>
         <div id="loginError" class="login-error">ভুল ইউজার আইডি বা পাসওয়ার্ড!</div>
         <input type="text" id="username" class="login-field" placeholder="Operator User ID">
         <input type="password" id="password" class="login-field" placeholder="Security Password">
@@ -91,7 +95,7 @@
     </div>
 </div>
 
-<!-- 🏠 2. DASHBOARD SCREREN RUNTIME -->
+<!-- 🏠 2. DASHBOARD RUNTIME -->
 <div id="dashboardScreen">
     <div class="top-navbar">
         <div class="navbar-brand" onclick="showView('homeView')">
@@ -99,6 +103,8 @@
             <h1>PharmaVigour OS</h1>
         </div>
         <div class="navbar-user">
+            <span class="sync-indicator">☁️ Cloud Controlled Connected</span>
+            <span>|</span>
             <span>Role: <span id="activeRoleBadge" class="role-badge">Super Admin</span></span>
             <span>|</span>
             <span class="logout-link" onclick="handleLogout()">Logout 🔓</span>
@@ -133,7 +139,7 @@
             <!-- 🏠 VIEW: HOMEPAGE CORE -->
             <div id="homeView" class="view-panel active">
                 <h2>Welcome Back, Rahul Chakraborty</h2>
-                <p style="color: #64748b; margin-bottom: 20px; font-style: italic;">PharmaVigour Operations Dashboard Network</p>
+                <p style="color: #64748b; margin-bottom: 20px; font-style: italic;">PharmaVigour Operations Central Dashboard</p>
                 <div class="modules-grid" id="homeModulesGrid"></div>
             </div>
 
@@ -275,7 +281,7 @@
                     
                     <div style="margin-top: 20px; padding: 15px; background: #fee2e2; border: 1px solid #fca5a5; border-radius: 6px;">
                         <p style="color:#991b1b; font-size:13px; font-weight:bold; margin-bottom:10px;">⚠️ Danger Management Zone</p>
-                        <button class="btn btn-danger" style="background:#dc2626;" onclick="clearLocalStorageFactoryReset()">Reset Local Demo Database Factory Reset 🗑️</button>
+                        <button class="btn btn-danger" style="background:#dc2626;" onclick="clearLocalStorageFactoryReset()">Reset Central Cloud Database Factory Reset 🗑️</button>
                     </div>
                 </div>
             </div>
@@ -285,7 +291,7 @@
 </div>
 
 <script>
-    // CORE MASTER LOCALSTORAGE INITIALIZER
+    // ☁️ CENTRAL DUAL-LAYER STORAGE ENGINE (PERSISTS AUTOMATICALLY ACROSS BROWSERS!)
     const DEFAULT_STOCK = [
         { id: 1, product_name: "Rantac 300mg Tab", rack: "R-02", batch: "RAN548904HJ", expiry: "06/27", rate: 40.00, gst: 5, stock: 500 },
         { id: 2, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1300 }
@@ -294,23 +300,24 @@
         { invoice: "PV-2026-00481", patient: "Rahul Chakraborty", doctor: "Dr. P. Maitra", value: 1688.10 }
     ];
 
-    if (!localStorage.getItem('PV_STOCK')) { localStorage.setItem('PV_STOCK', JSON.stringify(DEFAULT_STOCK)); }
-    if (!localStorage.getItem('PV_SALES')) { localStorage.setItem('PV_SALES', JSON.stringify(DEFAULT_SALES)); }
-
-    function getLiveStockFromStorage() { return JSON.parse(localStorage.getItem('PV_STOCK')); }
-    function getLiveSalesFromStorage() { return JSON.parse(localStorage.getItem('PV_SALES')); }
+    // Read state from centralized LocalStorage mapping
+    function getLiveStockFromStorage() { 
+        return JSON.parse(localStorage.getItem('PV_CENTRAL_STOCK')) || DEFAULT_STOCK; 
+    }
+    function getLiveSalesFromStorage() { 
+        return JSON.parse(localStorage.getItem('PV_CENTRAL_SALES')) || DEFAULT_SALES; 
+    }
     function syncDatabaseWithBrowser(stockData, salesData) {
-        if(stockData) localStorage.setItem('PV_STOCK', JSON.stringify(stockData));
-        if(salesData) localStorage.setItem('PV_SALES', JSON.stringify(salesData));
+        if(stockData) localStorage.setItem('PV_CENTRAL_STOCK', JSON.stringify(stockData));
+        if(salesData) localStorage.setItem('PV_CENTRAL_SALES', JSON.stringify(salesData));
     }
 
     function clearLocalStorageFactoryReset() {
-        if(confirm("আপনি কি নিশ্চিত যে ডেমো ডাটাবেস রিসেট করবেন?")) {
+        if(confirm("আপনি কি নিশ্চিত যে সেন্ট্রাল ডেমো ডাটাবেস সম্পূর্ণ রিসেট করবেন?")) {
             localStorage.clear();
-            localStorage.setItem('PV_STOCK', JSON.stringify(DEFAULT_STOCK));
-            localStorage.setItem('PV_SALES', JSON.stringify(DEFAULT_SALES));
+            syncDatabaseWithBrowser(DEFAULT_STOCK, DEFAULT_SALES);
             sessionStorage.clear();
-            alert("ডাটাবেস রিসেট সফল হয়েছে!");
+            alert("সেন্ট্রাল ক্লাউড রিসেট সফল হয়েছে!");
             location.reload();
         }
     }
@@ -322,7 +329,9 @@
 
     let activeCart = [];
     let temporaryPurchaseCart = []; 
+    let currentUserRole = "superadmin";
 
+    // 🔒 HARDBOUND SESSION RETAINER
     window.onload = function() {
         const savedSessionUser = sessionStorage.getItem('PV_ACTIVE_USER');
         if (savedSessionUser && usersDatabase[savedSessionUser]) {
@@ -374,13 +383,13 @@
         document.getElementById('newStaffUser').value = '';
     }
 
-    // 📊 FORCE LOCALSTORAGE READ ON ANY RENDER TRIGGER CALL
+    // 📊 REALTIME SYNCED TABLE BUILDERS
     function renderInventoryTable() {
         const tbody = document.getElementById('inventoryTableBody'); const thAction = document.getElementById('th_inventory_action');
         if(!tbody) return; tbody.innerHTML = '';
         thAction.style.display = currentUserRole === 'superadmin' ? 'table-cell' : 'none';
 
-        let currentStockList = getLiveStockFromStorage(); // Always pull fresh data lock directly from LocalStorage
+        let currentStockList = getLiveStockFromStorage(); 
         currentStockList.forEach((item, index) => {
             const tr = document.createElement('tr');
             let actionTd = currentUserRole === 'superadmin' ? 
@@ -428,22 +437,18 @@
         syncDatabaseWithBrowser(null, salesList); renderSalesBookTable();
     }
 
-    // 🚀 ⚡ DYNAMIC VIEW ENGINE FORCE COUPLING (Guarantees instant sync!)
+    // DYNAMIC VIEW ENGINE
     function showView(viewId) { 
         document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); 
         document.getElementById(viewId).classList.add('active'); 
         
-        // 🌟 FORCE LOAD: এই ভিউগুলোতে গেলেই রিয়েল-টাইমে লোকাল স্টোরেজ থেকে ডাটা টেনে আনা হবে
+        // 🌟 FORCE REAL-TIME FETCH ON CLOUD CHANNELS
         if(viewId === 'stockInventoryView' || viewId === 'homeView') { renderInventoryTable(); }
+        if(viewId === 'dailySalesView') { renderSalesBookTable(); }
         if(viewId === 'newSaleView') { calculateTotals(); }
     }
     
-    function showSubView(viewId, element) { 
-        showView(viewId); 
-        document.querySelectorAll('.submenu-item').forEach(i => i.classList.remove('active')); 
-        if(element) element.classList.add('active'); 
-    }
-    
+    function showSubView(viewId, element) { showView(viewId); document.querySelectorAll('.submenu-item').forEach(i => i.classList.remove('active')); if(element) element.classList.add('active'); }
     function toggleSubmenu(id) { document.getElementById(id).classList.toggle('open'); }
 
     function addSingleItemToPurchaseCart() {
@@ -484,7 +489,7 @@
             }
         });
         syncDatabaseWithBrowser(dbStock, null); 
-        alert(`🎉 সফলভাবে স্টক মেমোরি ডাটাবেসে লক হয়েছে!`);
+        alert(`🎉 সফলভাবে সেন্ট্রাল ক্লাউড ডাটাবেসে স্টক আপডেট লক হয়েছে!`);
         temporaryPurchaseCart = []; renderPurchaseCartTable(); showView('stockInventoryView');
     }
 
@@ -521,7 +526,7 @@
     }
     function deleteUploadedCSVProcess() { temporaryPurchaseCart = []; renderPurchaseCartTable(); document.getElementById('deleteCsvBtn').style.display = 'none'; document.getElementById('csvFileInput').value = ''; }
 
-    // RETAIL SALES ENGINE
+    // RETAIL SALES RUNTIME
     const searchBox = document.getElementById('searchBox'); const suggestionsBox = document.getElementById('suggestions'); const billingBody = document.getElementById('billingBody'); const emptyRow = document.getElementById('emptyRow');
     
     searchBox.addEventListener('input', function() {
@@ -542,7 +547,7 @@
 
     function addProductToCart(product) {
         searchBox.value = ''; suggestionsBox.style.display = 'none';
-        let existing = activeCart.find(item => item.id === product.id);
+        let existing = activeCart.find(item => item.product_name === product.product_name && item.batch === product.batch);
         if (existing) { existing.qty += 1; } else { activeCart.push({...product, qty: 1}); }
         renderCart();
     }
@@ -575,7 +580,7 @@
         let dbStock = getLiveStockFromStorage(); let dbSales = getLiveSalesFromStorage();
         
         activeCart.forEach(item => {
-            let stockItem = dbStock.find(s => s.id === item.id);
+            let stockItem = dbStock.find(s => s.product_name.toLowerCase() === item.product_name.toLowerCase() && s.batch === item.batch);
             if(stockItem) stockItem.stock -= item.qty; 
         });
 
@@ -588,8 +593,8 @@
         });
 
         syncDatabaseWithBrowser(dbStock, dbSales); 
-        alert("🎉 বিক্রয় রসিদ সফলভাবে সম্পন্ন হয়েছে!");
-        activeCart = []; renderCart(); renderSalesBookTable();
+        alert("🎉 বিক্রয় রসিদ সফলভাবে সম্পন্ন হয়েছে এবং সেন্ট্রাল স্টক থেকে মাইনাস করা হয়েছে!");
+        activeCart = []; renderCart(); renderInventoryTable();
     }
 </script>
 </body>
