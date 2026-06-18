@@ -17,10 +17,7 @@
         .login-field { width: 100%; padding: 12px; margin-bottom: 16px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 15px; outline: none; text-align: left; }
         .login-btn { width: 100%; padding: 12px; background: #064e3b; color: #fef08a; border: 1px solid #d97706; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
         .login-error { color: #ef4444; font-size: 13px; margin-bottom: 12px; display: none; }
-        
-        /* 💡 QUICK DEMO AUTO-LOGIN BUTTON */
         .quick-demo-btn { margin-top: 15px; background: transparent; color: #d97706; border: 1px dashed #d97706; padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; transition: all 0.2s; }
-        .quick-demo-btn:hover { background: rgba(217,119,6,0.05); }
 
         /* 🏠 MAIN DASHBOARD INTERFACE */
         #dashboardScreen { display: none; min-height: 100vh; flex-direction: column; }
@@ -60,7 +57,6 @@
         .form-group { display: flex; flex-direction: column; margin-bottom: 12px; }
         .form-group label { font-size: 12px; color: #064e3b; font-weight: bold; margin-bottom: 5px; text-align: left; }
         .form-group input, .form-group select { padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; outline: none; background: white; }
-        .form-group input:focus, .form-group select:focus { border-color: #d97706; }
         
         /* Tables Core CSS */
         table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
@@ -70,31 +66,33 @@
         .btn-container { margin-top: 25px; display: flex; gap: 15px; justify-content: flex-end; }
         .btn { padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 14px; }
         .btn-primary { background: #064e3b; color: #fef08a; border: 1px solid #d97706; }
-        .btn-primary:hover { background: #043d2e; color: white; }
-        .btn-success { background: #d97706; color: white; }
-        .btn-success:hover { background: #b45309; }
-
-        /* Stats Grid for Reports */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: white; padding: 20px; border-radius: 8px; border-left: 5px solid #064e3b; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .stat-card.gold-border { border-left-color: #d97706; }
-        .stat-card.red-border { border-left-color: #ef4444; }
-        .stat-card h4 { font-size: 12px; color: #64748b; text-transform: uppercase; }
-        .stat-card p { font-size: 24px; font-weight: bold; color: #1e293b; margin-top: 5px; }
 
         .search-box { width: 100%; padding: 12px; border: 2px solid #064e3b; border-radius: 6px; font-size: 14px; outline: none; }
         .suggestions-box { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #cbd5e1; border-radius: 0 0 6px 6px; max-height: 200px; overflow-y: auto; z-index: 1000; display: none; }
         .suggestion-item { padding: 10px 15px; cursor: pointer; border-bottom: 1px solid #f1f5f9; text-align: left; }
         .suggestion-item:hover { background-color: #f0fdf4; color: #064e3b; font-weight: bold; }
         .qty-input, .disc-input { width: 60px; padding: 5px; border: 1px solid #cbd5e1; border-radius: 4px; text-align: center; }
+        
+        /* Print Utilities */
         .bill-header-print { display: none; }
+        .print-text-val { display: none; font-weight: bold; font-size: 14px; }
 
         @media print {
-            .sidebar, .top-navbar, .search-section, .btn-container, .delete-btn, th:last-child, td:last-child, .meta-grid input { display: none !important; }
+            .sidebar, .top-navbar, .search-section, .btn-container, .delete-btn, th:last-child, td:last-child, .meta-grid input, .qty-input, .disc-input { display: none !important; }
+            .print-text-val { display: inline-block !important; }
             body, .main-content, .card-box { background: white !important; padding: 0; margin: 0; box-shadow: none; border: none; }
             .bill-header-print { display: flex !important; align-items: center; justify-content: space-between; border-bottom: 2px solid #064e3b; padding-bottom: 15px; margin-bottom: 25px; }
+            
+            .billing-container::before {
+                content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+                background-image: url('logo.jpg') !important; background-repeat: no-repeat !important; background-position: center 50% !important; background-size: 380px !important;
+                opacity: 0.05 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; z-index: 0;
+            }
+            
             th { background-color: #f1f5f9 !important; color: black !important; border: 1px solid #94a3b8 !important; }
-            td { border: 1px solid #cbd5e1 !important; }
+            td { border: 1px solid #cbd5e1 !important; background: transparent !important; }
+            .summary-box { display: flex !important; visibility: visible !important; opacity: 1 !important; }
+            .total-row { background-color: #f8fafc !important; color: #064e3b !important; border: 1px solid #94a3b8 !important; }
         }
     </style>
 </head>
@@ -110,8 +108,6 @@
         <input type="text" id="username" class="login-field" placeholder="Operator User ID" value="admin">
         <input type="password" id="password" class="login-field" placeholder="Security Password" value="password">
         <button class="login-btn" onclick="handleLogin()">Secure Sign In</button>
-        
-        <!-- ⚡ QUICK DEMO LOGIN BUTTON -->
         <button class="quick-demo-btn" onclick="triggerQuickDemoLogin()">⚡ Quick Demo Autologin</button>
     </div>
 </div>
@@ -131,62 +127,26 @@
     </div>
 
     <div class="workspace">
-        <!-- SIDEBAR OPTIONS NAVIGATION -->
+        <!-- SIDEBAR -->
         <div class="sidebar">
-            <!-- 1. SALE -->
             <div class="menu-item" onclick="toggleSubmenu('saleSub')">1. Sale <span>▼</span></div>
             <div id="saleSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('newSaleView', this)">• New Sale (Billing)</div>
-                <div class="submenu-item" onclick="showSubView('patientDetailsView', this)">• Patient Details</div>
-                <div class="submenu-item" onclick="showSubView('saleReturnView', this)">• Sale Return</div>
-            </div>
-
-            <!-- 2. PURCHASE -->
-            <div class="menu-item" onclick="toggleSubmenu('purchaseSub')">2. Purchase <span>▼</span></div>
-            <div id="purchaseSub" class="submenu-list">
-                <div class="submenu-item" onclick="showSubView('newPurchaseView', this)">• New Purchase (Stock Entry)</div>
-                <div class="submenu-item" onclick="showSubView('vendorListView', this)">• Vendor / Distributor List</div>
-            </div>
-
-            <!-- 3. REPORTS -->
-            <div class="menu-item" onclick="toggleSubmenu('reportsSub')">3. Reports <span>▼</span></div>
-            <div id="reportsSub" class="submenu-list">
-                <div class="submenu-item" onclick="showSubView('dailySalesView', this)">• Daily Sales Summary</div>
-                <div class="submenu-item" onclick="showSubView('expiryDashboardView', this)">• Expiry Dashboard</div>
-            </div>
-
-            <!-- 4. GST DETAIL -->
-            <div class="menu-item" onclick="toggleSubmenu('gstSub')">4. GST Detail <span>▼</span></div>
-            <div id="gstSub" class="submenu-list">
-                <div class="submenu-item" onclick="showSubView('gstr1View', this)">• GSTR-1 Summary</div>
-            </div>
-
-            <!-- 5. SETTINGS -->
-            <div class="menu-item" onclick="toggleSubmenu('settingsSub')">5. Settings <span>▼</span></div>
-            <div id="settingsSub" class="submenu-list">
-                <div class="submenu-item" onclick="showSubView('storeConfigView', this)">• Store Configuration</div>
             </div>
         </div>
 
-        <!-- DYNAMIC DESK PANEL CONTROLLER -->
+        <!-- MAIN PANEL -->
         <div class="main-content">
-            
-            <!-- 🏠 VIEW: HOMEPAGE CORE -->
             <div id="homeView" class="view-panel active">
                 <h2>Welcome Back, Rahul Chakraborty</h2>
-                <p style="color: #64748b; margin-bottom: 20px; font-style: italic;">PharmaVigour Operations Dashboard Network</p>
                 <div class="modules-grid">
-                    <div class="module-card" onclick="toggleSubmenu('saleSub')"><h3>Sale Module</h3><p>New Bills, Returns, Patients Control</p></div>
-                    <div class="module-card" onclick="toggleSubmenu('purchaseSub')"><h3>Purchase Node</h3><p>Live Stock Entries, Vendors Registry</p></div>
-                    <div class="module-card" onclick="toggleSubmenu('reportsSub')"><h3>Reports Engine</h3><p>Sales Book, Expiry Triggers</p></div>
-                    <div class="module-card" onclick="toggleSubmenu('gstSub')"><h3>GST Ledger</h3><p>GSTR-1 Tax Splits & Reports</p></div>
-                    <div class="module-card" onclick="toggleSubmenu('settingsSub')"><h3>Settings Core</h3><p>Store Node Configurations</p></div>
+                    <div class="module-card" onclick="toggleSubmenu('saleSub')"><h3>Sale Module</h3><p>New Bills Runtime</p></div>
                 </div>
             </div>
 
-            <!-- 🛒 VIEW: 1.1 NEW SALE (BILLING CORE) -->
+            <!-- 🛒 NEW SALE MODULE -->
             <div id="newSaleView" class="view-panel">
-                <div class="card-box">
+                <div class="card-box billing-container">
                     <div class="bill-header-print">
                         <div style="display:flex; align-items:center; gap:15px;">
                             <img src="logo.jpg" style="width:80px; height:auto;">
@@ -198,13 +158,13 @@
                     </div>
                     <div class="panel-title search-section">Core Retail Billing Node (New Sale)</div>
                     <div class="meta-grid">
-                        <div class="form-group"><label>Patient Name</label><input type="text" id="patientName" value="Rahul Chakraborty"></div>
-                        <div class="form-group"><label>Contact Number</label><input type="text" id="patientContact" value="9829972091"></div>
-                        <div class="form-group"><label>Doctor Name</label><input type="text" id="docName" value="Dr. P. Maitra"></div>
-                        <div class="form-group"><label>Bill Date</label><input type="text" value="18/06/2026" readonly></div>
+                        <div class="form-group"><label>Patient Name</label><input type="text" id="patientName" value="Rahul Chakraborty"><span class="print-text-val">Rahul Chakraborty</span></div>
+                        <div class="form-group"><label>Contact Number</label><input type="text" id="patientContact" value="9829972091"><span class="print-text-val">9829972091</span></div>
+                        <div class="form-group"><label>Doctor Name</label><input type="text" id="docName" value="Dr. P. Maitra"><span class="print-text-val">Dr. P. Maitra</span></div>
+                        <div class="form-group"><label>Bill Date</label><input type="text" value="18/06/2026" readonly><span class="print-text-val">18/06/2026</span></div>
                     </div>
                     <div class="search-section" style="position:relative;">
-                        <input type="text" id="searchBox" class="search-box" placeholder="Type medicine name (e.g. Cil) to search live local stock database..." autocomplete="off">
+                        <input type="text" id="searchBox" class="search-box" placeholder="Type medicine name (e.g. Ran or Cil)..." autocomplete="off">
                         <div id="suggestions" class="suggestions-box"></div>
                     </div>
                     <div style="overflow-x: auto;">
@@ -230,224 +190,30 @@
                     </div>
                 </div>
             </div>
-
-            <!-- 👥 VIEW: 1.2 PATIENT DETAILS -->
-            <div id="patientDetailsView" class="view-panel">
-                <div class="card-box">
-                    <div class="panel-title">Patient Management System</div>
-                    <div class="meta-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
-                        <div class="form-group"><label>New Patient Name</label><input type="text" id="pNewName" placeholder="Enter Name"></div>
-                        <div class="form-group"><label>Contact Number</label><input type="text" id="pNewMobile" placeholder="Mobile No."></div>
-                        <div class="form-group" style="justify-content: flex-end;"><button class="btn btn-success" style="margin-top:5px;" onclick="addPatientDemo()">+ Add Patient Registry</button></div>
-                    </div>
-                    <table>
-                        <thead><tr><th>ID</th><th>Patient Name</th><th>Mobile Number</th><th>Last Visit</th><th>Status</th></tr></thead>
-                        <tbody id="patientTableBody">
-                            <tr><td>#P101</td><td><strong>Rahul Chakraborty</strong></td><td>9829972091</td><td>18/06/2026</td><td><span style="background:#bbf7d0; color:#166534; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:bold;">Active</span></td></tr>
-                            <tr><td>#P102</td><td>Animesh Chatterjee</td><td>9830012345</td><td>15/05/2026</td><td><span style="background:#bbf7d0; color:#166534; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:bold;">Active</span></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 🔄 VIEW: 1.3 SALE RETURN -->
-            <div id="saleReturnView" class="view-panel">
-                <div class="card-box">
-                    <div class="panel-title">Instant Sale Return / Credit Note Node</div>
-                    <div class="meta-grid" style="grid-template-columns: 2fr 1fr;">
-                        <div class="form-group"><label>Enter Invoice / Bill Number</label><input type="text" id="returnBillId" placeholder="e.g. PV-2026-9481" value="PV-2026-0311"></div>
-                        <div class="form-group" style="justify-content: flex-end;"><button class="btn btn-primary" onclick="processReturnDemo()">Fetch Invoice Details</button></div>
-                    </div>
-                    <div id="returnStatusBox" style="display:none; padding:15px; background:#fef2f2; border:1px solid #fee2e2; color:#991b1b; border-radius:6px; font-weight:600;">
-                        Invoice data parsed successfully! Return processed for: 1 Strip Cilacar 10mg. Credit Note adjusted in Ledger.
-                    </div>
-                </div>
-            </div>
-
-            <!-- 📥 VIEW: 2.1 NEW PURCHASE -->
-            <div id="newPurchaseView" class="view-panel">
-                <div class="card-box">
-                    <div class="panel-title">Dynamic Stock Inward Ledger (Add New Item)</div>
-                    <div class="meta-grid">
-                        <div class="form-group"><label>Medicine Name</label><input type="text" id="purName" placeholder="e.g. Pan D Cap"></div>
-                        <div class="form-group"><label>Rack Location</label><input type="text" id="purRack" placeholder="e.g. B-12"></div>
-                        <div class="form-group"><label>Batch Number</label><input type="text" id="purBatch" placeholder="BATCH123"></div>
-                        <div class="form-group"><label>Expiry Date</label><input type="text" id="purExpiry" placeholder="05/29"></div>
-                        <div class="form-group"><label>Rate / Strip (₹)</label><input type="number" id="purRate" placeholder="120.00"></div>
-                        <div class="form-group"><label>GST %</label><select id="purGst"><option value="5">5%</option><option value="12">12%</option><option value="18">18%</option></select></div>
-                        <div class="form-group"><label>Stock Qty (Strips)</label><input type="number" id="purStock" placeholder="50"></div>
-                    </div>
-                    <div class="btn-container" style="margin-top:0;"><button class="btn btn-success" onclick="savePurchaseToStock()">Inward Stock & Update System</button></div>
-                </div>
-            </div>
-
-            <!-- 🏢 VIEW: 2.2 VENDOR LIST -->
-            <div id="vendorListView" class="view-panel">
-                <div class="card-box">
-                    <div class="panel-title">Registered Distributors / Vendors Profile</div>
-                    <table>
-                        <thead><tr><th>Vendor Code</th><th>Distributor Name</th><th>DL Number</th><th>GSTIN</th><th>Contact Person</th></tr></thead>
-                        <tbody>
-                            <tr><td>#VND01</td><td><strong>Bagree Market Medicine Hub</strong></td><td>DL-48192-M</td><td>19AAACF4810M1Z2</td><td>Mr. J. Jalan</td></tr>
-                            <tr><td>#VND02</td><td>S.R. Pharma Distributor</td><td>DL-99381-M</td><td>19BBAAF9920K1Z5</td><td>Amit K. Saha</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 📊 VIEW: 3.1 DAILY SALES REPORT -->
-            <div id="dailySalesView" class="view-panel">
-                <div class="stats-grid">
-                    <div class="stat-card"><h4>Today's Gross Sales</h4><p id="repGross">₹ 2,250.80</p></div>
-                    <div class="stat-card gold-border"><h4>Total Tax Collected (GST)</h4><p id="repGst">₹ 112.54</p></div>
-                    <div class="stat-card red-border"><h4>Active Hold Bills Count</h4><p>00</p></div>
-                </div>
-                <div class="card-box">
-                    <div class="panel-title">Today's Sales Book Audit</div>
-                    <table>
-                        <thead><tr><th>Invoice No.</th><th>Time</th><th>Patient Name</th><th>Doctor Name</th><th>Bill Value</th></tr></thead>
-                        <tbody>
-                            <tr><td>PV-2026-4812</td><td>11:45 AM</td><td>Rahul Chakraborty</td><td>Dr. P. Maitra</td><td>₹ 1,688.10</td></tr>
-                            <tr><td>PV-2026-4813</td><td>02:30 PM</td><td>Animesh Chatterjee</td><td>Self</td><td>₹ 562.70</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- ⚠️ VIEW: 3.2 EXPIRY ALERT DASHBOARD -->
-            <div id="expiryDashboardView" class="view-panel">
-                <div class="card-box">
-                    <div class="panel-title" style="color:#b91c1c;">Critical Expiry Dashboard Node (Upcoming 3 Months)</div>
-                    <div style="background:#fee2e2; border:1px solid #fca5a5; padding:12px; border-radius:6px; color:#991b1b; font-size:13px; font-weight:bold; margin-bottom:15px;">
-                        ⚠️ Operational Directive: 20 Tarikh er bhetore nicher expiry items gulo management-e report na korle staff account theke salary deduct hobe!
-                    </div>
-                    <table>
-                        <thead><tr style="background:#b91c1c;"><th style="color:white;">Medicine Name</th><th>Batch No</th><th>Expiry Month</th><th>Current Stock</th><th>Action Plan</th></tr></thead>
-                        <tbody>
-                            <tr><td><strong>Tab Cilacar 10mg</strong></td><td>CIL3452100</td><td>12/28</td><td>1300 Strips</td><td><span style="color:#d97706; font-weight:bold;">Safe (Non-Expired)</span></td></tr>
-                            <tr style="background:rgba(239,68,68,0.05);"><td><strong>Mock Expiring Cap</strong></td><td>MOCK8842</td><td>07/26</td><td>45 Strips</td><td><span style="color:#ef4444; font-weight:bold;">🚨 Push Sale / Return to Bagree</span></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 📝 VIEW: 4.1 GSTR-1 TAX BOOK -->
-            <div id="gstr1View" class="view-panel">
-                <div class="card-box">
-                    <div class="panel-title">GSTR-1 B2C Sales Tax Ledger Summary</div>
-                    <table>
-                        <thead><tr><th>Month</th><th>Taxable Turnover</th><th>CGST (₹)</th><th>SGST (₹)</th><th>Total GST Payable</th></tr></thead>
-                        <tbody>
-                            <tr><td><strong>June 2026 (Current)</strong></td><td>₹ 45,210.00</td><td>₹ 1,130.25</td><td>₹ 1,130.25</td><td><strong>₹ 2,260.50</strong></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- ⚙️ VIEW: 5.1 STORE CONFIGURATION -->
-            <div id="storeConfigView" class="view-panel">
-                <div class="card-box">
-                    <div class="panel-title">Store Node Security & Core Config</div>
-                    <div class="meta-grid" style="grid-template-columns: 1fr 1fr;">
-                        <div class="form-group"><label>Pharmacy Core Brand Name</label><input type="text" id="cfgBrand" value="PharmaVigour Operations" readonly></div>
-                        <div class="form-group"><label>Active Outlet Tag</label><input type="text" id="cfgOutlet" value="Shantipur Railway Station Node"></div>
-                    </div>
-                    <div class="btn-container" style="margin-top:0;"><button class="btn btn-primary" onclick="alert('Configuration Node updated successfully!')">Update Global Node</button></div>
-                </div>
-            </div>
-
         </div>
     </div>
 </div>
 
 <script>
-    // 🔐 LOGIC 1: INTELIGENT LOGIN ENGINE (With Auto-Trim space fix)
     function handleLogin() {
-        // .trim() ব্যবহার করা হলো যাতে ভুল করে অতিরিক্ত স্পেস পড়লেও লগইন আটকে না যায়
         const u = document.getElementById('username').value.trim();
         const p = document.getElementById('password').value.trim();
-        
         if(u === 'admin' && p === 'password') {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('dashboardScreen').style.display = 'flex';
             showView('homeView');
-        } else {
-            document.getElementById('loginError').style.display = 'block';
-        }
+        } else { document.getElementById('loginError').style.display = 'block'; }
     }
-    
-    // ⚡ QUICK DEMO LOGIN AUTO-FILL
-    function triggerQuickDemoLogin() {
-        document.getElementById('username').value = 'admin';
-        document.getElementById('password').value = 'password';
-        handleLogin();
-    }
+    function triggerQuickDemoLogin() { document.getElementById('username').value = 'admin'; document.getElementById('password').value = 'password'; handleLogin(); }
+    function handleLogout() { document.getElementById('dashboardScreen').style.display = 'none'; document.getElementById('loginScreen').style.display = 'flex'; }
+    function showView(viewId) { document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); document.getElementById(viewId).classList.add('active'); }
+    function showSubView(viewId, element) { showView(viewId); document.querySelectorAll('.submenu-item').forEach(i => i.classList.remove('active')); if(element) element.classList.add('active'); }
+    function toggleSubmenu(id) { const target = document.getElementById(id); target.classList.toggle('open'); }
 
-    function handleLogout() {
-        document.getElementById('dashboardScreen').style.display = 'none';
-        document.getElementById('loginScreen').style.display = 'flex';
-    }
-
-    // 🗺️ LOGIC 2: SINGLE PAGE NAVIGATION SYSTEM
-    function showView(viewId) {
-        document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active'));
-        document.getElementById(viewId).classList.add('active');
-        if(viewId === 'homeView') {
-            document.querySelectorAll('.submenu-item').forEach(i => i.classList.remove('active'));
-        }
-    }
-    function showSubView(viewId, element) {
-        showView(viewId);
-        document.querySelectorAll('.submenu-item').forEach(i => i.classList.remove('active'));
-        if(element) element.classList.add('active');
-    }
-    function toggleSubmenu(id) {
-        const target = document.getElementById(id);
-        const isOpen = target.classList.contains('open');
-        document.querySelectorAll('.submenu-list').forEach(list => list.classList.remove('open'));
-        if(!isOpen) target.classList.add('open');
-    }
-
-    // 📥 LOGIC 3: DYNAMIC PURCHASE ENTRY ENGINE
-    function savePurchaseToStock() {
-        const name = document.getElementById('purName').value;
-        const rack = document.getElementById('purRack').value;
-        const batch = document.getElementById('purBatch').value;
-        const expiry = document.getElementById('purExpiry').value;
-        const rate = parseFloat(document.getElementById('purRate').value);
-        const gst = parseInt(document.getElementById('purGst').value);
-        const stock = parseInt(document.getElementById('purStock').value);
-
-        if(!name || !rate || !stock) { alert('Please enter Name, Rate, and Stock Quantity!'); return; }
-
-        const newItem = { id: globalStock.length + 1, product_name: name, rack: rack, batch: batch, expiry: expiry, rate: rate, gst: gst, stock: stock };
-        globalStock.push(newItem);
-        alert('Stock Updated Successfully! This medicine is now instantly searchable in New Sale Module.');
-        
-        document.getElementById('purName').value = '';
-        document.getElementById('purRack').value = '';
-        document.getElementById('purBatch').value = '';
-        document.getElementById('purExpiry').value = '';
-        document.getElementById('purRate').value = '';
-        showView('homeView');
-    }
-
-    // Interactive Demo Helpers
-    function addPatientDemo() {
-        const n = document.getElementById('pNewName').value;
-        const m = document.getElementById('pNewMobile').value;
-        if(!n || !m) return;
-        const b = document.getElementById('patientTableBody');
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>#P${Math.floor(Math.random()*100)+110}</td><td><strong>${n}</strong></td><td>${m}</td><td>18/06/2026</td><td><span style='background:#bbf7d0; color:#166534; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:bold;'>Active</span></td>`;
-        b.appendChild(tr);
-        document.getElementById('pNewName').value = ''; document.getElementById('pNewMobile').value = '';
-    }
-    function processReturnDemo() { document.getElementById('returnStatusBox').style.display = 'block'; }
-
-    // 🛒 LOGIC 4: LIVE RETAIL BILLING ENGINE
+    // 🛒 IN-MEMORY PRODUCT DATABANK (Rantac + Cilacar Added)
     const globalStock = [
-        { id: 1, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1300 }
+        { id: 1, product_name: "Rantac 300mg Tab", rack: "R-02", batch: "RAN548904HJ", expiry: "6/27", rate: 40.00, gst: 5 },
+        { id: 2, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5 }
     ];
     let activeCart = [];
 
@@ -460,7 +226,7 @@
         const query = this.value.toLowerCase().trim();
         suggestionsBox.innerHTML = '';
         if (query.length < 1) { suggestionsBox.style.display = 'none'; return; }
-        const matches = globalStock.filter(p => p.product_name && p.product_name.toLowerCase().includes(query));
+        const matches = globalStock.filter(p => p.product_name.toLowerCase().includes(query));
         if (matches.length > 0) {
             matches.forEach(product => {
                 const div = document.createElement('div'); div.className = 'suggestion-item';
@@ -488,10 +254,17 @@
             const rateVal = parseFloat(item.rate) || 0;
             const discVal = parseFloat(item.discount) || 0;
             const gstPercent = parseFloat(item.gst) || 0;
-            const subtotal = (rateVal * item.qty) - ((rateVal * item.qty) * (discVal / 100));
-            tr.innerHTML = `<td><strong>${item.product_name}</strong></td><td>${item.rack || '-'}</td><td>${item.batch || '-'}</td><td>${item.expiry || '-'}</td>`+
-                `<td><input type="number" class="qty-input" value="${item.qty}" min="1" oninput="updateQty(${index}, this.value)"></td><td>₹${rateVal.toFixed(2)}</td>`+
-                `<td><input type="number" class="disc-input" value="${discVal}" min="0" max="100" oninput="updateDisc(${index}, this.value)"></td><td>${gstPercent}%</td>`+
+            
+            // 💡 সম্পূর্ণ ট্যাক্স হিসাব কারেক্ট করা হলো (Rate * Qty - Discount + GST)
+            const baseAmount = rateVal * item.qty;
+            const discountAmount = baseAmount * (discVal / 100);
+            const taxableAmount = baseAmount - discountAmount;
+            const gstAmount = taxableAmount * (gstPercent / 100);
+            const subtotal = taxableAmount + gstAmount;
+            
+            tr.innerHTML = `<td><strong>${item.product_name}</strong></td><td>${item.rack}</td><td>${item.batch}</td><td>${item.expiry}</td>`+
+                `<td><input type="number" class="qty-input" value="${item.qty}" min="1" oninput="updateQty(${index}, this.value)"><span class="print-text-val">${item.qty}</span></td><td>₹${rateVal.toFixed(2)}</td>`+
+                `<td><input type="number" class="disc-input" value="${discVal}" min="0" max="100" oninput="updateDisc(${index}, this.value)"><span class="print-text-val">${discVal}</span></td><td>${gstPercent}%</td>`+
                 `<td><strong>₹${subtotal.toFixed(2)}</strong></td><td><button class="delete-btn" onclick="removeItem(${index})">Remove</button></td>`;
             billingBody.appendChild(tr);
         });
