@@ -1,172 +1,265 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PharmaVigour OS - Corporate Cloud ERP</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
-        body { background-color: #f8fafc; color: #0f172a; min-height: 100vh; overflow-x: hidden; padding: 20px 0; }
-        
-        /* 🎨 OTP LOGIN SCREEN GATEWAY CONTAINER */
-        #loginScreen { display: block; width: 100%; max-width: 420px; margin: 40px auto; padding: 0 15px; }
-        .login-card { background: #ffffff; width: 100%; padding: 40px 30px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); text-align: center; border-top: 5px solid #d97706; border-bottom: 1px solid #e2e8f0; }
-        .login-logo { width: 140px; height: auto; margin-bottom: 15px; }
-        .login-card h2 { color: #064e3b; margin-bottom: 6px; font-size: 24px; font-weight: 700; }
-        .login-card p { color: #64748b; font-size: 13px; margin-bottom: 25px; font-style: italic; }
-        
-        .field-label { display: block; text-align: left; font-size: 11px; font-weight: bold; color: #064e3b; margin-bottom: 6px; letter-spacing: 0.5px; }
-        .login-field { width: 100%; padding: 12px; margin-bottom: 18px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 16px; font-weight: bold; letter-spacing: 1px; outline: none; background: #ffffff; color: #000000; text-align: center; transition: border-color 0.2s; }
-        .login-field:focus { border-color: #d97706; }
-        
-        .login-btn { width: 100%; padding: 14px; background: #064e3b; color: #fef08a; border: 1px solid #d97706; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; margin-bottom: 10px; display: block; transition: background 0.2s; }
-        .login-btn:hover { background: #022c22; }
-        
-        .demo-shortcut-box { margin-top: 20px; background: #f1f5f9; padding: 12px; border-radius: 6px; font-size: 12px; color: #475569; line-height: 1.6; text-align: left; border: 1px solid #e2e8f0; }
+// ✅ FORCE CLEAR & RE-SEED DATABASE ON LOAD
+localStorage.removeItem('PV_OS_STOCK');
+localStorage.removeItem('PV_OS_SALES');
+localStorage.removeItem('PV_OS_PURCHASES');
 
-        /* 🏠 TOP NAVIGATION BAR PANELS */
-        #dashboardScreen { display: none; min-height: 100vh; flex-direction: column; background-color: #f8fafc; }
-        .top-navbar { background: #064e3b; color: white; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #d97706; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: relative; z-index: 2000; }
-        .navbar-brand { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .hamburger-icon { font-size: 24px; color: #fef08a; cursor: pointer; padding-right: 5px; font-weight: bold; }
-        .navbar-logo { height: 35px; width: auto; background: white; border-radius: 4px; padding: 2px; }
-        .navbar-brand h1 { font-size: 18px; font-weight: 700; color: #fef08a; letter-spacing: 0.5px; }
-        .navbar-right-controls { display: flex; align-items: center; gap: 20px; }
-        .notification-bell-box { position: relative; cursor: pointer; font-size: 20px; }
-        .bell-badge { position: absolute; top: -6px; right: -8px; background: #ef4444; color: white; font-size: 10px; font-weight: bold; border-radius: 50%; padding: 2px 6px; border: 1px solid #064e3b; }
-        .navbar-user { display: flex; align-items: center; gap: 15px; font-size: 13px; font-weight: 500; }
-        .logout-link { color: #fca5a5; cursor: pointer; font-weight: bold; text-decoration: none; background: rgba(239,68,68,0.1); padding: 4px 10px; border-radius: 4px; border: 1px solid rgba(252,165,165,0.2); }
-        .role-badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; background: #fef08a; color: #854d0e; text-transform: uppercase; }
-        .outlet-badge { padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; background: #2563eb; color: white; }
+const IMMUTABLE_STOCK_SEED = [
+    { id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: 76.60, gst: 12, stock: 140 },
+    { id: 102, product_name: "REXIPRA LS TAB 10'S", rack: "B-12", batch: "KX3099", expiry: "11/27", rate: 78.57, gst: 12, stock: 90 },
+    { id: 103, product_name: "PAN D CAPSULE 10'S", rack: "C-05", batch: "PAN9942A", expiry: "05/26", rate: 145.00, gst: 12, stock: 45 },
+    { id: 104, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1250 }
+];
+const IMMUTABLE_SALES_SEED = [
+    { invoice: "PV-2026-00481", patient: "Rahul Chakraborty", doctor: "Dr. P. Maitra", value: 1688.10 }
+];
+const IMMUTABLE_PURCHASE_SEED = [
+    { voucher: "PV-PUR-00101", supplier: "PharmaOperational Wholesalers Ltd.", date: "15/06/2026", value: 24500.00 }
+];
 
-        /* ☰ AUTOMATIC SLIDE OPEN SIDEBAR ON HOVER */
-        .workspace { display: flex; flex: 1; position: relative; min-height: calc(100vh - 62px); }
-        .sidebar { background: #0f172a; color: #cbd5e1; width: 60px; padding: 20px 0; display: flex; flex-direction: column; gap: 4px; box-shadow: 4px 0 15px rgba(0,0,0,0.05); position: absolute; top: 0; left: 0; bottom: 0; z-index: 1500; transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; white-space: nowrap; }
-        .sidebar:hover { width: 260px; }
-        
-        .menu-item { padding: 14px 20px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid transparent; transition: background 0.2s; }
-        .menu-item:hover, .menu-item.active { background: #1e293b; color: #ffffff; border-left-color: #d97706; }
-        .menu-icon { font-size: 16px; display: inline-block; width: 20px; text-align: center; }
-        .menu-text { margin-left: 15px; opacity: 0; transition: opacity 0.2s; display: inline-block; }
-        .sidebar:hover .menu-text { opacity: 1; }
-        .menu-arrow { font-size: 10px; opacity: 0; transition: opacity 0.2s; }
-        .sidebar:hover .menu-arrow { opacity: 1; }
+localStorage.setItem('PV_OS_STOCK', JSON.stringify(IMMUTABLE_STOCK_SEED));
+localStorage.setItem('PV_OS_SALES', JSON.stringify(IMMUTABLE_SALES_SEED));
+localStorage.setItem('PV_OS_PURCHASES', JSON.stringify(IMMUTABLE_PURCHASE_SEED));
 
-        .submenu-list { background: #020617; display: none; padding: 4px 0; }
-        .submenu-list.open { display: block; }
-        .submenu-item { padding: 11px 20px 11px 55px; font-size: 13px; color: #94a3b8; cursor: pointer; transition: color 0.2s; display: block; }
-        .submenu-item:hover, .submenu-item.active { color: #fef08a; background: #0f172a; font-weight: 600; }
+function pullStock() { return JSON.parse(localStorage.getItem('PV_OS_STOCK')); }
+function pullSales() { return JSON.parse(localStorage.getItem('PV_OS_SALES')); }
+function pullPurchases() { return JSON.parse(localStorage.getItem('PV_OS_PURCHASES')); }
+function commitDb(s, b, p) { 
+    if(s) localStorage.setItem('PV_OS_STOCK', JSON.stringify(s)); 
+    if(b) localStorage.setItem('PV_OS_SALES', JSON.stringify(b)); 
+    if(p) localStorage.setItem('PV_OS_PURCHASES', JSON.stringify(p)); 
+    triggerMargWatchdogAudit();
+}
 
-        /* 🏠 MAIN RUNTIME PANELS */
-        .main-content { flex: 1; padding: 30px; margin-left: 60px; overflow-y: auto; position: relative; background-color: #f8fafc; }
-        .view-panel { display: none; position: relative; z-index: 1; animation: fadeIn 0.2s ease-out; }
-        .view-panel.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* PVO BRANDING */
-        .brand-landing-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 65vh; text-align: center; padding: 40px; }
-        .big-center-logo { width: 260px; height: auto; margin-bottom: 25px; filter: drop-shadow(0 10px 25px rgba(6,78,59,0.12)); background: white; padding: 15px; border-radius: 16px; border: 1px solid #e2e8f0; }
-        .brand-landing-wrapper h2 { color: #064e3b; font-size: 32px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.5px; }
-        
-        /* HOTKEY STRIP SYSTEM Style */
-        .hotkey-banner-strip { background: #fffbeb; border: 1px solid #fef3c7; padding: 8px 15px; border-radius: 6px; margin-bottom: 15px; font-size: 12px; color: #b45309; font-weight: bold; display: flex; gap: 15px; }
-        .hotkey-badge { background: #d97706; color: white; padding: 1px 5px; border-radius: 4px; font-size: 11px; }
+const usersRegistry = { '7029719074': { name: 'Rahul Chakraborty', role: 'superadmin', outlet: 'All Outlets Hub', permissions: ['sale'] } };
+let activeCart = []; let temporaryPurchaseCart = []; let generatedOTPCode = ""; let activeLoggedUser = null;
 
-        /* TABLE & BUTTONS */
-        table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
-        th { background-color: #064e3b; color: white; padding: 12px 12px; text-align: left; border-bottom: 3px solid #d97706; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-        td { padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: left; background: rgba(255,255,255,0.9); color: #334155; font-weight: 500; }
-        .btn-container { margin-top: 25px; display: flex; gap: 15px; justify-content: flex-end; }
-        .btn { padding: 12px 24px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; }
-        .btn-primary { background: #064e3b; color: #fef08a; border: 1px solid #d97706; }
-        .btn-success { background: #d97706; color: white; border: 1px solid #b45309; }
-        .btn-danger { background: #ef4444; color: white; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; }
-    </style>
-</head>
-<body>
+window.addEventListener('keydown', function(event) {
+    if (document.getElementById('dashboardScreen').style.display === 'flex') {
+        if (event.key === 'F2') { event.preventDefault(); showSubView('newSaleView', document.querySelector('.submenu-item')); }
+        if (event.key === 'F3') { event.preventDefault(); showSubView('newSaleView', document.querySelector('.submenu-item')); setTimeout(() => document.getElementById('searchBox').focus(), 150); }
+        if (event.key === 'F4') { event.preventDefault(); showSubView('stockInventoryView', null); }
+    }
+});
 
-<div id="loginScreen">
-    <div class="login-card">
-        <img class="login-logo" src="logo.jpg" alt="PharmaVigour Logo">
-        <h2>PharmaVigour OS</h2>
-        <p>Enterprise Network Security Access Gateway</p>
-        <div id="phoneSection">
-            <label class="field-label">ENTER REGISTERED MOBILE NUMBER</label>
-            <input type="tel" id="userPhone" class="login-field" placeholder="7029719074" maxlength="10">
-            <button class="login-btn" onclick="generateAndSendSecureOTP()">Generate Secure OTP</button>
-        </div>
-        <div id="otpBoxSection" style="display:none;">
-            <input type="password" id="inputOtp" class="login-field" placeholder="••••" maxlength="4">
-            <button class="login-btn" onclick="verifyReceivedOTPCode()">Verify Token & Authorize Session</button>
-        </div>
-    </div>
-</div>
+function triggerMargWatchdogAudit() {
+    let items = pullStock(); let alertCount = 0;
+    items.forEach(item => {
+        let expParts = item.expiry.split('/');
+        let expMonth = parseInt(expParts[0]); let expYear = parseInt("20" + expParts[1]);
+        if (expYear < 2026 || (expYear === 2026 && expMonth <= 6)) { alertCount++; }
+    });
+    const badge = document.getElementById('navAlertBadge');
+    if(badge) badge.innerText = alertCount;
+}
 
-<div id="dashboardScreen" style="display:none;">
-    <div class="top-navbar">
-        <div class="navbar-brand" onclick="showView('homeView')">
-            <span class="hamburger-icon">☰</span>
-            <img class="navbar-logo" src="logo.jpg" alt="Logo">
-            <h1>PharmaVigour OS</h1>
-        </div>
-        <div class="navbar-right-controls">
-            <div class="notification-bell-box" onclick="showView('stockInventoryView')">
-                <span>🔔</span><span id="navAlertBadge" class="bell-badge">0</span>
-            </div>
-            <div class="navbar-user">
-                <span class="logout-link" onclick="location.reload()">Secure Logout</span>
-            </div>
-        </div>
-    </div>
+function generateAndSendSecureOTP() {
+    const phoneInput = document.getElementById('userPhone').value.trim();
+    if (phoneInput === '7029719074') {
+        activeLoggedUser = usersRegistry[phoneInput]; generatedOTPCode = "1234";
+        document.getElementById('phoneSection').style.display = 'none';
+        document.getElementById('otpBoxSection').style.display = 'block';
+        alert("Security Access Code Token Generated!\nEnter OTP Code: 1234");
+    } else { alert("Error: Mobile number not registered within security parameters."); }
+}
 
-    <div class="workspace">
-        <div class="sidebar">
-            <div class="menu-item" onclick="toggleSubmenu('saleSub')">
-                <div><span class="menu-icon">🧮</span><span class="menu-text">1. Sale</span></div>
-            </div>
-            <div id="saleSub" class="submenu-list">
-                <div class="submenu-item" onclick="showSubView('newSaleView', this)">New Sale Bill</div>
-                <div class="submenu-item" onclick="showSubView('saleHistoryView', this)">Sale History</div>
-            </div>
-            <div class="menu-item" onclick="toggleSubmenu('purchaseSub')">
-                <div><span class="menu-icon">📦</span><span class="menu-text">2. Purchase</span></div>
-            </div>
-            <div id="purchaseSub" class="submenu-list">
-                <div class="submenu-item" onclick="showSubView('newPurchaseView', this)">New Stock Inward</div>
-                <div class="submenu-item" onclick="showSubView('purchaseHistoryView', this)">Purchase History</div>
-                <div class="submenu-item" onclick="showSubView('stockInventoryView', this)">Current Inventory</div>
-            </div>
-        </div>
+function verifyReceivedOTPCode() {
+    if (document.getElementById('inputOtp').value.trim() === generatedOTPCode) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('dashboardScreen').style.display = 'flex';
+        document.getElementById('print_outlet_name').innerText = `Outlet: ${document.getElementById('loginOutlet').value}`;
+        document.getElementById('activeRoleBadge').innerText = "Super Admin 👑";
+        document.getElementById('activeOutletBadge').innerText = document.getElementById('loginOutlet').value;
+        renderInventoryTable(); renderSalesBookTable(); renderPurchaseHistoryTable();
+        triggerMargWatchdogAudit();
+        showView('homeView');
+    } else { alert("Invalid security token code validation verification failed."); }
+}
 
-        <div class="main-content">
-            <div id="homeView" class="view-panel active">
-                <div class="brand-landing-wrapper">
-                    <img class="big-center-logo" src="logo.jpg" alt="Logo">
-                    <h2>PharmaVigour Operations</h2>
-                    <p>PVO Enterprise Cloud ERP System. Built for Performance and Scalability.</p>
-                </div>
-            </div>
-            <div id="newSaleView" class="view-panel">
-                <div class="hotkey-banner-strip">
-                    <span>⚡ PVO Fast-Track Keys:</span>
-                    <span><span class="hotkey-badge">F3</span> Search</span>
-                </div>
-                <div class="card-box"><div class="panel-title">New Sale Bill Terminal</div></div>
-            </div>
-            <div id="saleHistoryView" class="view-panel"><div class="card-box"><div class="panel-title">Historic Sales Ledger</div></div></div>
-            <div id="newPurchaseView" class="view-panel"><div class="card-box"><div class="panel-title">PVO Stock Inward</div></div></div>
-            <div id="purchaseHistoryView" class="view-panel"><div class="card-box"><div class="panel-title">Purchase History Ledger</div></div></div>
-            <div id="stockInventoryView" class="view-panel"><div class="card-box"><div class="panel-title">PVO Watchdog - Inventory</div></div></div>
-        </div>
-    </div>
-</div>
+function fillQuickDemoAccount(num) { document.getElementById('userPhone').value = num; generateAndSendSecureOTP(); }
+function handleLogoutSystemSession() { location.reload(); }
 
-<script>
-    function generateAndSendSecureOTP() { document.getElementById('phoneSection').style.display='none'; document.getElementById('otpBoxSection').style.display='block'; alert("Your Token: 1234"); }
-    function verifyReceivedOTPCode() { if(document.getElementById('inputOtp').value=='1234') { document.getElementById('loginScreen').style.display='none'; document.getElementById('dashboardScreen').style.display='flex'; } }
-    function showView(vId) { document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); document.getElementById(vId).classList.add('active'); }
-    function showSubView(vId, el) { showView(vId); }
-    function toggleSubmenu(id) { document.getElementById(id).classList.toggle('open'); }
-</script>
-</body>
-</html>
+function renderInventoryTable() {
+    const tbody = document.getElementById('inventoryTableBody'); if(!tbody) return; tbody.innerHTML = '';
+    pullStock().forEach(item => {
+        const tr = document.createElement('tr');
+        let expParts = item.expiry.split('/');
+        let expMonth = parseInt(expParts[0]); let expYear = parseInt("20" + expParts[1]);
+        let isExpired = (expYear < 2026 || (expYear === 2026 && expMonth <= 6));
+        let expiryCell = isExpired ? `<span class="expiry-alert-badge">⚠️ ${item.expiry} (EXPIRED)</span>` : item.expiry;
+        tr.innerHTML = `<td>#STK0${item.id}</td><td><strong>${item.product_name}</strong></td>`+
+            `<td><span style="background:#f1f5f9; padding:4px 8px; border-radius:4px; font-weight:bold;">${item.rack}</span></td>`+
+            `<td>${item.batch}</td><td>${expiryCell}</td><td>₹${item.rate.toFixed(2)}</td><td>${item.gst}%</td>`+
+            `<td><strong style="color:${isExpired ? '#ef4444' : '#166534'}">${item.stock} Strips</strong></td>`;
+        tbody.appendChild(tr);
+    });
+}
+
+function renderSalesBookTable() {
+    const tbody = document.getElementById('salesBookTableBody'); if(!tbody) return; tbody.innerHTML = '';
+    let totalSum = 0;
+    pullSales().forEach(bill => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><strong>${bill.invoice}</strong></td><td>${bill.patient}</td><td>${bill.doctor}</td><td><strong>₹${bill.value.toFixed(2)}</strong></td>`;
+        tbody.appendChild(tr);
+        totalSum += bill.value;
+    });
+    const chartLabel = document.getElementById('chart_live_val');
+    if(chartLabel) chartLabel.innerText = '₹ ' + totalSum.toFixed(2);
+}
+
+function renderPurchaseHistoryTable() {
+    const tbody = document.getElementById('purchaseHistoryBody'); if(!tbody) return; tbody.innerHTML = '';
+    let purchases = pullPurchases();
+    if(purchases.length === 0) { document.getElementById('purHistEmptyRow').style.display = 'table-row'; return; }
+    purchases.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><strong>${item.voucher}</strong></td><td>${item.supplier}</td><td>${item.date}</td><td><strong>₹${item.value.toFixed(2)}</strong></td>`;
+        tbody.appendChild(tr);
+    });
+}
+
+const searchBox = document.getElementById('searchBox');
+const suggestionsBox = document.getElementById('suggestions');
+const billingBody = document.getElementById('billingBody');
+const emptyRow = document.getElementById('emptyRow');
+
+searchBox.addEventListener('input', function() {
+    const query = this.value.toLowerCase().trim(); suggestionsBox.innerHTML = '';
+    if (query.length < 1) { suggestionsBox.style.display = 'none'; return; }
+    let matches = pullStock().filter(p => p.product_name.toLowerCase().includes(query));
+    if (matches.length > 0) {
+        matches.forEach(product => {
+            const div = document.createElement('div'); div.className = 'suggestion-item';
+            div.innerText = `${product.product_name} - Available Stock: ${product.stock} Strips (₹${product.rate}/strip)`;
+            div.onclick = function() { addProductToActiveBillingCart(product); };
+            suggestionsBox.appendChild(div);
+        });
+        suggestionsBox.style.display = 'block';
+    } else { suggestionsBox.style.display = 'none'; }
+});
+
+function addProductToActiveBillingCart(product) {
+    searchBox.value = ''; suggestionsBox.style.display = 'none';
+    if (!activeCart.find(item => item.id === product.id)) { activeCart.push({...product, qty: 1, discount: 0}); }
+    renderActiveCartTableManifest();
+}
+
+function renderActiveCartTableManifest() {
+    billingBody.querySelectorAll('tr:not(#emptyRow)').forEach(r => r.remove());
+    if (activeCart.length === 0) { emptyRow.style.display = 'table-row'; calculateBillFinancialTotals(); return; }
+    emptyRow.style.display = 'none';
+    activeCart.forEach((item, index) => {
+        const tr = document.createElement('tr');
+        const q = parseFloat(item.qty) || 0; const r = parseFloat(item.rate) || 0; const d = parseFloat(item.discount) || 0; const g = parseFloat(item.gst) || 0;
+        const subtotal = (r * q - (r * q * (d / 100))) * (1 + g / 100);
+        tr.innerHTML = `<td><strong>${item.product_name}</strong></td><td>${item.rack}</td><td>${item.batch}</td><td>${item.expiry}</td>`+
+            `<td><input type="number" class="qty-input" value="${q}" oninput="activeCart[${index}].qty=this.value; renderActiveCartTableManifest();"><span class="print-text-val">${q}</span></td>`+
+            `<td>₹${r.toFixed(2)}</td>`+
+            `<td><input type="number" class="disc-input" value="${d}" oninput="activeCart[${index}].discount=this.value; renderActiveCartTableManifest();"><span class="print-text-val">${d}%</span></td>`+
+            `<td>${g}%</td><td><strong>₹${subtotal.toFixed(2)}</strong></td>`+
+            `<td><button class="btn-danger" onclick="activeCart.splice(${index},1); renderActiveCartTableManifest();">Delete</button></td>`;
+        billingBody.appendChild(tr);
+    });
+    calculateBillFinancialTotals();
+}
+
+function calculateBillFinancialTotals() {
+    let gross = 0, totalDiscount = 0, gstTotal = 0;
+    activeCart.forEach(item => {
+        const q = parseFloat(item.qty) || 0; const r = parseFloat(item.rate) || 0; const d = parseFloat(item.discount) || 0; const g = parseFloat(item.gst) || 0;
+        const base = r * q; const disc = base * (d / 100); const tax = (base - disc) * (g / 100);
+        gross += base; totalDiscount += disc; gstTotal += tax;
+    });
+    const netPayable = gross - totalDiscount + gstTotal;
+    document.getElementById('lbl_gross').innerHTML = '₹ ' + gross.toFixed(2);
+    document.getElementById('lbl_disc').innerHTML = '₹ ' + totalDiscount.toFixed(2);
+    document.getElementById('lbl_gst').innerHTML = '₹ ' + gstTotal.toFixed(2);
+    document.getElementById('lbl_net').innerHTML = '₹ ' + netPayable.toFixed(2);
+}
+
+function processSaleInvoiceDeductStockCentral() {
+    if(activeCart.length === 0) { alert("Cart empty!"); return; }
+    let stock = pullStock(); let sales = pullSales();
+    document.getElementById('lbl_patientName').innerText = document.getElementById('patientName').value;
+    document.getElementById('lbl_patientContact').innerText = document.getElementById('patientContact').value;
+    document.getElementById('lbl_docName').innerText = document.getElementById('docName').value;
+    calculateBillFinancialTotals();
+    activeCart.forEach(cartItem => { let item = stock.find(s => s.id === cartItem.id); if(item) item.stock -= cartItem.qty; });
+    sales.push({ invoice: `PV-2026-00${Math.floor(Math.random()*900)+100}`, patient: document.getElementById('patientName').value, doctor: document.getElementById('docName').value, value: parseFloat(document.getElementById('lbl_net').innerText.replace('₹ ', '')) });
+    commitDb(stock, sales, null);
+    setTimeout(() => { window.print(); activeCart = []; renderActiveCartTableManifest(); renderInventoryTable(); renderSalesBookTable(); }, 250);
+}
+
+function handleSmartCSVUpload(event) {
+    const file = event.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const text = e.target.result; const lines = text.split('\n');
+        temporaryPurchaseCart = [];
+        for (let i = 1; i < lines.length; i++) {
+            if (!lines[i].trim()) continue; 
+            const cols = lines[i].split(',');
+            if (cols.length >= 7) {
+                const name = cols[1].trim().replace(/"/g, ''); 
+                const qty = parseInt(cols[4]) || 0;
+                const rate = parseFloat(cols[5]) || 0;
+                if (name && name.toLowerCase() !== 'product name') { 
+                    temporaryPurchaseCart.push({ 
+                        product_name: name, rack: cols[2] || "A-01", 
+                        batch: cols[3] || "BAT-NEW", expiry: cols[6] || "12/28", 
+                        rate: rate, gst: parseInt(cols[7]) || 12, qty: qty 
+                    }); 
+                }
+            }
+        }
+        renderPurchaseCartTable();
+    };
+    reader.readAsText(file);
+}
+
+function renderPurchaseCartTable() {
+    const tbody = document.getElementById('purchaseCartBody'); const emptyRow = document.getElementById('purEmptyRow');
+    tbody.querySelectorAll('tr:not(#purEmptyRow)').forEach(r => r.remove());
+    if(temporaryPurchaseCart.length === 0) { emptyRow.style.display = 'table-row'; document.getElementById('deleteCsvBtn').style.display='none'; return; }
+    emptyRow.style.display = 'none'; document.getElementById('deleteCsvBtn').style.display='inline-block';
+    temporaryPurchaseCart.forEach(item => {
+        const tr = document.createElement('tr'); 
+        tr.innerHTML = `<td><strong>${item.product_name}</strong></td>`+
+            `<td><span style="background:#fffbeb; padding:2px 6px; border-radius:4px; font-weight:bold; color:#b45309;">${item.rack}</span></td>`+
+            `<td>${item.batch}</td><td>${item.expiry}</td><td><strong>${item.qty} Strips</strong></td>`+
+            `<td>₹${item.rate.toFixed(2)}</td><td>${item.gst}%</td><td><strong>₹${(item.rate * item.qty).toFixed(2)}</strong></td>`;
+        tbody.appendChild(tr);
+    });
+}
+
+function saveEntirePurchaseCartToStock() {
+    if(temporaryPurchaseCart.length === 0) { alert("Please parse a CSV file first!"); return; }
+    let stock = pullStock(); let purchases = pullPurchases(); let currentInvoiceTotal = 0;
+    temporaryPurchaseCart.forEach(item => {
+        currentInvoiceTotal += (item.rate * item.qty);
+        let match = stock.find(s => s.product_name.toLowerCase() === item.product_name.toLowerCase() && s.batch === item.batch);
+        if(match) { match.stock += item.qty; } 
+        else { stock.push({ id: stock.length + 101, product_name: item.product_name, rack: item.rack, batch: item.batch, expiry: item.expiry, rate: item.rate, gst: item.gst, stock: item.qty }); }
+    });
+    purchases.push({ voucher: `PV-PUR-00${Math.floor(Math.random()*900)+100}`, supplier: document.getElementById('supplierName').value, date: "19/06/2026", value: currentInvoiceTotal });
+    commitDb(stock, null, purchases); 
+    alert("🎉 Success: Stock saved to inventory!");
+    temporaryPurchaseCart = []; renderPurchaseCartTable(); renderInventoryTable(); renderPurchaseHistoryTable();
+    showView('purchaseHistoryView'); 
+}
+
+function deleteUploadedCSVProcess() { temporaryPurchaseCart = []; renderPurchaseCartTable(); }
+
+function showView(vId) { 
+    document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); 
+    document.getElementById(vId).classList.add('active'); 
+    if(vId=='stockInventoryView') renderInventoryTable(); 
+    if(vId=='saleHistoryView') renderSalesBookTable(); 
+    if(vId=='purchaseHistoryView') renderPurchaseHistoryTable(); 
+}
+function showSubView(vId, el) { 
+    showView(vId); 
+    document.querySelectorAll('.sidebar .submenu-item, .sidebar .menu-item').forEach(i => i.classList.remove('active')); 
+    if(el) el.classList.add('active'); 
+}
+function toggleSubmenu(id) { document.getElementById(id).classList.toggle('open'); }
