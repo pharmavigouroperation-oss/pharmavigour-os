@@ -181,6 +181,7 @@
             </div>
             <div id="purchaseSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('newPurchaseView', this)">New Stock Inward</div>
+                <div class="submenu-item" onclick="showSubView('purchaseHistoryView', this)">Purchase History</div>
                 <div class="submenu-item" onclick="showSubView('stockInventoryView', this)">Current Inventory</div>
             </div>
         </div>
@@ -283,7 +284,7 @@
                 </div>
             </div>
 
-            <!-- 📥 🌟 VIEW: 2.1 NEW PURCHASE (SMART CSV FILE PARSER INPUT GATEWAY) -->
+            <!-- 📥 VIEW: 2.1 NEW PURCHASE -->
             <div id="newPurchaseView" class="view-panel">
                 <div class="csv-upload-box">
                     <h3 style="color:#064e3b; margin-bottom:10px;">📦 Smart Bulk Stock Inward Gateway (CSV)</h3>
@@ -297,7 +298,11 @@
                 
                 <div class="card-box">
                     <div class="panel-title">Interactive Purchase Bill Cart Entry View</div>
-                    <div style="overflow-x: auto; margin-top:15px;">
+                    <div class="meta-grid" style="grid-template-columns: 1fr 1fr; margin-bottom:15px;">
+                        <div class="form-group"><label>Supplier / Distributor Name</label><input type="text" id="supplierName" value="PharmaOperational Wholesalers Ltd."></div>
+                        <div class="form-group"><label>Inward Date</label><input type="text" value="19/06/2026" readonly></div>
+                    </div>
+                    <div style="overflow-x: auto;">
                         <table>
                             <thead>
                                 <tr style="background:#064e3b; color:white;">
@@ -315,7 +320,23 @@
                 </div>
             </div>
 
-            <!-- 📊 VIEW: 2.2 CURRENT STOCK INVENTORY -->
+            <!-- 📜 🌟 NEW VIEW: 2.2 PURCHASE HISTORY REPORT MODULE -->
+            <div id="purchaseHistoryView" class="view-panel">
+                <div class="card-box">
+                    <div class="panel-title">Consolidated Stock Purchase & Inward History Ledger</div>
+                    <p style="color:#64748b; font-size:13px; font-style:italic; margin-bottom:15px;">Audit log of all CSV and manual wholesale invoices received by nodes</p>
+                    <table>
+                        <thead>
+                            <tr><th>Purchase ID</th><th>Supplier / Distributor</th><th>Inward Date</th><th>Total Invoice Value (₹)</th></tr>
+                        </thead>
+                        <tbody id="purchaseHistoryBody">
+                            <tr class="empty-row" id="purHistEmptyRow"><td colspan="4" style="text-align:center; padding:20px; color:#64748b; font-style:italic;">No historic purchase vouchers recorded yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 📊 VIEW: 2.3 CURRENT STOCK INVENTORY -->
             <div id="stockInventoryView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Live Network Stock Inventory Balance Ledger</div>
@@ -333,7 +354,7 @@
 </div>
 
 <script>
-    // ENTERPRISE HARD RECORD BALANCES SEEDS
+    // CORE ENTERPRISE DATABASE SEEDS
     const IMMUTABLE_STOCK_SEED = [
         { id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: 76.60, gst: 12, stock: 140 },
         { id: 102, product_name: "REXIPRA LS TAB 10'S", rack: "B-12", batch: "KX3099", expiry: "11/27", rate: 78.57, gst: 12, stock: 90 },
@@ -343,13 +364,22 @@
     const IMMUTABLE_SALES_SEED = [
         { invoice: "PV-2026-00481", patient: "Rahul Chakraborty", doctor: "Dr. P. Maitra", value: 1688.10 }
     ];
+    const IMMUTABLE_PURCHASE_SEED = [
+        { voucher: "PV-PUR-00101", supplier: "PharmaOperational Wholesalers Ltd.", date: "15/06/2026", value: 24500.00 }
+    ];
 
     if (!localStorage.getItem('PV_OS_STOCK')) { localStorage.setItem('PV_OS_STOCK', JSON.stringify(IMMUTABLE_STOCK_SEED)); }
     if (!localStorage.getItem('PV_OS_SALES')) { localStorage.setItem('PV_OS_SALES', JSON.stringify(IMMUTABLE_SALES_SEED)); }
+    if (!localStorage.getItem('PV_OS_PURCHASES')) { localStorage.setItem('PV_OS_PURCHASES', JSON.stringify(IMMUTABLE_PURCHASE_SEED)); }
 
     function pullStock() { return JSON.parse(localStorage.getItem('PV_OS_STOCK')); }
     function pullSales() { return JSON.parse(localStorage.getItem('PV_OS_SALES')); }
-    function commitDb(s, b) { if(s) localStorage.setItem('PV_OS_STOCK', JSON.stringify(s)); if(b) localStorage.setItem('PV_OS_SALES', JSON.stringify(b)); }
+    function pullPurchases() { return JSON.parse(localStorage.getItem('PV_OS_PURCHASES')); }
+    function commitDb(s, b, p) { 
+        if(s) localStorage.setItem('PV_OS_STOCK', JSON.stringify(s)); 
+        if(b) localStorage.setItem('PV_OS_SALES', JSON.stringify(b)); 
+        if(p) localStorage.setItem('PV_OS_PURCHASES', JSON.stringify(p)); 
+    }
 
     const usersRegistry = { '7029719074': { name: 'Rahul Chakraborty', role: 'superadmin', outlet: 'All Outlets Hub', permissions: ['sale'] } };
     let activeCart = []; let temporaryPurchaseCart = []; let generatedOTPCode = ""; let activeLoggedUser = null;
@@ -371,7 +401,7 @@
             document.getElementById('print_outlet_name').innerText = `Outlet: ${document.getElementById('loginOutlet').value}`;
             document.getElementById('activeRoleBadge').innerText = "Super Admin 👑";
             document.getElementById('activeOutletBadge').innerText = document.getElementById('loginOutlet').value;
-            renderInventoryTable(); renderSalesBookTable();
+            renderInventoryTable(); renderSalesBookTable(); renderPurchaseHistoryTable();
             showView('homeView');
         } else { alert("Invalid security token code validation verification failed."); }
     }
@@ -401,6 +431,19 @@
         });
         const chartLabel = document.getElementById('chart_live_val');
         if(chartLabel) chartLabel.innerText = '₹ ' + totalSum.toFixed(2);
+    }
+
+    // 🌟 RENDERER: PURCHASE HISTORY
+    function renderPurchaseHistoryTable() {
+        const tbody = document.getElementById('purchaseHistoryBody'); if(!tbody) return; tbody.innerHTML = '';
+        let purchases = pullPurchases();
+        if(purchases.length === 0) { document.getElementById('purHistEmptyRow').style.display = 'table-row'; return; }
+        
+        purchases.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td><strong>${item.voucher}</strong></td><td>${item.supplier}</td><td>${item.date}</td><td><strong>₹${item.value.toFixed(2)}</strong></td>`;
+            tbody.appendChild(tr);
+        });
     }
 
     // 🛒 INVOICE CONSOLE ROUTINES
@@ -478,18 +521,18 @@
         activeCart.forEach(cartItem => { let item = stock.find(s => s.id === cartItem.id); if(item) item.stock -= cartItem.qty; });
         sales.push({ invoice: `PV-2026-00${Math.floor(Math.random()*900)+100}`, patient: document.getElementById('patientName').value, doctor: document.getElementById('docName').value, value: parseFloat(document.getElementById('lbl_net').innerText.replace('₹ ', '')) });
         
-        commitDb(stock, sales);
+        commitDb(stock, sales, null);
         
         setTimeout(() => { window.print(); activeCart = []; renderActiveCartTableManifest(); renderInventoryTable(); renderSalesBookTable(); }, 250);
     }
 
-    // 📥 🧠 SMART CSV CONVERT PARSER LOGIC FOR BULK STOCK INWARD
+    // 📥 SMART CSV PARSER ENGINE
     function handleSmartCSVUpload(event) {
         const file = event.target.files[0]; if (!file) return;
         const reader = new FileReader();
         reader.onload = function(e) {
             const text = e.target.result; const lines = text.split('\n');
-            temporaryPurchaseCart = []; // Wipe out stack
+            temporaryPurchaseCart = [];
             
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue; 
@@ -534,14 +577,18 @@
         });
     }
 
+    // 💾 SAVE & INJECT TO HISTORIC AUDIT LEDGER LOCK
     function saveEntirePurchaseCartToStock() {
         if(temporaryPurchaseCart.length === 0) { alert("Please parse a CSV file first!"); return; }
         let stock = pullStock();
+        let purchases = pullPurchases();
+        let currentInvoiceTotal = 0;
         
         temporaryPurchaseCart.forEach(item => {
+            currentInvoiceTotal += (item.rate * item.qty);
             let match = stock.find(s => s.product_name.toLowerCase() === item.product_name.toLowerCase() && s.batch === item.batch);
             if(match) { 
-                match.stock += item.qty; // Plus existing batch stock Allocation
+                match.stock += item.qty;
             } else { 
                 stock.push({ 
                     id: stock.length + 101, 
@@ -556,17 +603,26 @@
             }
         });
         
-        commitDb(stock, null); 
-        alert("🎉 Success: Invoice stock successfully added into Central Repository!");
+        // Push right inside the new History Registry Latch
+        purchases.push({
+            voucher: `PV-PUR-00${Math.floor(Math.random()*900)+100}`,
+            supplier: document.getElementById('supplierName').value,
+            date: "19/06/2026",
+            value: currentInvoiceTotal
+        });
+        
+        commitDb(stock, null, purchases); 
+        alert("🎉 Success: Invoice stock successfully recorded and saved to Purchase History!");
         temporaryPurchaseCart = []; 
         renderPurchaseCartTable(); 
-        renderInventoryTable(); 
-        showView('stockInventoryView'); // Dynamic redirect to live layout viewport
+        renderInventoryTable();
+        renderPurchaseHistoryTable();
+        showView('purchaseHistoryView'); // Soft redirect straight to history vault!
     }
     function deleteUploadedCSVProcess() { temporaryPurchaseCart = []; renderPurchaseCartTable(); }
 
     // VIEW ROUTING
-    function showView(vId) { document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); document.getElementById(vId).classList.add('active'); if(vId=='stockInventoryView') renderInventoryTable(); if(vId=='saleHistoryView') renderSalesBookTable(); }
+    function showView(vId) { document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); document.getElementById(vId).classList.add('active'); if(vId=='stockInventoryView') renderInventoryTable(); if(vId=='saleHistoryView') renderSalesBookTable(); if(vId=='purchaseHistoryView') renderPurchaseHistoryTable(); }
     function showSubView(vId, el) { showView(vId); document.querySelectorAll('.sidebar .submenu-item, .sidebar .menu-item').forEach(i => i.classList.remove('active')); if(el) el.classList.add('active'); }
     function toggleSubmenu(id) { document.getElementById(id).classList.toggle('open'); }
 </script>
