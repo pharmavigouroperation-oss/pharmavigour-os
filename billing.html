@@ -40,7 +40,7 @@
             .container { box-shadow: none; padding: 0; max-width: 100%; }
             .search-section, .btn-container, .delete-btn, th:last-child, td:last-child { display: none !important; }
             table { min-width: 100%; }
-            th { background-color: #e2e8f0 !important; color: black !important; border: 1px solid #94a3b8; }
+            th { background-color: #e2e2e2 !important; color: black !important; border: 1px solid #94a3b8; }
             td { border: 1px solid #cbd5e1; }
             .qty-input, .disc-input { border: none; background: transparent; font-weight: bold; }
         }
@@ -52,7 +52,7 @@
     <div class="container">
         <div class="header">
             <h1>PharmaVigour OS</h1>
-            <span class="store-tag">Outlet: Shantipur</span>
+            <span class="store-tag">Outlet: Main</span>
         </div>
         <div class="meta-grid">
             <div class="form-group"><label>Patient Name</label><input type="text" id="patientName" value="Rahul Chakraborty"></div>
@@ -91,7 +91,6 @@
 </div>
 
 <script>
-    // 💡 আপনার CSV ফাইল থেকে ওষুধের লাইভ ডাটা সরাসরি কোডে এম্বেড করে দেওয়া হলো
     const globalStock = [
         {
             id: 1,
@@ -139,7 +138,7 @@
         if (existing) { 
             existing.qty += 1; 
         } else { 
-            activeCart.push({...product, qty: 1, discount: 0}); 
+            activeCart.push({...product, qty: 1, discount: 25}); // ডিফল্ট ২৫% ডিসকাউন্ট সেট করা হলো স্ক্রিনশট অনুযায়ী
         }
         renderCart();
     }
@@ -152,6 +151,7 @@
             return; 
         }
         emptyRow.style.display = 'none';
+        
         activeCart.forEach((item, index) => {
             const tr = document.createElement('tr');
             const rateVal = parseFloat(item.rate) || 0;
@@ -160,20 +160,41 @@
             
             const subtotal = (rateVal * item.qty) - ((rateVal * item.qty) * (discVal / 100));
             
-            tr.innerHTML = `<td><strong>${item.product_name}</strong></td>`+
-                `<td>${item.rack || '-'}</td>`+
-                `<td>${item.batch || '-'}</td>`+
-                `<td>${item.expiry || '-'}</td>`+
-                `<td><input type="number" class="qty-input" value="${item.qty}" onchange="activeCart[${index}].qty=parseInt(this.value)||1;renderCart();"></td>`+
-                `<td>₹${rateVal.toFixed(2)}</td>`+
-                `<td><input type="number" class="disc-input" value="${discVal}" onchange="activeCart[${index}].discount=parseFloat(this.value)||0;renderCart();"></td>`+
-                `<td>${gstPercent}%</td>`+
-                `<td><strong>₹${subtotal.toFixed(2)}</strong></td>`+
-                `<td><button class="delete-btn" onclick="activeCart.splice(${index},1);renderCart();">Remove</button></td>`;
+            tr.innerHTML = `<td><strong>${item.product_name}</strong></td>` +
+                `<td>${item.rack || '-'}</td>` +
+                `<td>${item.batch || '-'}</td>` +
+                `<td>${item.expiry || '-'}</td>` +
+                `<td><input type="number" class="qty-input" value="${item.qty}" min="1" oninput="updateQty(${index}, this.value)"></td>` +
+                `<td>₹${rateVal.toFixed(2)}</td>` +
+                `<td><input type="number" class="disc-input" value="${discVal}" min="0" max="100" oninput="updateDisc(${index}, this.value)"></td>` +
+                `<td>${gstPercent}%</td>` +
+                `<td><strong>₹${subtotal.toFixed(2)}</strong></td>` +
+                `<td><button class="delete-btn" onclick="removeItem(${index})">Remove</button></td>`;
             billingBody.appendChild(tr);
         });
         calculateTotals();
     }
+
+    function updateQty(index, val) {
+        activeCart[index].qty = parseInt(val) || 1;
+        renderCart();
+    }
+
+    document.updateQty = updateQty;
+
+    function updateDisc(index, val) {
+        activeCart[index].discount = parseFloat(val) || 0;
+        renderCart();
+    }
+
+    document.updateDisc = updateDisc;
+
+    function removeItem(index) {
+        activeCart.splice(index, 1);
+        renderCart();
+    }
+
+    document.removeItem = removeItem;
 
     function calculateTotals() {
         let gross = 0, disc = 0, gst = 0;
@@ -182,14 +203,16 @@
             const discVal = parseFloat(item.discount) || 0;
             const gstPercent = parseFloat(item.gst) || 0;
 
-            const lg = rateVal * item.qty; 
-            const ld = lg * (discVal / 100); 
-            const tx = lg - ld;
+            const baseAmount = rateVal * item.qty; 
+            const discountAmount = baseAmount * (discVal / 100); 
+            const taxableAmount = baseAmount - discountAmount;
+            const gstAmount = taxableAmount * (gstPercent / 100);
             
-            gross += lg; 
-            disc += ld; 
-            gst += tx * (gstPercent / 100);
+            gross += baseAmount; 
+            disc += discountAmount; 
+            gst += gstAmount;
         });
+        
         document.getElementById('grossTotal').innerText = '₹ ' + gross.toFixed(2);
         document.getElementById('totalDisc').innerText = '₹ ' + disc.toFixed(2);
         document.getElementById('gstTotal').innerText = '₹ ' + gst.toFixed(2);
