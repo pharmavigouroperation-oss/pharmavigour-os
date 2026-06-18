@@ -17,7 +17,8 @@
         .login-field { width: 100%; padding: 12px; margin-bottom: 16px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 15px; outline: none; }
         .login-btn { width: 100%; padding: 12px; background: #064e3b; color: #fef08a; border: 1px solid #d97706; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
         .login-error { color: #ef4444; font-size: 13px; margin-bottom: 12px; display: none; }
-        .quick-demo-btn { margin-top: 15px; background: transparent; color: #d97706; border: 1px dashed #d97706; padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; transition: all 0.2s; }
+        .demo-btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        .quick-demo-btn { flex: 1; background: transparent; color: #d97706; border: 1px dashed #d97706; padding: 8px 6px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
 
         /* 🏠 MAIN DASHBOARD INTERFACE */
         #dashboardScreen { display: none; min-height: 100vh; flex-direction: column; }
@@ -43,7 +44,7 @@
         .view-panel { display: none; position: relative; z-index: 1; }
         .view-panel.active { display: block; }
 
-        /* UI Styling Components */
+        /* UI Components Box styling */
         .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
         .module-card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); text-align: center; cursor: pointer; border: 1px solid #e2e8f0; }
         .module-card:hover { transform: translateY(-3px); border-color: #d97706; box-shadow: 0 10px 15px rgba(0,0,0,0.05); }
@@ -65,7 +66,8 @@
         .btn { padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 14px; }
         .btn-primary { background: #064e3b; color: #fef08a; border: 1px solid #d97706; }
         .btn-success { background: #d97706; color: white; border: 1px solid #b45309; }
-        .btn-danger { background: #ef4444; color: white; border: 1px solid #dc2626; }
+        .btn-danger { background: #ef4444; color: white; border: 1px solid #dc2626; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; }
+        .btn-edit { background: #3b82f6; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; font-weight: bold; margin-right: 5px; }
 
         .search-box { width: 100%; padding: 12px; border: 2px solid #064e3b; border-radius: 6px; font-size: 14px; outline: none; }
         .suggestions-box { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #cbd5e1; border-radius: 0 0 6px 6px; max-height: 200px; overflow-y: auto; z-index: 1000; display: none; }
@@ -76,6 +78,7 @@
         .bill-header-print { display: none; }
         .print-text-val { display: none; font-weight: bold; font-size: 14px; }
         .csv-upload-box { background: #fffbeb; border: 2px dashed #d97706; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px; }
+        .role-badge { padding: 3px 8px; border-radius: 20px; font-size: 12px; font-weight: bold; background: #fef08a; color: #854d0e; }
 
         @media print {
             .sidebar, .top-navbar, .search-section, .btn-container, .delete-btn, th:last-child, td:last-child, .meta-grid input, .qty-input, .disc-input { display: none !important; }
@@ -84,23 +87,27 @@
             .bill-header-print { display: flex !important; align-items: center; justify-content: space-between; border-bottom: 2px solid #064e3b; padding-bottom: 15px; margin-bottom: 25px; }
             th { background-color: #f1f5f9 !important; color: black !important; border: 1px solid #94a3b8 !important; }
             td { border: 1px solid #cbd5e1 !important; background: transparent !important; }
-            .total-row { background-color: #f8fafc !important; color: #064e3b !important; border: 1px solid #94a3b8 !important; }
         }
     </style>
 </head>
 <body>
 
-<!-- 🔐 1. LOGIN MODULE -->
+<!-- 🔐 1. LOGIN MODULE (WITH TWO-ROLES ASSIGNMENT) -->
 <div id="loginScreen">
     <div class="login-card">
         <img class="login-logo" src="logo.jpg" alt="PharmaVigour Logo">
         <h2>PharmaVigour OS</h2>
         <p>Bridging Expertise with Expansion</p>
         <div id="loginError" class="login-error">ভুল ইউজার আইডি বা পাসওয়ার্ড!</div>
-        <input type="text" id="username" class="login-field" placeholder="Operator User ID" value="admin">
-        <input type="password" id="password" class="login-field" placeholder="Security Password" value="password">
+        <input type="text" id="username" class="login-field" placeholder="Operator User ID" value="superadmin">
+        <input type="password" id="password" class="login-field" placeholder="Security Password" value="admin123">
         <button class="login-btn" onclick="handleLogin()">Secure Sign In</button>
-        <button class="quick-demo-btn" onclick="triggerQuickDemoLogin()">⚡ Quick Demo Autologin</button>
+        
+        <!-- ⚡ TWO SEPARATE QUICK LOGIN BUTTONS FOR DEMO -->
+        <div class="demo-btn-group">
+            <button class="quick-demo-btn" onclick="triggerQuickLogin('superadmin', 'admin123')">👑 Super Admin Login</button>
+            <button class="quick-demo-btn" onclick="triggerQuickLogin('staff', 'staff123')">🧑 Staff Operator Login</button>
+        </div>
     </div>
 </div>
 
@@ -112,6 +119,8 @@
             <h1>PharmaVigour OS</h1>
         </div>
         <div class="navbar-user">
+            <span>Role: <span id="activeRoleBadge" class="role-badge">Super Admin</span></span>
+            <span>|</span>
             <span>Outlet: <strong>Shantipur Core</strong></span>
             <span>|</span>
             <span class="logout-link" onclick="handleLogout()">Logout 🔓</span>
@@ -119,47 +128,49 @@
     </div>
 
     <div class="workspace">
+        <!-- SIDEBAR OPTIONS NAVIGATION -->
         <div class="sidebar">
-            <div class="menu-item" onclick="toggleSubmenu('saleSub')">1. Sale <span>▼</span></div>
+            <!-- 1. SALE -->
+            <div class="menu-item side-node" id="side_sale" onclick="toggleSubmenu('saleSub')">1. Sale <span>▼</span></div>
             <div id="saleSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('newSaleView', this)">• New Sale (Billing)</div>
-                <div class="submenu-item" onclick="showSubView('patientDetailsView', this)">• Patient Details</div>
-                <div class="submenu-item" onclick="showSubView('saleReturnView', this)">• Sale Return</div>
             </div>
 
-            <div class="menu-item" onclick="toggleSubmenu('purchaseSub')">2. Purchase <span>▼</span></div>
+            <!-- 2. PURCHASE -->
+            <div class="menu-item side-node" id="side_purchase" onclick="toggleSubmenu('purchaseSub')">2. Purchase <span>▼</span></div>
             <div id="purchaseSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('newPurchaseView', this)">• New Purchase (Cart Entry) 🛒</div>
                 <div class="submenu-item" onclick="showSubView('stockInventoryView', this)">• Current Stock Inventory 📊</div>
-                <div class="submenu-item" onclick="showSubView('vendorListView', this)">• Vendor / Distributor List</div>
             </div>
 
-            <div class="menu-item" onclick="toggleSubmenu('reportsSub')">3. Reports <span>▼</span></div>
+            <!-- 3. REPORTS -->
+            <div class="menu-item side-node" id="side_reports" onclick="toggleSubmenu('reportsSub')">3. Reports <span>▼</span></div>
             <div id="reportsSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('dailySalesView', this)">• Daily Sales Summary</div>
-                <div class="submenu-item" onclick="showSubView('expiryDashboardView', this)">• Expiry Dashboard</div>
             </div>
 
-            <div class="menu-item" onclick="toggleSubmenu('gstSub')">4. GST Detail <span>▼</span></div>
+            <!-- 4. GST DETAIL -->
+            <div class="menu-item side-node" id="side_gst" onclick="toggleSubmenu('gstSub')">4. GST Detail <span>▼</span></div>
             <div id="gstSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('gstr1View', this)">• GSTR-1 Summary</div>
             </div>
 
-            <div class="menu-item" onclick="toggleSubmenu('settingsSub')">5. Settings <span>▼</span></div>
-            <div id="settingsSub" class="submenu-list">
-                <div class="submenu-item" onclick="showSubView('storeConfigView', this)">• Store Configuration</div>
+            <!-- 🔑 5. SUPERADMIN USER MANAGEMENT MODULE -->
+            <div class="menu-item side-node" id="side_management" style="background:#451a03; color:#fef08a;" onclick="toggleSubmenu('mgmtSub')">🔑 5. User Management <span>▼</span></div>
+            <div id="mgmtSub" class="submenu-list">
+                <div class="submenu-item" style="color:#fef08a;" onclick="showSubView('userManagementView', this)">• Staff Roles & Permissions</div>
             </div>
         </div>
 
+        <!-- DYNAMIC PANEL CONTROLLER -->
         <div class="main-content">
+            
             <!-- 🏠 VIEW: HOMEPAGE CORE -->
             <div id="homeView" class="view-panel active">
                 <h2>Welcome Back, Rahul Chakraborty</h2>
                 <p style="color: #64748b; margin-bottom: 20px; font-style: italic;">PharmaVigour Operations Dashboard Network</p>
-                <div class="modules-grid">
-                    <div class="module-card" onclick="toggleSubmenu('saleSub')"><h3>Sale Module</h3><p>New Bills Control</p></div>
-                    <div class="module-card" onclick="toggleSubmenu('purchaseSub')"><h3>Purchase Node</h3><p>Live Stock Entries</p></div>
-                    <div class="module-card" onclick="toggleSubmenu('reportsSub')"><h3>Reports Engine</h3><p>Sales Book</p></div>
+                <div class="modules-grid" id="homeModulesGrid">
+                    <!-- Loaded via role configurations -->
                 </div>
             </div>
 
@@ -170,9 +181,6 @@
                         <div style="display:flex; align-items:center; gap:15px;">
                             <img src="logo.jpg" style="width:80px; height:auto;">
                             <div><h2>PharmaVigour Operations</h2><p>Bridging Expertise with Expansion</p></div>
-                        </div>
-                        <div style="text-align:right; font-size:13px;">
-                            <p><strong>Retail Invoice / Cash Memo</strong></p><p>Outlet: Shantipur Station Node</p>
                         </div>
                     </div>
                     <div class="panel-title search-section">Core Retail Billing Node (New Sale)</div>
@@ -189,17 +197,16 @@
                     <div style="overflow-x: auto;">
                         <table>
                             <thead>
-                                <tr><th>Product Name</th><th>Rack</th><th>Batch</th><th>Expiry</th><th>Qty</th><th>Rate (₹)</th><th>Disc %</th><th>GST %</th><th>Amount (₹)</th><th class="delete-btn-head">Action</th></tr>
+                                <tr><th>Product Name</th><th>Rack</th><th>Batch</th><th>Expiry</th><th>Qty</th><th>Rate (₹)</th><th>GST %</th><th>Amount (₹)</th><th class="delete-btn-head">Action</th></tr>
                             </thead>
                             <tbody id="billingBody">
-                                <tr class="empty-row" id="emptyRow"><td colspan="10">No products added yet. Ready to search stock.</td></tr>
+                                <tr class="empty-row" id="emptyRow"><td colspan="9">No products added yet. Ready to search stock.</td></tr>
                             </tbody>
                         </table>
                     </div>
                     <div class="summary-box">
                         <table class="summary-table">
                             <tr><td>Gross Total:</td><td id="grossTotal" class="amt-col">₹ 0.00</td></tr>
-                            <tr><td>Total Discount:</td><td id="totalDisc" class="amt-col">₹ 0.00</td></tr>
                             <tr><td>GST Tax Amount:</td><td id="gstTotal" class="amt-col">₹ 0.00</td></tr>
                             <tr class="total-row"><td><strong>Net Payable:</strong></td><td id="netPayable" class="amt-col">₹ 0.00</td></tr>
                         </table>
@@ -210,24 +217,6 @@
                 </div>
             </div>
 
-            <!-- 👥 VIEW: 1.2 PATIENT DETAILS -->
-            <div id="patientDetailsView" class="view-panel">
-                <div class="card-box">
-                    <div class="panel-title">Patient Management System</div>
-                    <div class="meta-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
-                        <div class="form-group"><label>New Patient Name</label><input type="text" id="pNewName" placeholder="Enter Name"></div>
-                        <div class="form-group"><label>Contact Number</label><input type="text" id="pNewMobile" placeholder="Mobile No."></div>
-                        <div class="form-group" style="justify-content: flex-end;"><button class="btn btn-success" style="margin-top:5px;" onclick="addPatientDemo()">+ Add Patient Registry</button></div>
-                    </div>
-                    <table>
-                        <thead><tr><th>ID</th><th>Patient Name</th><th>Mobile Number</th><th>Last Visit</th><th>Status</th></tr></thead>
-                        <tbody id="patientTableBody">
-                            <tr><td>#P101</td><td><strong>Rahul Chakraborty</strong></td><td>9829972091</td><td>18/06/2026</td><td><span style="background:#bbf7d0; color:#166534; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:bold;">Active</span></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
             <!-- 📥 VIEW: 2.1 NEW PURCHASE -->
             <div id="newPurchaseView" class="view-panel">
                 <div class="csv-upload-box">
@@ -235,13 +224,12 @@
                     <input type="file" id="csvFileInput" accept=".csv" style="display:none;" onchange="handleSmartCSVUpload(event)">
                     <div style="display: flex; gap: 15px; justify-content: center;">
                         <button class="btn btn-primary" onclick="document.getElementById('csvFileInput').click()">📤 Upload CSV Invoice</button>
-                        <button id="deleteCsvBtn" class="btn btn-danger" style="display:none;" onclick="deleteUploadedCSVProcess()">🗑️ Clear CSV Entry</button>
+                        <button id="deleteCsvBtn" class="btn btn-danger" style="display:none;" onclick="deleteUploadedCSVProcess()">🗑 ... Clear Cart</button>
                     </div>
                 </div>
 
                 <div class="card-box">
                     <div class="panel-title">Interactive Purchase Bill Cart Entry</div>
-                    
                     <div class="meta-grid">
                         <div class="form-group"><label>Medicine Name</label><input type="text" id="purName" placeholder="e.g. Pan D Cap"></div>
                         <div class="form-group"><label>Rack Location</label><input type="text" id="purRack" placeholder="e.g. B-12" value="A-01"></div>
@@ -282,14 +270,14 @@
                 </div>
             </div>
 
-            <!-- 📊 VIEW: 2.2 LIVE INVENTORY -->
+            <!-- 📊 VIEW: 2.2 LIVE INVENTORY (WITH SUPERADMIN CONTROL CORES!) -->
             <div id="stockInventoryView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Live Node Stock Inventory Manager</div>
                     <div style="overflow-x: auto;">
                         <table>
                             <thead>
-                                <tr><th>Product ID</th><th>Medicine Name</th><th>Rack Location</th><th>Batch Code</th><th>Expiry</th><th>Unit Rate (₹)</th><th>GST %</th><th>Current Stock Balance</th></tr>
+                                <tr><th>Product ID</th><th>Medicine Name</th><th>Rack</th><th>Batch Code</th><th>Expiry</th><th>Unit Rate (₹)</th><th>GST %</th><th>Current Stock</th><th id="th_inventory_action">Authorities Action</th></tr>
                             </thead>
                             <tbody id="inventoryTableBody"></tbody>
                         </table>
@@ -297,230 +285,292 @@
                 </div>
             </div>
 
-            <div id="vendorListView" class="view-panel"><div class="card-box"><h2>Distributors List Node</h2></div></div>
-            <div id="saleReturnView" class="view-panel"><div class="card-box"><h2>Return Engine</h2></div></div>
-            <div id="dailySalesView" class="view-panel"><div class="card-box"><h2>Sales Book Book</h2></div></div>
-            <div id="expiryDashboardView" class="view-panel"><div class="card-box"><h2>Shelf alerts active</h2></div></div>
-            <div id="gstr1View" class="view-panel"><div class="card-box"><h2>Tax ledgers compile Node</h2></div></div>
-            <div id="storeConfigView" class="view-panel"><div class="card-box"><h2>Config node active</h2></div></div>
+            <!-- 📊 VIEW: 3.1 DAILY SALES REPORT BOOK (WITH DELETE OPTION FOR SUPERADMIN) -->
+            <div id="dailySalesView" class="view-panel">
+                <div class="card-box">
+                    <div class="panel-title">Today's Sales Book Audit Ledger</div>
+                    <table>
+                        <thead>
+                            <tr><th>Invoice No.</th><th>Patient Name</th><th>Doctor Name</th><th>Bill Value</th><th id="th_sales_action">Admin Action</th></tr>
+                        </thead>
+                        <tbody id="salesBookTableBody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 🔑 VIEW: 5.1 USER PERMISSIONS MANAGEMENT (SUPERADMIN EXCLUSIVE) -->
+            <div id="userManagementView" class="view-panel">
+                <div class="card-box">
+                    <div class="panel-title">Create Node Operator & Configure Rights Permissions</div>
+                    <div class="meta-grid" style="grid-template-columns: 1fr 1fr 2fr;">
+                        <div class="form-group"><label>New Staff User ID</label><input type="text" id="newStaffUser" placeholder="e.g. shantipur_staff"></div>
+                        <div class="form-group"><label>Assign Password</label><input type="text" id="newStaffPass" value="staff123"></div>
+                        <div class="form-group" style="justify-content: center; text-align:left;">
+                            <label><strong>Grant Module Access Permissions:</strong></label>
+                            <div style="display:flex; gap:15px; margin-top:5px;">
+                                <label><input type="checkbox" id="prm_sale" checked> 1. Sale Module</label>
+                                <label><input type="checkbox" id="prm_purchase" checked> 2. Purchase</label>
+                                <label><input type="checkbox" id="prm_reports"> 3. Reports Engine</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-container" style="margin-top:0;"><button class="btn btn-success" onclick="createNewStaffRole()">⚡ Generate Staff Credentials</button></div>
+                    
+                    <h3 style="margin-top:25px; color:#064e3b; margin-bottom:10px;">Active Network Accounts Directory</h3>
+                    <table>
+                        <thead><tr><th>User ID</th><th>Account Role Type</th><th>Assigned Permissions Status</th><th>Status</th></tr></thead>
+                        <tbody id="usersDirectoryBody">
+                            <tr><td><strong>superadmin</strong></td><td><span class="role-badge" style="background:#fef08a;">Owner / Super Admin</span></td><td>Full Global Core Authorities Node (Read/Write/Delete/Edit)</td><td>Online ✅</td></tr>
+                            <tr><td>staff</td><td><span class="role-badge" style="background:#e2e8f0; color:#1e293b;">Standard Operator</span></td><td>Sale Module, Purchase Module Entry Only (Delete Restricted)</td><td>Active 🟢</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- OTHER INERT CHANNELS -->
+            <div id="gstr1View" class="view-panel"><div class="card-box"><h2>GSTR-1 Tax Module</h2></div></div>
         </div>
     </div>
 </div>
 
 <script>
-    function handleLogin() {
-        const u = document.getElementById('username').value.trim();
-        const p = document.getElementById('password').value.trim();
-        if(u === 'admin' && p === 'password') {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('dashboardScreen').style.display = 'flex';
-            showView('homeView');
-            renderInventoryTable();
-        } else { document.getElementById('loginError').style.display = 'block'; }
-    }
-    function triggerQuickDemoLogin() { document.getElementById('username').value = 'admin'; document.getElementById('password').value = 'password'; handleLogin(); }
-    function handleLogout() { document.getElementById('dashboardScreen').style.display = 'none'; document.getElementById('loginScreen').style.display = 'flex'; }
-    
-    function showView(viewId) { 
-        document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); 
-        document.getElementById(viewId).classList.add('active'); 
-    }
-    function showSubView(viewId, element) { 
-        showView(viewId); 
-        document.querySelectorAll('.submenu-item').forEach(i => i.classList.remove('active')); 
-        if(element) element.classList.add('active'); 
-    }
-    function toggleSubmenu(id) { document.getElementById(id).classList.toggle('open'); }
-
-    // REPOSITORY ENGINE
+    // GLOBAL ARCHITECTURE MEMORY RUNTIME STATE
+    let currentUserRole = "superadmin"; // default
     const globalStock = [
-        { id: 1, product_name: "Rantac 300mg Tab", rack: "R-02", batch: "RAN548904HJ", expiry: "06/27", rate: 40.00, gst: 5, stock: 500, source: "default" },
-        { id: 2, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1300, source: "default" }
+        { id: 1, product_name: "Rantac 300mg Tab", rack: "R-02", batch: "RAN548904HJ", expiry: "06/27", rate: 40.00, gst: 5, stock: 500 },
+        { id: 2, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1300 }
     ];
+    const mockSalesBook = [
+        { invoice: "PV-2026-00481", patient: "Rahul Chakraborty", doctor: "Dr. P. Maitra", value: 1688.10 }
+    ];
+    
+    // Configurable User Databank
+    const usersDatabase = {
+        'superadmin': { pass: 'admin123', role: 'superadmin', permissions: ['sale', 'purchase', 'reports', 'gst', 'management'] },
+        'staff': { pass: 'staff123', role: 'staff', permissions: ['sale', 'purchase'] }
+    };
+
     let activeCart = [];
     let temporaryPurchaseCart = []; 
 
+    // 🔐 LOGIN CONTROL
+    function handleLogin() {
+        const u = document.getElementById('username').value.trim();
+        const p = document.getElementById('password').value.trim();
+        
+        if (usersDatabase[u] && usersDatabase[u].pass === p) {
+            currentUserRole = usersDatabase[u].role;
+            
+            // Configure UI Elements based on login role type
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('dashboardScreen').style.display = 'flex';
+            
+            document.getElementById('activeRoleBadge').innerText = currentUserRole === 'superadmin' ? 'Super Admin 👑' : 'Staff Operator 🧑';
+            document.getElementById('activeRoleBadge').style.background = currentUserRole === 'superadmin' ? '#fef08a' : '#cbd5e1';
+            
+            applyRolePermissionsMatrix(usersDatabase[u].permissions);
+            showView('homeView');
+        } else {
+            document.getElementById('loginError').style.display = 'block';
+        }
+    }
+
+    function triggerQuickLogin(u, p) {
+        document.getElementById('username').value = u;
+        document.getElementById('password').value = p;
+        handleLogin();
+    }
+
+    function handleLogout() {
+        document.getElementById('dashboardScreen').style.display = 'none';
+        document.getElementById('loginScreen').style.display = 'flex';
+    }
+
+    // 🔑 APPLY ENFORCED PERMISSIONS BLOCKS (Hides modules seamlessly from side and home!)
+    function applyRolePermissionsMatrix(allowedModules) {
+        // Sidebar configurations mapping
+        document.getElementById('side_sale').style.display = allowedModules.includes('sale') ? 'flex' : 'none';
+        document.getElementById('side_purchase').style.display = allowedModules.includes('purchase') ? 'flex' : 'none';
+        document.getElementById('side_reports').style.display = allowedModules.includes('reports') ? 'flex' : 'none';
+        document.getElementById('side_gst').style.display = allowedModules.includes('gst') ? 'flex' : 'none';
+        document.getElementById('side_management').style.display = allowedModules.includes('management') ? 'flex' : 'none';
+
+        // Home Cards configuration compilation
+        const grid = document.getElementById('homeModulesGrid');
+        grid.innerHTML = '';
+        if(allowedModules.includes('sale')) grid.innerHTML += `<div class="module-card" onclick="toggleSubmenu('saleSub')"><h3>Sale Module</h3><p>New Retail Bills Core</p></div>`;
+        if(allowedModules.includes('purchase')) grid.innerHTML += `<div class="module-card" onclick="toggleSubmenu('purchaseSub')"><h3>Purchase Node</h3><p>Cart Entries & Stock Management</p></div>`;
+        if(allowedModules.includes('reports')) grid.innerHTML += `<div class="module-card" onclick="toggleSubmenu('reportsSub')"><h3>Reports Engine</h3><p>Daily Sales Summary Book</p></div>`;
+        if(allowedModules.includes('management')) grid.innerHTML += `<div class="module-card" onclick="toggleSubmenu('mgmtSub')"><h3>User Management</h3><p>Manage Roles & Rights Permissions</p></div>`;
+
+        // Render data tables with or without Admin Action Columns
+        renderInventoryTable();
+        renderSalesBookTable();
+    }
+
+    // 🔑 GENERATE NEW USER RIGHT ROLES DYNAMICALLY (SuperAdmin Action)
+    function createNewStaffRole() {
+        const user = document.getElementById('newStaffUser').value.trim().toLowerCase();
+        const pass = document.getElementById('newStaffPass').value.trim();
+        if(!user || !pass) return;
+
+        let prms = [];
+        if(document.getElementById('prm_sale').checked) prms.push('sale');
+        if(document.getElementById('prm_purchase').checked) prms.push('purchase');
+        if(document.getElementById('prm_reports').checked) prms.push('reports');
+
+        usersDatabase[user] = { pass: pass, role: 'staff', permissions: prms };
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `<td><strong>${user}</strong></td><td><span class="role-badge" style="background:#cbd5e1; color:#1e293b;">Staff Operator</span></td>`+
+            `<td>Modules Authorized: ${prms.join(', ')} (Delete Blocked)</td><td>Active 🟢</td>`;
+        document.getElementById('usersDirectoryBody').appendChild(row);
+        
+        alert(`Account created successfully for User ID: "${user}". This profile is now live on the network node.`);
+        document.getElementById('newStaffUser').value = '';
+    }
+
+    // 📊 RENDER LIVE INVENTORY TABLE (With adaptive SuperAdmin controls)
     function renderInventoryTable() {
         const tbody = document.getElementById('inventoryTableBody');
+        const thAction = document.getElementById('th_inventory_action');
         if(!tbody) return; tbody.innerHTML = '';
-        globalStock.forEach(item => {
+
+        if(currentUserRole === 'superadmin') { thAction.style.display = 'table-cell'; } 
+        else { thAction.style.display = 'none'; }
+
+        globalStock.forEach((item, index) => {
             const tr = document.createElement('tr');
+            let actionTd = currentUserRole === 'superadmin' ? 
+                `<td><button class="btn-edit" onclick="editStockPrompt(${index})">✏️ Edit</button>`+
+                `<button class="btn-danger" onclick="globalStock.splice(${index},1); renderInventoryTable();">🗑️ Delete</button></td>` : '';
+
             tr.innerHTML = `<td>#STK00${item.id}</td><td><strong>${item.product_name}</strong></td>`+
                 `<td><span style="background:#f1f5f9; padding:4px 8px; border-radius:4px; font-weight:bold;">${item.rack}</span></td>`+
                 `<td>${item.batch}</td><td>${item.expiry}</td><td>₹${parseFloat(item.rate).toFixed(2)}</td><td>${item.gst}%</td>`+
-                `<td><strong style="color:#166534;">${item.stock} Strips</strong></td>`;
+                `<td><strong style="color:#166534;">${item.stock} Strips</strong></td>` + actionTd;
             tbody.appendChild(tr);
         });
     }
 
+    // 📊 RENDER SALES BOOK
+    function renderSalesBookTable() {
+        const tbody = document.getElementById('salesBookTableBody');
+        const thSales = document.getElementById('th_sales_action');
+        if(!tbody) return; tbody.innerHTML = '';
+
+        if(currentUserRole === 'superadmin') { thSales.style.display = 'table-cell'; } 
+        else { thSales.style.display = 'none'; }
+
+        mockSalesBook.forEach((bill, index) => {
+            const tr = document.createElement('tr');
+            let actionTd = currentUserRole === 'superadmin' ? `<td><button class="btn-danger" onclick="mockSalesBook.splice(${index},1); renderSalesBookTable();">🗑️ Delete Invoice</button></td>` : '';
+            tr.innerHTML = `<td><strong>${bill.invoice}</strong></td><td>${bill.patient}</td><td>${bill.doctor}</td><td><strong>₹${bill.value.toFixed(2)}</strong></td>` + actionTd;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function editStockPrompt(index) {
+        let currentStock = globalStock[index].stock;
+        let newStock = prompt(`"${globalStock[index].product_name}"-এর নতুন স্টক কোয়ান্টিটি টাইপ করুন:`, currentStock);
+        if(newStock !== null) {
+            globalStock[index].stock = parseInt(newStock) || 0;
+            renderInventoryTable();
+        }
+    }
+
+    // NAVIGATION CONTROLLERS
+    function showView(viewId) { document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); document.getElementById(viewId).classList.add('active'); }
+    function showSubView(viewId, element) { showView(viewId); document.querySelectorAll('.submenu-item').forEach(i => i.classList.remove('active')); if(element) element.classList.add('active'); }
+    function toggleSubmenu(id) { document.getElementById(id).classList.toggle('open'); }
+
+    // RETAIL MANIFEST INWARD WRITERS
     function addSingleItemToPurchaseCart() {
-        const name = document.getElementById('purName').value.trim();
-        const rack = document.getElementById('purRack').value.trim();
-        const batch = document.getElementById('purBatch').value.trim();
-        const expiry = document.getElementById('purExpiry').value.trim();
-        const rate = parseFloat(document.getElementById('purRate').value) || 0;
-        const gst = parseInt(document.getElementById('purGst').value) || 5;
+        const name = document.getElementById('purName').value.trim(); const rack = document.getElementById('purRack').value.trim();
+        const batch = document.getElementById('purBatch').value.trim(); const expiry = document.getElementById('purExpiry').value.trim();
+        const rate = parseFloat(document.getElementById('purRate').value) || 0; const gst = parseInt(document.getElementById('purGst').value) || 5;
         const qty = parseInt(document.getElementById('purStock').value) || 0;
 
-        if (!name || rate <= 0 || qty <= 0) { alert('সভিক ওষুধের তথ্য পূরণ করুন!'); return; }
+        if (!name || rate <= 0 || qty <= 0) { alert('সঠিক ওষুধের তথ্য পূরণ করুন!'); return; }
         temporaryPurchaseCart.push({ product_name: name, rack: rack, batch: batch, expiry: expiry, rate: rate, gst: gst, qty: qty, source: "manual" });
-        document.getElementById('purName').value = ''; document.getElementById('purBatch').value = '';
-        document.getElementById('purRate').value = ''; document.getElementById('purStock').value = '';
+        document.getElementById('purName').value = ''; document.getElementById('purBatch').value = ''; document.getElementById('purRate').value = ''; document.getElementById('purStock').value = '';
         renderPurchaseCartTable();
     }
 
     function renderPurchaseCartTable() {
-        const tbody = document.getElementById('purchaseCartBody');
-        const emptyRow = document.getElementById('purEmptyRow');
+        const tbody = document.getElementById('purchaseCartBody'); const emptyRow = document.getElementById('purEmptyRow');
         tbody.querySelectorAll('tr:not(#purEmptyRow)').forEach(r => r.remove());
-        
         if (temporaryPurchaseCart.length === 0) {
-            emptyRow.style.display = 'table-row';
-            document.getElementById('purGrossTotal').innerText = '₹ 0.00';
-            document.getElementById('purGstTotal').innerText = '₹ 0.00';
-            document.getElementById('purNetPayable').innerText = '₹ 0.00';
-            return;
+            emptyRow.style.display = 'table-row'; document.getElementById('purGrossTotal').innerText = '₹ 0.00'; document.getElementById('purGstTotal').innerText = '₹ 0.00'; document.getElementById('purNetPayable').innerText = '₹ 0.00'; return;
         }
-        emptyRow.style.display = 'none';
-        let gross = 0, gstTotal = 0;
-
+        emptyRow.style.display = 'none'; let gross = 0, gstTotal = 0;
         temporaryPurchaseCart.forEach((item, index) => {
-            const base = item.rate * item.qty; const gstAmt = base * (item.gst / 100); const total = base + gstAmt;
-            gross += base; gstTotal += gstAmt;
+            const base = item.rate * item.qty; const gstAmt = base * (item.gst / 100); const total = base + gstAmt; gross += base; gstTotal += gstAmt;
             const tr = document.createElement('tr');
-            tr.innerHTML = `<td><strong>${item.product_name}</strong></td><td>${item.rack}</td><td>${item.batch}</td><td>${item.expiry}</td>`+
-                `<td>${item.qty}</td><td>₹${item.rate.toFixed(2)}</td><td>${item.gst}%</td><td><strong>₹${total.toFixed(2)}</strong></td>`+
-                `<td><button class="delete-btn" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="temporaryPurchaseCart.splice(${index},1); renderPurchaseCartTable();">Remove</button></td>`;
+            tr.innerHTML = `<td><strong>${item.product_name}</strong></td><td>${item.rack}</td><td>${item.batch}</td><td>${item.expiry}</td><td>${item.qty}</td><td>₹${item.rate.toFixed(2)}</td><td>${item.gst}%</td><td><strong>₹${total.toFixed(2)}</strong></td><td><button class="delete-btn" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="temporaryPurchaseCart.splice(${index},1); renderPurchaseCartTable();">Remove</button></td>`;
             tbody.appendChild(tr);
         });
-        document.getElementById('purGrossTotal').innerText = '₹ ' + gross.toFixed(2);
-        document.getElementById('purGstTotal').innerText = '₹ ' + gstTotal.toFixed(2);
-        document.getElementById('purNetPayable').innerText = '₹ ' + (gross + gstTotal).toFixed(2);
+        document.getElementById('purGrossTotal').innerText = '₹ ' + gross.toFixed(2); document.getElementById('purGstTotal').innerText = '₹ ' + gstTotal.toFixed(2); document.getElementById('purNetPayable').innerText = '₹ ' + (gross + gstTotal).toFixed(2);
     }
 
-    // 💾 🌟 ১০০% ফিক্সড মেমোরি সেভিং লজিক (রোলব্যাক ও ডাটা সেভিং লক!)
     function saveEntirePurchaseCartToStock() {
         if (temporaryPurchaseCart.length === 0) { alert('কার্ট খালি!'); return; }
-        
         temporaryPurchaseCart.forEach(item => {
             let existing = globalStock.find(s => s.product_name.toLowerCase() === item.product_name.toLowerCase() && s.batch === item.batch);
-            if (existing) {
-                existing.stock += item.qty; // আগের ওষুধের সাথে নতুন কোয়ান্টিটি যোগ হবে
-            } else {
-                globalStock.push({
-                    id: globalStock.length + 1,
-                    product_name: item.product_name,
-                    rack: item.rack,
-                    batch: item.batch,
-                    expiry: item.expiry,
-                    rate: item.rate,
-                    gst: item.gst,
-                    stock: item.qty, // সিএসভি থেকে আসা পারফেক্ট কোয়ান্টিটি মেমোরিতে রাইট হবে
-                    source: item.source || "csv_upload"
-                });
+            if (existing) { existing.stock += item.qty; } else {
+                globalStock.push({ id: globalStock.length + 1, product_name: item.product_name, rack: item.rack, batch: item.batch, expiry: item.expiry, rate: item.rate, gst: item.gst, stock: item.qty, source: "user_entry" });
             }
         });
-
-        alert(`🎉 সফলভাবে স্টক মেমোরি আপডেট হয়েছে! মোট ${temporaryPurchaseCart.length}টি আইটেম ইনভেন্টরিতে লক করা হলো।`);
-        temporaryPurchaseCart = []; 
-        renderPurchaseCartTable(); 
-        renderInventoryTable(); // 🚀 ফিক্সড: লাইভ টেবিল ভিউকে ফোর্স রিফ্রেশ করা
-        showView('stockInventoryView'); 
+        alert(`🎉 সফলভাবে স্টক মেমোরি আপডেট হয়েছে!`);
+        temporaryPurchaseCart = []; renderPurchaseCartTable(); renderInventoryTable(); showView('stockInventoryView');
     }
 
-    // SMART INTELLIGENT HEADER AUTO-MATCHING ENGINE
     function handleSmartCSVUpload(event) {
-        const file = event.target.files[0];
-        if (!file) return;
+        const file = event.target.files[0]; if (!file) return;
         const reader = new FileReader();
         reader.onload = function(e) {
-            const text = e.target.result;
-            const lines = text.split('\n');
-            if (lines.length < 2) { alert('ফাইলে কোনো ডাটা পাওয়া যায়নি!'); return; }
-
+            const text = e.target.result; const lines = text.split('\n');
             const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/"/g, ''));
-            
             let prodIdx = headers.findIndex(h => h.includes('product') || h.includes('medicine') || h.includes('item'));
-            let rackIdx = headers.findIndex(h => h.includes('rack') || h.includes('location'));
-            let batchIdx = headers.findIndex(h => h.includes('batch') || h.includes('lot'));
-            let expIdx = headers.findIndex(h => h.includes('expiry') || h.includes('exp'));
-            let rateIdx = headers.findIndex(h => h.includes('rate') || h.includes('price') || h.includes('mrp'));
-            let gstIdx = headers.findIndex(h => h.includes('gst') || h.includes('tax'));
-            let qtyIdx = headers.findIndex(h => h.includes('qty') || h.includes('stock') || h.includes('quantity') || h.includes('amount'));
+            let rackIdx = headers.findIndex(h => h.includes('rack')); let batchIdx = headers.findIndex(h => h.includes('batch'));
+            let expIdx = headers.findIndex(h => h.includes('expiry')); let rateIdx = headers.findIndex(h => h.includes('rate'));
+            let gstIdx = headers.findIndex(h => h.includes('gst')); let qtyIdx = headers.findIndex(h => h.includes('stock') || h.includes('qty'));
 
-            if (prodIdx === -1) prodIdx = 2; 
-            if (rackIdx === -1) rackIdx = 3;
-            if (batchIdx === -1) batchIdx = 4;
-            if (expIdx === -1) expIdx = 5;
-            if (rateIdx === -1) rateIdx = 6;
-            if (gstIdx === -1) gstIdx = 7;
-            if (qtyIdx === -1) qtyIdx = 8;
+            if (prodIdx === -1) prodIdx = 2; if (rackIdx === -1) rackIdx = 3; if (batchIdx === -1) batchIdx = 4; if (expIdx === -1) expIdx = 5; if (rateIdx === -1) rateIdx = 6; if (gstIdx === -1) gstIdx = 7; if (qtyIdx === -1) qtyIdx = 8;
 
             let addedCount = 0;
             for (let i = 1; i < lines.length; i++) {
-                if (!lines[i].trim()) continue;
-                const cols = lines[i].split(',');
-
+                if (!lines[i].trim()) continue; const cols = lines[i].split(',');
                 if (cols.length > prodIdx) {
                     const name = cols[prodIdx] ? cols[prodIdx].trim().replace(/"/g, '') : '';
                     if (!name || name.toLowerCase() === 'id' || name.toLowerCase() === 'company') continue;
-
-                    const rack = cols[rackIdx] ? cols[rackIdx].trim().replace(/"/g, '') : 'A-01';
-                    const batch = cols[batchIdx] ? cols[batchIdx].trim().replace(/"/g, '') : 'N/A';
-                    const expiry = cols[expIdx] ? cols[expIdx].trim().replace(/"/g, '') : '12/29';
-                    const rate = parseFloat(cols[rateIdx]) || 0;
-                    const gst = parseInt(cols[gstIdx]) || 5;
-                    const qty = parseInt(cols[qtyIdx]) || 0;
-
+                    const rack = cols[rackIdx] ? cols[rackIdx].trim().replace(/"/g, '') : 'A-01'; const batch = cols[batchIdx] ? cols[batchIdx].trim().replace(/"/g, '') : 'N/A';
+                    const expiry = cols[expIdx] ? cols[expIdx].trim().replace(/"/g, '') : '12/29'; const rate = parseFloat(cols[rateIdx]) || 0; const gst = parseInt(cols[gstIdx]) || 5; const qty = parseInt(cols[qtyIdx]) || 0;
                     if (name && rate > 0) {
-                        temporaryPurchaseCart.push({
-                            product_name: name,
-                            rack: rack,
-                            batch: batch,
-                            expiry: expiry,
-                            rate: rate,
-                            gst: gst,
-                            qty: qty,
-                            source: "csv_upload"
-                        });
+                        temporaryPurchaseCart.push({ product_name: name, rack: rack, batch: batch, expiry: expiry, rate: rate, gst: gst, qty: qty, source: "csv_upload" });
                         addedCount++;
                     }
                 }
             }
-            
-            if (addedCount > 0) {
-                document.getElementById('deleteCsvBtn').style.display = 'inline-block';
-                renderPurchaseCartTable();
-                alert(`🎉 CSV সফলভাবে লোড হয়েছে! ${addedCount}টি ওষুধের ডিটেলস নিচে পারচেজ কার্ট টেবিলে যোগ করা হয়েছে।`);
-            } else {
-                alert('দুঃখিত, CSV ফাইলের কলামের নাম বা ভেতরের স্ট্রাকচার রিড করা সম্ভব হয়নি।');
-            }
+            if (addedCount > 0) { document.getElementById('deleteCsvBtn').style.display = 'inline-block'; renderPurchaseCartTable(); }
         };
         reader.readAsText(file);
     }
 
-    function deleteUploadedCSVProcess() {
-        temporaryPurchaseCart = []; renderPurchaseCartTable();
-        document.getElementById('deleteCsvBtn').style.display = 'none';
-        document.getElementById('csvFileInput').value = '';
-    }
+    function deleteUploadedCSVProcess() { temporaryPurchaseCart = []; renderPurchaseCartTable(); document.getElementById('deleteCsvBtn').style.display = 'none'; document.getElementById('csvFileInput').value = ''; }
 
-    // SALE BILLING ENGINE
-    const searchBox = document.getElementById('searchBox');
-    const suggestionsBox = document.getElementById('suggestions');
-    const billingBody = document.getElementById('billingBody');
-    const emptyRow = document.getElementById('emptyRow');
-
+    // RETAIL SALES RUNTIME
+    const searchBox = document.getElementById('searchBox'); const suggestionsBox = document.getElementById('suggestions'); const billingBody = document.getElementById('billingBody'); const emptyRow = document.getElementById('emptyRow');
     searchBox.addEventListener('input', function() {
         const query = this.value.toLowerCase().trim(); suggestionsBox.innerHTML = '';
         if (query.length < 1) { suggestionsBox.style.display = 'none'; return; }
         const matches = globalStock.filter(p => p.product_name.toLowerCase().includes(query));
         if (matches.length > 0) {
             matches.forEach(product => {
-                const div = document.createElement('div'); div.className = 'suggestion-item';
-                div.innerText = `${product.product_name} [Rack: ${product.rack}] [Batch: ${product.batch}] - Balance: ${product.stock}`;
-                div.onclick = function() { addProductToCart(product); };
-                suggestionsBox.appendChild(div);
+                const div = document.createElement('div'); div.className = 'suggestion-item'; div.innerText = `${product.product_name} [Rack: ${product.rack}] [Batch: ${product.batch}] - Balance: ${product.stock}`;
+                div.onclick = function() { addProductToCart(product); }; suggestionsBox.appendChild(div);
             });
             suggestionsBox.style.display = 'block';
         } else { suggestionsBox.style.display = 'none'; }
@@ -529,7 +579,7 @@
     function addProductToCart(product) {
         searchBox.value = ''; suggestionsBox.style.display = 'none';
         let existing = activeCart.find(item => item.id === product.id);
-        if (existing) { existing.qty += 1; } else { activeCart.push({...product, qty: 1, discount: 25}); }
+        if (existing) { existing.qty += 1; } else { activeCart.push({...product, qty: 1, discount: 0}); }
         renderCart();
     }
 
@@ -538,33 +588,26 @@
         if (activeCart.length === 0) { emptyRow.style.display = 'table-row'; calculateTotals(); return; }
         emptyRow.style.display = 'none';
         activeCart.forEach((item, index) => {
-            const tr = document.createElement('tr');
-            const rateVal = parseFloat(item.rate) || 0; const discVal = parseFloat(item.discount) || 0; const gstPercent = parseFloat(item.gst) || 0;
-            const baseAmount = rateVal * item.qty; const discountAmount = baseAmount * (discVal / 100); const taxableAmount = baseAmount - discountAmount; const gstAmount = taxableAmount * (gstPercent / 100); const subtotal = taxableAmount + gstAmount;
-            
+            const tr = document.createElement('tr'); const rateVal = parseFloat(item.rate) || 0; const gstPercent = parseFloat(item.gst) || 0;
+            const baseAmount = rateVal * item.qty; const gstAmount = baseAmount * (gstPercent / 100); const subtotal = baseAmount + gstAmount;
             tr.innerHTML = `<td><strong>${item.product_name}</strong></td><td>${item.rack}</td><td>${item.batch}</td><td>${item.expiry}</td>`+
-                `<td><input type="number" class="qty-input" value="${item.qty}" min="1" oninput="updateQty(${index}, this.value)"><span class="print-text-val">${item.qty}</span></td><td>₹${rateVal.toFixed(2)}</td>`+
-                `<td><input type="number" class="disc-input" value="${discVal}" min="0" max="100" oninput="updateDisc(${index}, this.value)"><span class="print-text-val">${discVal}</span></td><td>${gstPercent}%</td>`+
+                `<td><input type="number" class="qty-input" value="${item.qty}" min="1" oninput="updateQty(${index}, this.value)"><span class="print-text-val">${item.qty}</span></td><td>₹${rateVal.toFixed(2)}</td><td>${gstPercent}%</td>`+
                 `<td><strong>₹${subtotal.toFixed(2)}</strong></td><td><button class="delete-btn" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px;" onclick="removeItem(${index})">Remove</button></td>`;
             billingBody.appendChild(tr);
         });
         calculateTotals();
     }
     function updateQty(i, val) { activeCart[i].qty = parseInt(val) || 1; renderCart(); }
-    function updateDisc(i, val) { activeCart[i].discount = parseFloat(val) || 0; renderCart(); }
     function removeItem(i) { activeCart.splice(i, 1); renderCart(); }
 
     function calculateTotals() {
-        let gross = 0, disc = 0, gst = 0;
+        let gross = 0, gst = 0;
         activeCart.forEach(item => {
-            const rateVal = parseFloat(item.rate) || 0; const discVal = parseFloat(item.discount) || 0; const gstPercent = parseFloat(item.gst) || 0;
-            const baseAmount = rateVal * item.qty; const discountAmount = baseAmount * (discVal / 100); const taxableAmount = baseAmount - discountAmount; const gstAmount = taxableAmount * (gstPercent / 100);
-            gross += baseAmount; disc += discountAmount; gst += gstAmount;
+            const rateVal = parseFloat(item.rate) || 0; const gstPercent = parseFloat(item.gst) || 0;
+            const baseAmount = rateVal * item.qty; const gstAmount = baseAmount * (gstPercent / 100); gross += baseAmount; gst += gstAmount;
         });
-        document.getElementById('grossTotal').innerText = '₹ ' + gross.toFixed(2);
-        document.getElementById('totalDisc').innerText = '₹ ' + disc.toFixed(2);
-        document.getElementById('gstTotal').innerText = '₹ ' + gst.toFixed(2);
-        document.getElementById('netPayable').innerText = '₹ ' + (gross - disc + gst).toFixed(2);
+        document.getElementById('grossTotal').innerText = '₹ ' + gross.toFixed(2); document.getElementById('gstTotal').innerText = '₹ ' + gst.toFixed(2);
+        document.getElementById('netPayable').innerText = '₹ ' + (gross + gst).toFixed(2);
     }
 </script>
 </body>
