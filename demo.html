@@ -1,265 +1,382 @@
-// ✅ FORCE CLEAR & RE-SEED DATABASE ON LOAD
-localStorage.removeItem('PV_OS_STOCK');
-localStorage.removeItem('PV_OS_SALES');
-localStorage.removeItem('PV_OS_PURCHASES');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PharmaVigour OS - Corporate Cloud ERP</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: #f8fafc; color: #0f172a; min-height: 100vh; overflow-x: hidden; padding: 20px 0; }
+        
+        #loginScreen { display: block; width: 100%; max-width: 420px; margin: 40px auto; padding: 0 15px; }
+        .login-card { background: #ffffff; width: 100%; padding: 40px 30px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); text-align: center; border-top: 5px solid #d97706; border-bottom: 1px solid #e2e8f0; }
+        .login-logo { width: 140px; height: auto; margin-bottom: 15px; }
+        .login-card h2 { color: #064e3b; margin-bottom: 6px; font-size: 24px; font-weight: 700; }
+        .login-card p { color: #64748b; font-size: 13px; margin-bottom: 25px; font-style: italic; }
+        
+        .field-label { display: block; text-align: left; font-size: 11px; font-weight: bold; color: #064e3b; margin-bottom: 6px; letter-spacing: 0.5px; }
+        .login-field { width: 100%; padding: 12px; margin-bottom: 18px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 16px; font-weight: bold; letter-spacing: 1px; outline: none; background: #ffffff; color: #000000; text-align: center; transition: border-color 0.2s; }
+        .login-field:focus { border-color: #d97706; }
+        
+        .login-btn { width: 100%; padding: 14px; background: #064e3b; color: #fef08a; border: 1px solid #d97706; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; margin-bottom: 10px; display: block; transition: background 0.2s; }
+        .login-btn:hover { background: #022c22; }
+        
+        .demo-shortcut-box { margin-top: 20px; background: #f1f5f9; padding: 12px; border-radius: 6px; font-size: 12px; color: #475569; line-height: 1.6; text-align: left; border: 1px solid #e2e8f0; }
 
-const IMMUTABLE_STOCK_SEED = [
-    { id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: 76.60, gst: 12, stock: 140 },
-    { id: 102, product_name: "REXIPRA LS TAB 10'S", rack: "B-12", batch: "KX3099", expiry: "11/27", rate: 78.57, gst: 12, stock: 90 },
-    { id: 103, product_name: "PAN D CAPSULE 10'S", rack: "C-05", batch: "PAN9942A", expiry: "05/26", rate: 145.00, gst: 12, stock: 45 },
-    { id: 104, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1250 }
-];
-const IMMUTABLE_SALES_SEED = [
-    { invoice: "PV-2026-00481", patient: "Rahul Chakraborty", doctor: "Dr. P. Maitra", value: 1688.10 }
-];
-const IMMUTABLE_PURCHASE_SEED = [
-    { voucher: "PV-PUR-00101", supplier: "PharmaOperational Wholesalers Ltd.", date: "15/06/2026", value: 24500.00 }
-];
+        #dashboardScreen { display: none; min-height: 100vh; flex-direction: column; background-color: #f8fafc; }
+        .top-navbar { background: #064e3b; color: white; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #d97706; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: relative; z-index: 2000; }
+        .navbar-brand { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .hamburger-icon { font-size: 24px; color: #fef08a; cursor: pointer; padding-right: 5px; font-weight: bold; }
+        .navbar-logo { height: 35px; width: auto; background: white; border-radius: 4px; padding: 2px; }
+        .navbar-brand h1 { font-size: 18px; font-weight: 700; color: #fef08a; letter-spacing: 0.5px; }
+        
+        .navbar-right-controls { display: flex; align-items: center; gap: 20px; }
+        .notification-bell-box { position: relative; cursor: pointer; font-size: 20px; }
+        .bell-badge { position: absolute; top: -6px; right: -8px; background: #ef4444; color: white; font-size: 10px; font-weight: bold; border-radius: 50%; padding: 2px 6px; border: 1px solid #064e3b; }
+        .navbar-user { display: flex; align-items: center; gap: 15px; font-size: 13px; font-weight: 500; }
+        .logout-link { color: #fca5a5; cursor: pointer; font-weight: bold; text-decoration: none; background: rgba(239,68,68,0.1); padding: 4px 10px; border-radius: 4px; border: 1px solid rgba(252,165,165,0.2); }
+        .role-badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; background: #fef08a; color: #854d0e; text-transform: uppercase; }
+        .outlet-badge { padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; background: #2563eb; color: white; }
 
-localStorage.setItem('PV_OS_STOCK', JSON.stringify(IMMUTABLE_STOCK_SEED));
-localStorage.setItem('PV_OS_SALES', JSON.stringify(IMMUTABLE_SALES_SEED));
-localStorage.setItem('PV_OS_PURCHASES', JSON.stringify(IMMUTABLE_PURCHASE_SEED));
+        .workspace { display: flex; flex: 1; position: relative; min-height: calc(100vh - 62px); }
+        .sidebar { background: #0f172a; color: #cbd5e1; width: 60px; padding: 20px 0; display: flex; flex-direction: column; gap: 4px; box-shadow: 4px 0 15px rgba(0,0,0,0.05); position: absolute; top: 0; left: 0; bottom: 0; z-index: 1500; transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; white-space: nowrap; }
+        .sidebar:hover { width: 260px; }
+        
+        .menu-item { padding: 14px 20px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid transparent; transition: background 0.2s; }
+        .menu-item:hover, .menu-item.active { background: #1e293b; color: #ffffff; border-left-color: #d97706; }
+        .menu-icon { font-size: 16px; display: inline-block; width: 20px; text-align: center; }
+        .menu-text { margin-left: 15px; opacity: 0; transition: opacity 0.2s; display: inline-block; }
+        .sidebar:hover .menu-text { opacity: 1; }
+        .menu-arrow { font-size: 10px; opacity: 0; transition: opacity 0.2s; }
+        .sidebar:hover .menu-arrow { opacity: 1; }
 
-function pullStock() { return JSON.parse(localStorage.getItem('PV_OS_STOCK')); }
-function pullSales() { return JSON.parse(localStorage.getItem('PV_OS_SALES')); }
-function pullPurchases() { return JSON.parse(localStorage.getItem('PV_OS_PURCHASES')); }
-function commitDb(s, b, p) { 
-    if(s) localStorage.setItem('PV_OS_STOCK', JSON.stringify(s)); 
-    if(b) localStorage.setItem('PV_OS_SALES', JSON.stringify(b)); 
-    if(p) localStorage.setItem('PV_OS_PURCHASES', JSON.stringify(p)); 
-    triggerMargWatchdogAudit();
-}
+        .submenu-list { background: #020617; display: none; padding: 4px 0; }
+        .submenu-list.open { display: block; }
+        .submenu-item { padding: 11px 20px 11px 55px; font-size: 13px; color: #94a3b8; cursor: pointer; transition: color 0.2s; display: block; }
+        .submenu-item:hover, .submenu-item.active { color: #fef08a; background: #0f172a; font-weight: 600; }
 
-const usersRegistry = { '7029719074': { name: 'Rahul Chakraborty', role: 'superadmin', outlet: 'All Outlets Hub', permissions: ['sale'] } };
-let activeCart = []; let temporaryPurchaseCart = []; let generatedOTPCode = ""; let activeLoggedUser = null;
+        .main-content { flex: 1; padding: 30px; margin-left: 60px; overflow-y: auto; position: relative; background-color: #f8fafc; }
+        .view-panel { display: none; position: relative; z-index: 1; animation: fadeIn 0.2s ease-out; }
+        .view-panel.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .brand-landing-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 65vh; text-align: center; padding: 40px; }
+        .big-center-logo { width: 260px; height: auto; margin-bottom: 25px; filter: drop-shadow(0 10px 25px rgba(6,78,59,0.12)); background: white; padding: 15px; border-radius: 16px; border: 1px solid #e2e8f0; }
+        .brand-landing-wrapper h2 { color: #064e3b; font-size: 32px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.5px; }
+        .brand-landing-wrapper p { color: #64748b; font-size: 15px; font-weight: 500; max-width: 520px; line-height: 1.6; }
 
-window.addEventListener('keydown', function(event) {
-    if (document.getElementById('dashboardScreen').style.display === 'flex') {
-        if (event.key === 'F2') { event.preventDefault(); showSubView('newSaleView', document.querySelector('.submenu-item')); }
-        if (event.key === 'F3') { event.preventDefault(); showSubView('newSaleView', document.querySelector('.submenu-item')); setTimeout(() => document.getElementById('searchBox').focus(), 150); }
-        if (event.key === 'F4') { event.preventDefault(); showSubView('stockInventoryView', null); }
-    }
-});
+        .card-box { background: #ffffff; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(15,23,42,0.03); margin-bottom: 25px; }
+        .panel-title { font-size: 18px; color: #064e3b; margin-bottom: 20px; font-weight: bold; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
+        
+        .hotkey-banner-strip { background: #fffbeb; border: 1px solid #fef3c7; padding: 8px 15px; border-radius: 6px; margin-bottom: 15px; font-size: 12px; color: #b45309; font-weight: bold; display: flex; gap: 15px; }
+        .hotkey-badge { background: #d97706; color: white; padding: 1px 5px; border-radius: 4px; font-size: 11px; }
 
-function triggerMargWatchdogAudit() {
-    let items = pullStock(); let alertCount = 0;
-    items.forEach(item => {
-        let expParts = item.expiry.split('/');
-        let expMonth = parseInt(expParts[0]); let expYear = parseInt("20" + expParts[1]);
-        if (expYear < 2026 || (expYear === 2026 && expMonth <= 6)) { alertCount++; }
-    });
-    const badge = document.getElementById('navAlertBadge');
-    if(badge) badge.innerText = alertCount;
-}
+        .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; background: #f8fafc; padding: 15px; border-radius: 6px; border: 1px solid #e2e8f0; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 12px; }
+        .form-group label { font-size: 11px; color: #064e3b; font-weight: bold; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-group input { padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; outline: none; background: white; font-weight: 600; color: #0f172a; }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+        th { background-color: #064e3b; color: white; padding: 12px 12px; text-align: left; border-bottom: 3px solid #d97706; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        td { padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: left; background: rgba(255,255,255,0.9); color: #334155; font-weight: 500; }
+        
+        .btn-container { margin-top: 25px; display: flex; gap: 15px; justify-content: flex-end; }
+        .btn { padding: 12px 24px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .btn-primary { background: #064e3b; color: #fef08a; border: 1px solid #d97706; }
+        .btn-success { background: #d97706; color: white; border: 1px solid #b45309; }
+        .btn-danger { background: #ef4444; color: white; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; border: none; }
+        .csv-upload-box { background: #fffbeb; border: 2px dashed #d97706; padding: 25px; border-radius: 8px; text-align: center; margin-bottom: 25px; }
 
-function generateAndSendSecureOTP() {
-    const phoneInput = document.getElementById('userPhone').value.trim();
-    if (phoneInput === '7029719074') {
-        activeLoggedUser = usersRegistry[phoneInput]; generatedOTPCode = "1234";
-        document.getElementById('phoneSection').style.display = 'none';
-        document.getElementById('otpBoxSection').style.display = 'block';
-        alert("Security Access Code Token Generated!\nEnter OTP Code: 1234");
-    } else { alert("Error: Mobile number not registered within security parameters."); }
-}
+        .search-box { width: 100%; padding: 12px; border: 2px solid #064e3b; border-radius: 6px; font-size: 14px; outline: none; }
+        .suggestions-box { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #cbd5e1; border-radius: 0 0 6px 6px; max-height: 200px; overflow-y: auto; z-index: 1000; display: none; box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
+        .suggestion-item { padding: 10px 15px; cursor: pointer; border-bottom: 1px solid #f1f5f9; text-align: left; font-size: 13px; }
+        .suggestion-item:hover { background-color: #f0fdf4; color: #064e3b; font-weight: bold; }
+        .qty-input, .disc-input { width: 65px; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; text-align: center; font-weight: bold; }
+        
+        .summary-box { margin-top: 20px; display: flex; justify-content: flex-end; }
+        .summary-table { width: 320px; border: 1px solid #cbd5e1; background: #ffffff; }
+        .summary-table td { padding: 12px; border-bottom: 1px solid #cbd5e1; font-weight: bold; color: #000000; }
+        .total-row { background: #f8fafc !important; font-size: 15px; color: #064e3b; font-weight: bold; }
 
-function verifyReceivedOTPCode() {
-    if (document.getElementById('inputOtp').value.trim() === generatedOTPCode) {
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('dashboardScreen').style.display = 'flex';
-        document.getElementById('print_outlet_name').innerText = `Outlet: ${document.getElementById('loginOutlet').value}`;
-        document.getElementById('activeRoleBadge').innerText = "Super Admin 👑";
-        document.getElementById('activeOutletBadge').innerText = document.getElementById('loginOutlet').value;
-        renderInventoryTable(); renderSalesBookTable(); renderPurchaseHistoryTable();
-        triggerMargWatchdogAudit();
-        showView('homeView');
-    } else { alert("Invalid security token code validation verification failed."); }
-}
+        .expiry-alert-badge { background: #fee2e2; color: #ef4444; border: 1px solid #fca5a5; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
 
-function fillQuickDemoAccount(num) { document.getElementById('userPhone').value = num; generateAndSendSecureOTP(); }
-function handleLogoutSystemSession() { location.reload(); }
+        .bill-header-print { display: none; }
+        .print-text-val { display: none; font-weight: bold; }
 
-function renderInventoryTable() {
-    const tbody = document.getElementById('inventoryTableBody'); if(!tbody) return; tbody.innerHTML = '';
-    pullStock().forEach(item => {
-        const tr = document.createElement('tr');
-        let expParts = item.expiry.split('/');
-        let expMonth = parseInt(expParts[0]); let expYear = parseInt("20" + expParts[1]);
-        let isExpired = (expYear < 2026 || (expYear === 2026 && expMonth <= 6));
-        let expiryCell = isExpired ? `<span class="expiry-alert-badge">⚠️ ${item.expiry} (EXPIRED)</span>` : item.expiry;
-        tr.innerHTML = `<td>#STK0${item.id}</td><td><strong>${item.product_name}</strong></td>`+
-            `<td><span style="background:#f1f5f9; padding:4px 8px; border-radius:4px; font-weight:bold;">${item.rack}</span></td>`+
-            `<td>${item.batch}</td><td>${expiryCell}</td><td>₹${item.rate.toFixed(2)}</td><td>${item.gst}%</td>`+
-            `<td><strong style="color:${isExpired ? '#ef4444' : '#166534'}">${item.stock} Strips</strong></td>`;
-        tbody.appendChild(tr);
-    });
-}
-
-function renderSalesBookTable() {
-    const tbody = document.getElementById('salesBookTableBody'); if(!tbody) return; tbody.innerHTML = '';
-    let totalSum = 0;
-    pullSales().forEach(bill => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td><strong>${bill.invoice}</strong></td><td>${bill.patient}</td><td>${bill.doctor}</td><td><strong>₹${bill.value.toFixed(2)}</strong></td>`;
-        tbody.appendChild(tr);
-        totalSum += bill.value;
-    });
-    const chartLabel = document.getElementById('chart_live_val');
-    if(chartLabel) chartLabel.innerText = '₹ ' + totalSum.toFixed(2);
-}
-
-function renderPurchaseHistoryTable() {
-    const tbody = document.getElementById('purchaseHistoryBody'); if(!tbody) return; tbody.innerHTML = '';
-    let purchases = pullPurchases();
-    if(purchases.length === 0) { document.getElementById('purHistEmptyRow').style.display = 'table-row'; return; }
-    purchases.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td><strong>${item.voucher}</strong></td><td>${item.supplier}</td><td>${item.date}</td><td><strong>₹${item.value.toFixed(2)}</strong></td>`;
-        tbody.appendChild(tr);
-    });
-}
-
-const searchBox = document.getElementById('searchBox');
-const suggestionsBox = document.getElementById('suggestions');
-const billingBody = document.getElementById('billingBody');
-const emptyRow = document.getElementById('emptyRow');
-
-searchBox.addEventListener('input', function() {
-    const query = this.value.toLowerCase().trim(); suggestionsBox.innerHTML = '';
-    if (query.length < 1) { suggestionsBox.style.display = 'none'; return; }
-    let matches = pullStock().filter(p => p.product_name.toLowerCase().includes(query));
-    if (matches.length > 0) {
-        matches.forEach(product => {
-            const div = document.createElement('div'); div.className = 'suggestion-item';
-            div.innerText = `${product.product_name} - Available Stock: ${product.stock} Strips (₹${product.rate}/strip)`;
-            div.onclick = function() { addProductToActiveBillingCart(product); };
-            suggestionsBox.appendChild(div);
-        });
-        suggestionsBox.style.display = 'block';
-    } else { suggestionsBox.style.display = 'none'; }
-});
-
-function addProductToActiveBillingCart(product) {
-    searchBox.value = ''; suggestionsBox.style.display = 'none';
-    if (!activeCart.find(item => item.id === product.id)) { activeCart.push({...product, qty: 1, discount: 0}); }
-    renderActiveCartTableManifest();
-}
-
-function renderActiveCartTableManifest() {
-    billingBody.querySelectorAll('tr:not(#emptyRow)').forEach(r => r.remove());
-    if (activeCart.length === 0) { emptyRow.style.display = 'table-row'; calculateBillFinancialTotals(); return; }
-    emptyRow.style.display = 'none';
-    activeCart.forEach((item, index) => {
-        const tr = document.createElement('tr');
-        const q = parseFloat(item.qty) || 0; const r = parseFloat(item.rate) || 0; const d = parseFloat(item.discount) || 0; const g = parseFloat(item.gst) || 0;
-        const subtotal = (r * q - (r * q * (d / 100))) * (1 + g / 100);
-        tr.innerHTML = `<td><strong>${item.product_name}</strong></td><td>${item.rack}</td><td>${item.batch}</td><td>${item.expiry}</td>`+
-            `<td><input type="number" class="qty-input" value="${q}" oninput="activeCart[${index}].qty=this.value; renderActiveCartTableManifest();"><span class="print-text-val">${q}</span></td>`+
-            `<td>₹${r.toFixed(2)}</td>`+
-            `<td><input type="number" class="disc-input" value="${d}" oninput="activeCart[${index}].discount=this.value; renderActiveCartTableManifest();"><span class="print-text-val">${d}%</span></td>`+
-            `<td>${g}%</td><td><strong>₹${subtotal.toFixed(2)}</strong></td>`+
-            `<td><button class="btn-danger" onclick="activeCart.splice(${index},1); renderActiveCartTableManifest();">Delete</button></td>`;
-        billingBody.appendChild(tr);
-    });
-    calculateBillFinancialTotals();
-}
-
-function calculateBillFinancialTotals() {
-    let gross = 0, totalDiscount = 0, gstTotal = 0;
-    activeCart.forEach(item => {
-        const q = parseFloat(item.qty) || 0; const r = parseFloat(item.rate) || 0; const d = parseFloat(item.discount) || 0; const g = parseFloat(item.gst) || 0;
-        const base = r * q; const disc = base * (d / 100); const tax = (base - disc) * (g / 100);
-        gross += base; totalDiscount += disc; gstTotal += tax;
-    });
-    const netPayable = gross - totalDiscount + gstTotal;
-    document.getElementById('lbl_gross').innerHTML = '₹ ' + gross.toFixed(2);
-    document.getElementById('lbl_disc').innerHTML = '₹ ' + totalDiscount.toFixed(2);
-    document.getElementById('lbl_gst').innerHTML = '₹ ' + gstTotal.toFixed(2);
-    document.getElementById('lbl_net').innerHTML = '₹ ' + netPayable.toFixed(2);
-}
-
-function processSaleInvoiceDeductStockCentral() {
-    if(activeCart.length === 0) { alert("Cart empty!"); return; }
-    let stock = pullStock(); let sales = pullSales();
-    document.getElementById('lbl_patientName').innerText = document.getElementById('patientName').value;
-    document.getElementById('lbl_patientContact').innerText = document.getElementById('patientContact').value;
-    document.getElementById('lbl_docName').innerText = document.getElementById('docName').value;
-    calculateBillFinancialTotals();
-    activeCart.forEach(cartItem => { let item = stock.find(s => s.id === cartItem.id); if(item) item.stock -= cartItem.qty; });
-    sales.push({ invoice: `PV-2026-00${Math.floor(Math.random()*900)+100}`, patient: document.getElementById('patientName').value, doctor: document.getElementById('docName').value, value: parseFloat(document.getElementById('lbl_net').innerText.replace('₹ ', '')) });
-    commitDb(stock, sales, null);
-    setTimeout(() => { window.print(); activeCart = []; renderActiveCartTableManifest(); renderInventoryTable(); renderSalesBookTable(); }, 250);
-}
-
-function handleSmartCSVUpload(event) {
-    const file = event.target.files[0]; if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const text = e.target.result; const lines = text.split('\n');
-        temporaryPurchaseCart = [];
-        for (let i = 1; i < lines.length; i++) {
-            if (!lines[i].trim()) continue; 
-            const cols = lines[i].split(',');
-            if (cols.length >= 7) {
-                const name = cols[1].trim().replace(/"/g, ''); 
-                const qty = parseInt(cols[4]) || 0;
-                const rate = parseFloat(cols[5]) || 0;
-                if (name && name.toLowerCase() !== 'product name') { 
-                    temporaryPurchaseCart.push({ 
-                        product_name: name, rack: cols[2] || "A-01", 
-                        batch: cols[3] || "BAT-NEW", expiry: cols[6] || "12/28", 
-                        rate: rate, gst: parseInt(cols[7]) || 12, qty: qty 
-                    }); 
-                }
-            }
+        @media print {
+            .sidebar, .top-navbar, .search-section, .btn-container, .btn-danger, th:last-child, td:last-child, .meta-grid input, .qty-input, .disc-input, .hotkey-banner-strip { display: none !important; }
+            .print-text-val { display: inline-block !important; }
+            body, .main-content, .card-box { background: white !important; padding: 0; margin: 0; box-shadow: none; border: none; }
+            .bill-header-print { display: flex !important; align-items: center; justify-content: space-between; border-bottom: 2px solid #064e3b; padding-bottom: 15px; margin-bottom: 25px; }
+            th { background-color: #f1f5f9 !important; color: black !important; border: 1px solid #94a3b8 !important; }
+            td { border: 1px solid #cbd5e1 !important; background: transparent !important; color: #000000 !important; }
+            .summary-box { display: flex !important; width: 100% !important; justify-content: flex-end !important; margin-top: 20px !important; }
+            .summary-table { width: 300px !important; border: 2px solid #000000 !important; }
+            .summary-table td { border-bottom: 1px solid #000000 !important; padding: 12px !important; color: #000000 !important; font-size: 14px !important; font-weight: bold !important; display: table-cell !important; }
         }
-        renderPurchaseCartTable();
-    };
-    reader.readAsText(file);
-}
+    </style>
+</head>
+<body>
 
-function renderPurchaseCartTable() {
-    const tbody = document.getElementById('purchaseCartBody'); const emptyRow = document.getElementById('purEmptyRow');
-    tbody.querySelectorAll('tr:not(#purEmptyRow)').forEach(r => r.remove());
-    if(temporaryPurchaseCart.length === 0) { emptyRow.style.display = 'table-row'; document.getElementById('deleteCsvBtn').style.display='none'; return; }
-    emptyRow.style.display = 'none'; document.getElementById('deleteCsvBtn').style.display='inline-block';
-    temporaryPurchaseCart.forEach(item => {
-        const tr = document.createElement('tr'); 
-        tr.innerHTML = `<td><strong>${item.product_name}</strong></td>`+
-            `<td><span style="background:#fffbeb; padding:2px 6px; border-radius:4px; font-weight:bold; color:#b45309;">${item.rack}</span></td>`+
-            `<td>${item.batch}</td><td>${item.expiry}</td><td><strong>${item.qty} Strips</strong></td>`+
-            `<td>₹${item.rate.toFixed(2)}</td><td>${item.gst}%</td><td><strong>₹${(item.rate * item.qty).toFixed(2)}</strong></td>`;
-        tbody.appendChild(tr);
-    });
-}
+<!-- 🔐 LOGIN SCREEN -->
+<div id="loginScreen">
+    <div class="login-card">
+        <img class="login-logo" src="logo.jpg" alt="PharmaVigour Logo">
+        <h2>PharmaVigour OS</h2>
+        <p>Enterprise Network Security Access Gateway</p>
+        <div id="loginError" class="login-error"></div>
 
-function saveEntirePurchaseCartToStock() {
-    if(temporaryPurchaseCart.length === 0) { alert("Please parse a CSV file first!"); return; }
-    let stock = pullStock(); let purchases = pullPurchases(); let currentInvoiceTotal = 0;
-    temporaryPurchaseCart.forEach(item => {
-        currentInvoiceTotal += (item.rate * item.qty);
-        let match = stock.find(s => s.product_name.toLowerCase() === item.product_name.toLowerCase() && s.batch === item.batch);
-        if(match) { match.stock += item.qty; } 
-        else { stock.push({ id: stock.length + 101, product_name: item.product_name, rack: item.rack, batch: item.batch, expiry: item.expiry, rate: item.rate, gst: item.gst, stock: item.qty }); }
-    });
-    purchases.push({ voucher: `PV-PUR-00${Math.floor(Math.random()*900)+100}`, supplier: document.getElementById('supplierName').value, date: "19/06/2026", value: currentInvoiceTotal });
-    commitDb(stock, null, purchases); 
-    alert("🎉 Success: Stock saved to inventory!");
-    temporaryPurchaseCart = []; renderPurchaseCartTable(); renderInventoryTable(); renderPurchaseHistoryTable();
-    showView('purchaseHistoryView'); 
-}
+        <div id="phoneSection">
+            <label class="field-label">ENTER REGISTERED MOBILE NUMBER</label>
+            <input type="tel" id="userPhone" class="login-field" placeholder="7029719074" maxlength="10">
+            <div id="outletSelectGroup" style="margin-bottom:18px; text-align:left;">
+                <label class="field-label">SELECT SYSTEM NETWORK OUTLET</label>
+                <select id="loginOutlet" class="login-field" style="text-align-last:center; font-size:14px; padding:11px;">
+                    <option value="Shantipur Railway Station Node">Shantipur Railway Station Node</option>
+                    <option value="Chakdaha Dough Branch">Chakdaha Dough Branch</option>
+                    <option value="Kanchrapara Core Outlet">Kanchrapara Core Outlet</option>
+                </select>
+            </div>
+            <button class="login-btn" onclick="generateAndSendSecureOTP()">Generate Secure OTP</button>
+        </div>
 
-function deleteUploadedCSVProcess() { temporaryPurchaseCart = []; renderPurchaseCartTable(); }
+        <div id="otpBoxSection" style="display:none;">
+            <label class="field-label" style="color:#d97706; text-align:center;">ENTER 4-DIGIT SECURITY TOKEN</label>
+            <input type="password" id="inputOtp" class="login-field" placeholder="••••" maxlength="4" style="letter-spacing:10px; font-size:22px;">
+            <button class="login-btn" style="background:#d97706; color:white; border-color:#b45309;" onclick="verifyReceivedOTPCode()">Verify Token & Authorize Session</button>
+        </div>
 
-function showView(vId) { 
-    document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); 
-    document.getElementById(vId).classList.add('active'); 
-    if(vId=='stockInventoryView') renderInventoryTable(); 
-    if(vId=='saleHistoryView') renderSalesBookTable(); 
-    if(vId=='purchaseHistoryView') renderPurchaseHistoryTable(); 
-}
-function showSubView(vId, el) { 
-    showView(vId); 
-    document.querySelectorAll('.sidebar .submenu-item, .sidebar .menu-item').forEach(i => i.classList.remove('active')); 
-    if(el) el.classList.add('active'); 
-}
-function toggleSubmenu(id) { document.getElementById(id).classList.toggle('open'); }
+        <div class="demo-shortcut-box">
+            • Click number to auto-fill: <span style="text-decoration:underline; cursor:pointer; font-weight:bold; color:#064e3b;" onclick="fillQuickDemoAccount('7029719074')">7029719074</span>
+        </div>
+    </div>
+</div>
+
+<!-- 🏠 DASHBOARD -->
+<div id="dashboardScreen">
+    <div class="top-navbar">
+        <div class="navbar-brand" onclick="showView('homeView')">
+            <span class="hamburger-icon">☰</span>
+            <img class="navbar-logo" src="logo.jpg" alt="Logo">
+            <h1>PharmaVigour OS</h1>
+        </div>
+        <div class="navbar-right-controls">
+            <div class="notification-bell-box" onclick="showView('stockInventoryView')">
+                <span>🔔</span><span id="navAlertBadge" class="bell-badge">0</span>
+            </div>
+            <div class="navbar-user">
+                <span>Outlet: <span id="activeOutletBadge" class="outlet-badge">---</span></span>
+                <span>Role: <span id="activeRoleBadge" class="role-badge">---</span></span>
+                <span>|</span>
+                <span class="logout-link" onclick="handleLogoutSystemSession()">Secure Logout</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="workspace">
+        <div class="sidebar">
+            <div class="menu-item active" onclick="toggleSubmenu('saleSub')">
+                <div><span class="menu-icon">🧮</span><span class="menu-text">1. Sale</span></div><span class="menu-arrow">▼</span>
+            </div>
+            <div id="saleSub" class="submenu-list open">
+                <div class="submenu-item active" onclick="showSubView('newSaleView', this)">New Sale Bill</div>
+                <div class="submenu-item" onclick="showSubView('saleHistoryView', this)">Sale History</div>
+                <div class="submenu-item" onclick="showSubView('grossChartView', this)">Today Gross Sale Chart</div>
+            </div>
+            
+            <div class="menu-item" onclick="toggleSubmenu('purchaseSub')">
+                <div><span class="menu-icon">📦</span><span class="menu-text">2. Purchase</span></div><span class="menu-arrow">▼</span>
+            </div>
+            <div id="purchaseSub" class="submenu-list">
+                <div class="submenu-item" onclick="showSubView('newPurchaseView', this)">New Stock Inward</div>
+                <div class="submenu-item" onclick="showSubView('purchaseHistoryView', this)">Purchase History</div>
+                <div class="submenu-item" onclick="showSubView('stockInventoryView', this)">Current Inventory</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            
+            <!-- HOME -->
+            <div id="homeView" class="view-panel active">
+                <div class="brand-landing-wrapper">
+                    <img class="big-center-logo" src="logo.jpg" alt="PharmaVigour Operations Logo">
+                    <h2>PharmaVigour Operations</h2>
+                    <p>Bridging Medical Operational Expertise with Franchise Retail Chain Scalability.</p>
+                </div>
+            </div>
+
+            <!-- NEW SALE BILL -->
+            <div id="newSaleView" class="view-panel">
+                <div class="hotkey-banner-strip">
+                    <span>⚡ Hotkeys:</span>
+                    <span><span class="hotkey-badge">F3</span> Focus Search</span>
+                    <span><span class="hotkey-badge">F4</span> Open Inventory</span>
+                </div>
+
+                <div class="card-box billing-container">
+                    <div class="bill-header-print">
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <img src="logo.jpg" style="width:75px; height:auto;">
+                            <div>
+                                <h2 style="color:#064e3b; font-size:20px;">PharmaVigour Operations</h2>
+                                <p style="font-size:11px; color:#475569;">Bridging Expertise with Expansion</p>
+                            </div>
+                        </div>
+                        <div style="text-align:right; font-size:12px; line-height:1.5;">
+                            <p><strong>RETAIL INVOICE / CASH MEMO</strong></p>
+                            <p id="print_outlet_name">Outlet Node Branch</p>
+                        </div>
+                    </div>
+
+                    <div class="panel-title search-section">Retail Cash Memo Core Terminal</div>
+                    
+                    <div class="meta-grid">
+                        <div class="form-group"><label>Patient Full Name</label><input type="text" id="patientName" value="Rahul Chakraborty"><span class="print-text-val" id="lbl_patientName">Rahul Chakraborty</span></div>
+                        <div class="form-group"><label>Contact Number</label><input type="text" id="patientContact" value="9829972091"><span class="print-text-val" id="lbl_patientContact">9829972091</span></div>
+                        <div class="form-group"><label>Consulting Doctor</label><input type="text" id="docName" value="Dr. P. Maitra"><span class="print-text-val" id="lbl_docName">Dr. P. Maitra</span></div>
+                        <div class="form-group"><label>Invoice Date</label><input type="text" value="18/06/2026" readonly><span class="print-text-val">18/06/2026</span></div>
+                    </div>
+
+                    <div class="search-section" style="position:relative; margin-bottom: 20px;">
+                        <input type="text" id="searchBox" class="search-box" placeholder="Search product name (Press F3)..." autocomplete="off">
+                        <div id="suggestions" class="suggestions-box"></div>
+                    </div>
+
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr><th>Product</th><th>Rack</th><th>Batch</th><th>Expiry</th><th>Qty</th><th>Rate (₹)</th><th>Disc %</th><th>GST %</th><th>Subtotal (₹)</th><th>Action</th></tr>
+                            </thead>
+                            <tbody id="billingBody">
+                                <tr id="emptyRow"><td colspan="10" style="text-align:center; padding:25px; color:#64748b; font-style:italic;">No products added. Search above to add.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="summary-box">
+                        <table class="summary-table">
+                            <tbody>
+                                <tr><td>Gross Total:</td><td style="text-align:right;" id="lbl_gross">₹ 0.00</td></tr>
+                                <tr><td>Total Discount:</td><td style="text-align:right; color:#dc2626;" id="lbl_disc">₹ 0.00</td></tr>
+                                <tr><td>GST Amount:</td><td style="text-align:right;" id="lbl_gst">₹ 0.00</td></tr>
+                                <tr class="total-row"><td>Net Payable:</td><td style="text-align:right;" id="lbl_net">₹ 0.00</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="btn-container">
+                        <button class="btn btn-primary" onclick="processSaleInvoiceDeductStockCentral()">Complete Bill & Print 📄</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SALE HISTORY -->
+            <div id="saleHistoryView" class="view-panel">
+                <div class="card-box">
+                    <div class="panel-title">Sales History Ledger</div>
+                    <table>
+                        <thead>
+                            <tr><th>Invoice</th><th>Patient</th><th>Doctor</th><th>Net Value</th></tr>
+                        </thead>
+                        <tbody id="salesBookTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GROSS CHART -->
+            <div id="grossChartView" class="view-panel">
+                <div class="card-box" style="text-align:center; padding:40px 20px;">
+                    <div class="panel-title" style="text-align:left;">Today's Live Gross Sales Analytics</div>
+                    <div style="background:#f1f5f9; padding:30px; border-radius:12px; margin: 20px auto; max-width:500px; border:1px solid #cbd5e1;">
+                        <h2 style="color:#064e3b; font-size:36px; margin-bottom:10px;" id="chart_live_val">₹ 0.00</h2>
+                        <p style="color:#64748b; font-weight:600; font-size:13px;">Current Gross Turnover</p>
+                        <div style="width:100%; background:#cbd5e1; height:14px; border-radius:10px; margin-top:20px; overflow:hidden;">
+                            <div id="chartBar" style="width:0%; background:#d97706; height:100%; transition: width 0.5s;"></div>
+                        </div>
+                        <p style="font-size:11px; color:#94a3b8; margin-top:8px;">Target: ₹ 5,000.00</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW PURCHASE -->
+            <div id="newPurchaseView" class="view-panel">
+                <div class="csv-upload-box">
+                    <h3 style="color:#064e3b; margin-bottom:10px;">📦 Bulk Stock Inward Gateway (CSV)</h3>
+                    <p style="font-size:13px; color:#64748b; margin-bottom:15px;">Select distributor invoice CSV file</p>
+                    <input type="file" id="csvFileInput" accept=".csv" style="display:none;" onchange="handleSmartCSVUpload(event)">
+                    <div style="display: flex; gap: 15px; justify-content: center;">
+                        <button class="btn btn-primary" onclick="document.getElementById('csvFileInput').click()">📤 Select & Parse CSV</button>
+                        <button id="deleteCsvBtn" class="btn btn-danger" style="display:none;" onclick="deleteUploadedCSVProcess()">🗑 Clear</button>
+                    </div>
+                </div>
+                
+                <div class="card-box">
+                    <div class="panel-title">Purchase Bill Entry</div>
+                    <div class="meta-grid" style="grid-template-columns: 1fr 1fr; margin-bottom:15px;">
+                        <div class="form-group"><label>Supplier Name</label><input type="text" id="supplierName" value="PharmaOperational Wholesalers Ltd."></div>
+                        <div class="form-group"><label>Inward Date</label><input type="text" value="19/06/2026" readonly></div>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr><th>Item</th><th>Rack</th><th>Batch</th><th>Expiry</th><th>Qty</th><th>Rate (₹)</th><th>GST %</th><th>Total (₹)</th></tr>
+                            </thead>
+                            <tbody id="purchaseCartBody">
+                                <tr id="purEmptyRow"><td colspan="8" style="text-align:center; padding:20px; color:#64748b; font-style:italic;">Upload a CSV file to load stock data.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="btn-container">
+                        <button class="btn btn-success" style="background:#064e3b;" onclick="saveEntirePurchaseCartToStock()">💾 Save to Inventory</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PURCHASE HISTORY -->
+            <div id="purchaseHistoryView" class="view-panel">
+                <div class="card-box">
+                    <div class="panel-title">Purchase History Ledger</div>
+                    <table>
+                        <thead>
+                            <tr><th>Voucher ID</th><th>Supplier</th><th>Date</th><th>Invoice Value (₹)</th></tr>
+                        </thead>
+                        <tbody id="purchaseHistoryBody">
+                            <tr id="purHistEmptyRow"><td colspan="4" style="text-align:center; padding:20px; color:#64748b; font-style:italic;">No purchase records yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- STOCK INVENTORY -->
+            <div id="stockInventoryView" class="view-panel">
+                <div class="hotkey-banner-strip" style="background:#fee2e2; border-color:#fca5a5; color:#b91c1c;">
+                    <span>⚠️ Watchdog Active: Items expiring before June 2026 are auto-flagged.</span>
+                </div>
+                <div class="card-box">
+                    <div class="panel-title">Live Stock Inventory Ledger</div>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead><tr><th>Index</th><th>Product Name</th><th>Rack</th><th>Batch</th><th>Expiry</th><th>Rate</th><th>GST</th><th>Stock</th></tr></thead>
+                            <tbody id="inventoryTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // ✅ STEP 1: FORCE RESEED DATABASE ON EVERY LOAD
+    localStorage.removeItem('PV_OS_STOCK');
+    localStorage.removeItem('PV_OS_SALES');
+    localStorage.removeItem('PV_OS_PURCHASES');
+
+    const IMMUTABLE_STOCK_SEED = [
+        { id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: 76.60, gst: 12, stock: 140 },
+        { id: 102, product_name: "REXIPRA LS TAB 10'S", rack: "B-12", batch: "KX3099", expiry: "11/27", rate: 78.57, gst: 12, stock: 90 },
+        { id: 103, product_name: "PAN D CAPSULE 10'S", rack: "C-05", batch: "PAN9942A", expiry: "05/26", rate: 145.00, gst: 12, stock: 45 },
+        { id: 104, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "C
+
+*Something went wrong generating a response.*
