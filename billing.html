@@ -259,7 +259,7 @@
                 </div>
             </div>
 
-            <!-- 📥 VIEW: 2.1 NEW PURCHASE -->
+            <!-- 📥 VIEW: 2.1 NEW PURCHASE (WITH BULK CSV INTELLIGENT PARSER) -->
             <div id="newPurchaseView" class="view-panel">
                 <div class="csv-upload-box">
                     <h3 style="color:#064e3b; margin-bottom:10px;">📦 Bulk Stock Inward via CSV File</h3>
@@ -283,7 +283,7 @@
                 </div>
             </div>
 
-            <!-- 📊 VIEW: 2.2 NEW LIVE INVENTORY MONITOR MODULE -->
+            <!-- 📊 VIEW: 2.2 LIVE INVENTORY MONITOR MODULE -->
             <div id="stockInventoryView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Live Node Stock Inventory Manager</div>
@@ -315,7 +315,7 @@
                 </div>
             </div>
 
-            <!-- 🏢 OTHER MODULES REMAIN FULLY INTEGRATED FOR DEMO PURPOSES -->
+            <!-- 🏢 OTHER WORKSPACE DEMO PANELS -->
             <div id="saleReturnView" class="view-panel"><div class="card-box"><div class="panel-title">Sale Return Node</div><p>Interactive Credit Note Generator ready.</p></div></div>
             <div id="dailySalesView" class="view-panel"><div class="card-box"><div class="panel-title">Daily Sales Engine</div><p>Live gross audit tracker active.</p></div></div>
             <div id="expiryDashboardView" class="view-panel"><div class="card-box"><div class="panel-title">Expiry alerts</div><p>Automatic 3-month shelf analyzer active.</p></div></div>
@@ -334,7 +334,7 @@
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('dashboardScreen').style.display = 'flex';
             showView('homeView');
-            renderInventoryTable(); // Load initial stock on startup
+            renderInventoryTable();
         } else { document.getElementById('loginError').style.display = 'block'; }
     }
     function triggerQuickDemoLogin() { document.getElementById('username').value = 'admin'; document.getElementById('password').value = 'password'; handleLogin(); }
@@ -354,14 +354,14 @@
         target.classList.toggle('open'); 
     }
 
-    // 🛒 MASTER IN-MEMORY PRODUCT DATA BANK (Integrated with products_rows.csv metrics)
+    // 🛒 MASTER DATABANK IN-MEMORY INFRASTRUCTURE
     const globalStock = [
         { id: 1, product_name: "Rantac 300mg Tab", rack: "R-02", batch: "RAN548904HJ", expiry: "6/27", rate: 40.00, gst: 5, stock: 500 },
         { id: 2, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1300 }
     ];
     let activeCart = [];
 
-    // 📊 NEW FUNCTION: RENDER CURRENT LIVE STOCK INVENTORY TABLE
+    // 📊 RENDER LIVE STOCK INVENTORY TABLE
     function renderInventoryTable() {
         const tbody = document.getElementById('inventoryTableBody');
         if(!tbody) return;
@@ -375,12 +375,12 @@
                 `<td>${item.expiry}</td>`+
                 `<td>₹${parseFloat(item.rate).toFixed(2)}</td>`+
                 `<td>${item.gst}%</td>`+
-                `<td><strong style="color:#166534; font-size:14px;">${item.stock || 100} Strips</strong></td>`;
+                `<td><strong style="color:#166534; font-size:14px;">${item.stock} Strips</strong></td>`;
             tbody.appendChild(tr);
         });
     }
 
-    // 📤 BULK CSV FILE UPLOAD ENGINE (Pushes and re-renders inventory!)
+    // 📤 🌟 INTELLIGENT AUTO-FETCH CSV PARSER (Matches user CSV exactly!)
     function handleBulkCSVUpload(event) {
         const file = event.target.files[0];
         if (!file) return;
@@ -388,27 +388,50 @@
         reader.onload = function(e) {
             const text = e.target.result;
             const lines = text.split('\n');
+            
+            // Extract Headers to map indexes automatically
+            const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/"/g, ''));
+            
+            const idxName = headers.indexOf('product_name');
+            const idxRack = headers.indexOf('rack');
+            const idxBatch = headers.indexOf('batch');
+            const idxExpiry = headers.indexOf('expiry');
+            const idxRate = headers.indexOf('rate');
+            const idxGst = headers.indexOf('gst');
+            const idxStock = headers.indexOf('stock'); // Map user's CSV column 'stock' as the active quantity node
+
             let addedCount = 0;
+
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue;
                 const cols = lines[i].split(',');
+                
                 if (cols.length >= 5) {
-                    const name = cols[2] ? cols[2].trim().replace(/"/g, '') : '';
-                    const rack = cols[3] ? cols[3].trim() : 'N/A';
-                    const batch = cols[4] ? cols[4].trim() : 'N/A';
-                    const expiry = cols[5] ? cols[5].trim() : 'N/A';
-                    const rate = parseFloat(cols[6]) || 0;
-                    const gst = parseInt(cols[7]) || 5;
-                    const stkVal = parseInt(cols[8]) || 100;
+                    const name = cols[idxName] ? cols[idxName].trim().replace(/"/g, '') : '';
+                    const rack = cols[idxRack] ? cols[idxRack].trim().replace(/"/g, '') : 'N/A';
+                    const batch = cols[idxBatch] ? cols[idxBatch].trim().replace(/"/g, '') : 'N/A';
+                    const expiry = cols[idxExpiry] ? cols[idxExpiry].trim().replace(/"/g, '') : 'N/A';
+                    const rate = parseFloat(cols[idxRate]) || 0;
+                    const gst = parseInt(cols[idxGst]) || 5;
+                    const stockAmt = parseInt(cols[idxStock]) || 100;
 
                     if (name && rate > 0) {
-                        globalStock.push({ id: globalStock.length + 1, product_name: name, rack: rack, batch: batch, expiry: expiry, rate: rate, gst: gst, stock: stkVal });
+                        globalStock.push({
+                            id: globalStock.length + 1,
+                            product_name: name,
+                            rack: rack,
+                            batch: batch,
+                            expiry: expiry,
+                            rate: rate,
+                            gst: gst,
+                            stock: stockAmt
+                        });
                         addedCount++;
                     }
                 }
             }
-            alert(`🎉 Success! ${addedCount} medicines added. Total inventory stock node updated.`);
-            renderInventoryTable(); // Refresh list automatically
+            alert(`🎉 Success! Bulk CSV Auto-Fetch Complete. Added ${addedCount} brand records seamlessly into the inventory database node.`);
+            renderInventoryTable();
             showView('stockInventoryView');
         };
         reader.readAsText(file);
@@ -433,7 +456,7 @@
         document.getElementById('purBatch').value = ''; document.getElementById('purExpiry').value = '';
         document.getElementById('purRate').value = ''; document.getElementById('purStock').value = '';
         
-        renderInventoryTable(); // Refresh list automatically
+        renderInventoryTable();
         showView('stockInventoryView');
     }
 
