@@ -102,7 +102,7 @@
         <div class="navbar-user">
             <span>Role: <span id="activeRoleBadge" class="role-badge">Super Admin</span></span>
             <span>|</span>
-            <span>Outlet: <strong>Main</strong></span>
+            <span>Outlet: <strong>Shantipur Core</strong></span>
             <span>|</span>
             <span class="logout-link" onclick="handleLogout()">Logout 🔓</span>
         </div>
@@ -110,7 +110,7 @@
 
     <div class="workspace">
         <div class="sidebar">
-            <div class="menu-item side-node" id="side_sale" onclick="toggleSubmenu('saleSub')">1. Sale <span>▼</span></div>
+            <div class="menu-item" onclick="toggleSubmenu('saleSub')">1. Sale <span>▼</span></div>
             <div id="saleSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('newSaleView', this)">• New Sale (Billing)</div>
             </div>
@@ -276,9 +276,8 @@
                     </div>
                     <div class="btn-container" style="margin-top:0;"><button class="btn btn-success" onclick="createNewStaffRole()">⚡ Generate Staff Credentials</button></div>
                     
-                    <!-- ⚠️ GLOBAL DATA RESET NODE -->
                     <div style="margin-top: 20px; padding: 15px; background: #fee2e2; border: 1px solid #fca5a5; border-radius: 6px;">
-                        <p style="color:#991b1b; font-size:13px; font-weight:bold; margin-bottom:10px;">⚠️ Danger Management Zone: Fresh Demo ওল্ড ডাটাবেস সম্পূর্ণ ক্লিয়ার করুন</p>
+                        <p style="color:#991b1b; font-size:13px; font-weight:bold; margin-bottom:10px;">⚠️ Danger Management Zone</p>
                         <button class="btn btn-danger" style="background:#dc2626;" onclick="clearLocalStorageFactoryReset()">Reset Local Demo Database Factory Reset 🗑️</button>
                     </div>
                 </div>
@@ -289,7 +288,7 @@
 </div>
 
 <script>
-    // 🧠 🌟 LOCALSTORAGE PERSISTENCE ENGINE INITIALIZER (The Core Browser DB)
+    // 🧠 🌟 LOCALSTORAGE ENGINE (BOOTSTRAPS DATA SAFELY ON ALL CALLS)
     const DEFAULT_STOCK = [
         { id: 1, product_name: "Rantac 300mg Tab", rack: "R-02", batch: "RAN548904HJ", expiry: "06/27", rate: 40.00, gst: 5, stock: 500 },
         { id: 2, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1300 }
@@ -298,22 +297,20 @@
         { invoice: "PV-2026-00481", patient: "Rahul Chakraborty", doctor: "Dr. P. Maitra", value: 1688.10 }
     ];
 
-    // Read or bootstrap data directly from localStorage browser database
-    let globalStock = JSON.parse(localStorage.getItem('PV_STOCK')) || DEFAULT_STOCK;
-    let mockSalesBook = JSON.parse(localStorage.getItem('PV_SALES')) || DEFAULT_SALES;
+    // Core retrieval helper to block initialization wipes on re-login
+    function getLiveStockFromStorage() { return JSON.parse(localStorage.getItem('PV_STOCK')) || DEFAULT_STOCK; }
+    function getLiveSalesFromStorage() { return JSON.parse(localStorage.getItem('PV_SALES')) || DEFAULT_SALES; }
 
-    function syncDatabaseWithBrowser() {
-        localStorage.setItem('PV_STOCK', JSON.stringify(globalStock));
-        localStorage.setItem('PV_SALES', JSON.stringify(mockSalesBook));
+    function syncDatabaseWithBrowser(stockData, salesData) {
+        if(stockData) localStorage.setItem('PV_STOCK', JSON.stringify(stockData));
+        if(salesData) localStorage.setItem('PV_SALES', JSON.stringify(salesData));
     }
 
     function clearLocalStorageFactoryReset() {
-        if(confirm("আপনি কি নিশ্চিত যে ডেমো ডাটাবেস রিসেট করবেন? এতে ব্রাউজারে সেভ থাকা সব এক্সট্রা স্টক মুছে যাবে।")) {
+        if(confirm("আপনি কি নিশ্চিত যে ডেমো ডাটাবেস রিসেট করবেন?")) {
             localStorage.clear();
-            globalStock = DEFAULT_STOCK;
-            mockSalesBook = DEFAULT_SALES;
-            syncDatabaseWithBrowser();
-            alert("ডাটাবেস রিসেট সফল হয়েছে! পেজটি রিলোড হচ্ছে।");
+            syncDatabaseWithBrowser(DEFAULT_STOCK, DEFAULT_SALES);
+            alert("ডাটাবেস রিসেট সফল হয়েছে!");
             location.reload();
         }
     }
@@ -327,7 +324,7 @@
     let activeCart = [];
     let temporaryPurchaseCart = []; 
 
-    // 🔐 LOGIN CONTROLS
+    // 🔐 LOGIN CONTROLS (FIXED: Pulls straight from localStorage upon entry)
     function handleLogin() {
         const u = document.getElementById('username').value.trim();
         const p = document.getElementById('password').value.trim();
@@ -337,6 +334,8 @@
             document.getElementById('dashboardScreen').style.display = 'flex';
             document.getElementById('activeRoleBadge').innerText = currentUserRole === 'superadmin' ? 'Super Admin 👑' : 'Staff Operator 🧑';
             document.getElementById('activeRoleBadge').style.background = currentUserRole === 'superadmin' ? '#fef08a' : '#cbd5e1';
+            
+            // 🚀 CRITICAL FIX: Force reload from browser DB on login session trigger
             applyRolePermissionsMatrix(usersDatabase[u].permissions);
             showView('homeView');
         } else { document.getElementById('loginError').style.display = 'block'; }
@@ -369,17 +368,19 @@
         document.getElementById('newStaffUser').value = '';
     }
 
-    // 📊 RENDER LIVE INVENTORY WITH ADMIN DELETE/EDIT PERSISTENCE
+    // 📊 RENDER LIVE INVENTORY WITH PERSISTED CALLS
     function renderInventoryTable() {
         const tbody = document.getElementById('inventoryTableBody'); const thAction = document.getElementById('th_inventory_action');
         if(!tbody) return; tbody.innerHTML = '';
         thAction.style.display = currentUserRole === 'superadmin' ? 'table-cell' : 'none';
 
-        globalStock.forEach((item, index) => {
+        let currentStockList = getLiveStockFromStorage(); // Pull fresh database latch
+
+        currentStockList.forEach((item, index) => {
             const tr = document.createElement('tr');
             let actionTd = currentUserRole === 'superadmin' ? 
                 `<td><button class="btn-edit" onclick="editStockPrompt(${index})">✏️ Edit</button>`+
-                `<button class="btn-danger" onclick="globalStock.splice(${index},1); syncDatabaseWithBrowser(); renderInventoryTable();">🗑️ Delete</button></td>` : '';
+                `<button class="btn-danger" onclick="deleteStockItemRow(${index})">🗑️ Delete</button></td>` : '';
 
             tr.innerHTML = `<td>#STK00${item.id}</td><td><strong>${item.product_name}</strong></td>`+
                 `<td><span style="background:#f1f5f9; padding:4px 8px; border-radius:4px; font-weight:bold;">${item.rack}</span></td>`+
@@ -389,12 +390,20 @@
         });
     }
 
+    function deleteStockItemRow(idx) {
+        let stockList = getLiveStockFromStorage();
+        stockList.splice(idx, 1);
+        syncDatabaseWithBrowser(stockList, null);
+        renderInventoryTable();
+    }
+
     function editStockPrompt(index) {
-        let currentStock = globalStock[index].stock;
-        let newStock = prompt(`"${globalStock[index].product_name}"-এর নতুন স্টক টাইপ করুন:`, currentStock);
+        let stockList = getLiveStockFromStorage();
+        let currentStock = stockList[index].stock;
+        let newStock = prompt(`"${stockList[index].product_name}"-এর নতুন স্টক টাইপ করুন:`, currentStock);
         if(newStock !== null) {
-            globalStock[index].stock = parseInt(newStock) || 0;
-            syncDatabaseWithBrowser(); // Sync right into browser db lock
+            stockList[index].stock = parseInt(newStock) || 0;
+            syncDatabaseWithBrowser(stockList, null); 
             renderInventoryTable();
         }
     }
@@ -404,15 +413,23 @@
         if(!tbody) return; tbody.innerHTML = '';
         thSales.style.display = currentUserRole === 'superadmin' ? 'table-cell' : 'none';
 
-        mockSalesBook.forEach((bill, index) => {
+        let salesList = getLiveSalesFromStorage();
+
+        salesList.forEach((bill, index) => {
             const tr = document.createElement('tr');
-            let actionTd = currentUserRole === 'superadmin' ? `<td><button class="btn-danger" onclick="mockSalesBook.splice(${index},1); syncDatabaseWithBrowser(); renderSalesBookTable();">🗑️ Delete</button></td>` : '';
+            let actionTd = currentUserRole === 'superadmin' ? `<td><button class="btn-danger" onclick="deleteSalesBillRow(${index})">🗑️ Delete</button></td>` : '';
             tr.innerHTML = `<td><strong>${bill.invoice}</strong></td><td>${bill.patient}</td><td>${bill.doctor}</td><td><strong>₹${bill.value.toFixed(2)}</strong></td>` + actionTd;
             tbody.appendChild(tr);
         });
     }
 
-    // NAVIGATION CONTROLLER
+    function deleteSalesBillRow(idx) {
+        let salesList = getLiveSalesFromStorage();
+        salesList.splice(idx, 1);
+        syncDatabaseWithBrowser(null, salesList);
+        renderSalesBookTable();
+    }
+
     function showView(viewId) { document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); document.getElementById(viewId).classList.add('active'); }
     function showSubView(viewId, element) { showView(viewId); document.querySelectorAll('.submenu-item').forEach(i => i.classList.remove('active')); if(element) element.classList.add('active'); }
     function toggleSubmenu(id) { document.getElementById(id).classList.toggle('open'); }
@@ -448,13 +465,17 @@
 
     function saveEntirePurchaseCartToStock() {
         if (temporaryPurchaseCart.length === 0) { alert('কার্ট খালি!'); return; }
+        
+        let dbStock = getLiveStockFromStorage(); // Pull fresh array node
+        
         temporaryPurchaseCart.forEach(item => {
-            let existing = globalStock.find(s => s.product_name.toLowerCase() === item.product_name.toLowerCase() && s.batch === item.batch);
+            let existing = dbStock.find(s => s.product_name.toLowerCase() === item.product_name.toLowerCase() && s.batch === item.batch);
             if (existing) { existing.stock += item.qty; } else {
-                globalStock.push({ id: globalStock.length + 1, product_name: item.product_name, rack: item.rack, batch: item.batch, expiry: item.expiry, rate: item.rate, gst: item.gst, stock: item.qty, source: "user_entry" });
+                dbStock.push({ id: dbStock.length + 1, product_name: item.product_name, rack: item.rack, batch: item.batch, expiry: item.expiry, rate: item.rate, gst: item.gst, stock: item.qty, source: "user_entry" });
             }
         });
-        syncDatabaseWithBrowser(); // Save permanently
+        
+        syncDatabaseWithBrowser(dbStock, null); // Commit perfectly
         alert(`🎉 সফলভাবে স্টক মেমোরি ডাটাবেসে লক হয়েছে!`);
         temporaryPurchaseCart = []; renderPurchaseCartTable(); renderInventoryTable(); showView('stockInventoryView');
     }
@@ -492,13 +513,16 @@
     }
     function deleteUploadedCSVProcess() { temporaryPurchaseCart = []; renderPurchaseCartTable(); document.getElementById('deleteCsvBtn').style.display = 'none'; document.getElementById('csvFileInput').value = ''; }
 
-    // 🛒 RETAIL SALES WITH REAL-TIME INVENTORY DEDUCTION PRE-LOCK
+    // 🛒 RETAIL SALES ENGINE
     const searchBox = document.getElementById('searchBox'); const suggestionsBox = document.getElementById('suggestions'); const billingBody = document.getElementById('billingBody'); const emptyRow = document.getElementById('emptyRow');
     
     searchBox.addEventListener('input', function() {
         const query = this.value.toLowerCase().trim(); suggestionsBox.innerHTML = '';
         if (query.length < 1) { suggestionsBox.style.display = 'none'; return; }
-        const matches = globalStock.filter(p => p.product_name.toLowerCase().includes(query));
+        
+        let dbStock = getLiveStockFromStorage(); // Dynamic lookup
+        const matches = dbStock.filter(p => p.product_name.toLowerCase().includes(query));
+        
         if (matches.length > 0) {
             matches.forEach(product => {
                 const div = document.createElement('div'); div.className = 'suggestion-item'; div.innerText = `${product.product_name} [Rack: ${product.rack}] - Avail: ${product.stock} Strips`;
@@ -538,27 +562,28 @@
         document.getElementById('netPayable').innerText = '₹ ' + (gross + gst).toFixed(2);
     }
 
-    // 💾 COMPLETE SALES REAL-TIME DEDUCTION ENGINE LATCH
+    // COMPLETE SALES INVOICE DEDUCTION
     function processSaleInvoiceDeductStock() {
         if(activeCart.length === 0) return;
         
-        // Deduct from in-memory stock live
+        let dbStock = getLiveStockFromStorage();
+        let dbSales = getLiveSalesFromStorage();
+        
         activeCart.forEach(item => {
-            let stockItem = globalStock.find(s => s.id === item.id);
-            if(stockItem) stockItem.stock -= item.qty; // Real-time deduction
+            let stockItem = dbStock.find(s => s.id === item.id);
+            if(stockItem) stockItem.stock -= item.qty; 
         });
 
-        // Add transaction entry to sales log
         const netValue = parseFloat(document.getElementById('netPayable').innerText.replace('₹ ', ''));
-        mockSalesBook.push({
+        dbSales.push({
             invoice: `PV-2026-00${Math.floor(Math.random()*900)+100}`,
             patient: document.getElementById('patientName').value,
             doctor: document.getElementById('docName').value,
             value: netValue
         });
 
-        syncDatabaseWithBrowser(); // 🚀 ডাটাবেসে চিরতরে লক করা হলো
-        alert("🎉 বিক্রয় রসিদ সফলভাবে সম্পন্ন হয়েছে! ইনভেন্টরি থেকে স্টক স্বয়ংক্রিয়ভাবে মাইনাস করে দেওয়া হয়েছে।");
+        syncDatabaseWithBrowser(dbStock, dbSales); // Lock perfectly
+        alert("🎉 বিক্রয় রসিদ সফলভাবে সম্পন্ন হয়েছে!");
         activeCart = []; renderCart(); renderInventoryTable(); renderSalesBookTable();
         window.print();
     }
