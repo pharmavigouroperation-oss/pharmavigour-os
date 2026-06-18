@@ -3,169 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PharmaVigour OS - Enterprise ERP</title>
+    <title>PharmaVigour OS - Live Demo Enterprise ERP</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
-        
-        /* 🎨 BRAND COLOR THEME */
         body { background-color: #f5f4f0; color: #1e293b; }
         
-        /* 🔐 LOGIN SCREEN STYLES */
+        /* 🎨 BRAND COLOR THEME */
         #loginScreen { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(135deg, #022c22 0%, #064e3b 100%); padding: 20px; }
         .login-card { background: #fdfdfb; width: 100%; max-width: 400px; padding: 35px 30px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); text-align: center; border-top: 5px solid #d97706; }
         .login-logo { width: 140px; height: auto; margin-bottom: 15px; }
         .login-card h2 { color: #064e3b; margin-bottom: 6px; font-size: 22px; font-weight: 700; }
         .login-card p { color: #64748b; font-size: 13px; margin-bottom: 24px; font-style: italic; }
-        .login-field { width: 100%; padding: 12px; margin-bottom: 16px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 15px; outline: none; background: #fff; }
-        .login-field:focus { border-color: #d97706; box-shadow: 0 0 0 3px rgba(217,119,6,0.1); }
-        .login-btn { width: 100%; padding: 12px; background: #064e3b; color: #fef08a; border: 1px solid #d97706; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
-        .login-btn:hover { background: #043d2e; color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .login-field { width: 100%; padding: 12px; margin-bottom: 16px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 15px; outline: none; }
+        .login-btn { width: 100%; padding: 12px; background: #064e3b; color: #fef08a; border: 1px solid #d97706; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
         .login-error { color: #ef4444; font-size: 13px; margin-bottom: 12px; display: none; }
 
-        /* 🏠 MAIN DASHBOARD SYSTEM */
+        /* 🏠 MAIN DASHBOARD INTERFACE */
         #dashboardScreen { display: none; min-height: 100vh; flex-direction: column; }
-        
-        /* Top Navigation Bar */
-        .top-navbar { background: #064e3b; color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-bottom: 3px solid #d97706; }
+        .top-navbar { background: #064e3b; color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #d97706; }
         .navbar-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .navbar-logo { height: 35px; width: auto; background: white; border-radius: 4px; padding: 2px; }
-        .navbar-brand h1 { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; color: #fef08a; }
-        .navbar-user { display: flex; align-items: center; gap: 15px; font-size: 14px; color: #f1f5f9; }
-        .logout-link { color: #fca5a5; text-decoration: none; cursor: pointer; font-weight: bold; }
-        .logout-link:hover { color: #f87171; text-shadow: 0 0 4px rgba(248,113,113,0.3); }
+        .navbar-brand h1 { font-size: 18px; font-weight: 700; color: #fef08a; }
+        .navbar-user { display: flex; align-items: center; gap: 15px; font-size: 14px; }
+        .logout-link { color: #fca5a5; cursor: pointer; font-weight: bold; text-decoration: none; }
 
-        /* Main Workspace Layout */
         .workspace { display: flex; flex: 1; position: relative; }
-        
-        /* Sidebar Navigation */
-        .sidebar { background: #0f172a; color: #cbd5e1; width: 240px; padding: 20px 0; display: flex; flex-direction: column; gap: 4px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
+        .sidebar { background: #0f172a; color: #cbd5e1; width: 240px; padding: 20px 0; display: flex; flex-direction: column; gap: 4px; }
         .menu-item { padding: 12px 20px; font-weight: 600; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid transparent; }
         .menu-item:hover, .menu-item.active { background: #1e293b; color: white; border-left-color: #d97706; }
-        
-        /* Submenu setup */
         .submenu-list { background: #020617; display: none; padding: 4px 0; }
         .submenu-list.open { display: block; }
         .submenu-item { padding: 10px 20px 10px 35px; font-size: 13px; color: #94a3b8; cursor: pointer; }
         .submenu-item:hover, .submenu-item.active { color: #fef08a; background: #0f172a; }
 
-        /* Dynamic Content Area with Full Screen Watermark */
-        .main-content { flex: 1; padding: 20px; overflow-y: auto; position: relative; background-color: #f5f4f0; }
+        /* Content Dashboard with Watermark */
+        .main-content { flex: 1; padding: 25px; overflow-y: auto; position: relative; background-color: #f5f4f0; }
+        .main-content::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('logo.jpg'); background-repeat: no-repeat; background-position: center center; background-size: 450px; opacity: 0.035; pointer-events: none; z-index: 0; }
         
-        /* 💧 SOFTWARE SCREEN WATERMARK */
-        .main-content::before {
-            content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('logo.jpg');
-            background-repeat: no-repeat; background-position: center center; background-size: 450px;
-            opacity: 0.04; pointer-events: none; z-index: 0;
-        }
-
         .view-panel { display: none; position: relative; z-index: 1; }
         .view-panel.active { display: block; }
 
-        /* Welcome Screen Grid */
+        /* UI Common Modules */
         .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
-        .module-card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); text-align: center; cursor: pointer; border: 1px solid #e2e8f0; transition: all 0.2s; }
-        .module-card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px rgba(0,0,0,0.05); border-color: #d97706; }
-        .module-card h3 { font-size: 18px; color: #064e3b; margin-bottom: 6px; }
-        .module-card p { font-size: 12px; color: #64748b; }
-
-        /* 🛒 BILLING MODULE STYLES WITH INTERNAL WATERMARK */
-        .billing-container { background: #ffffff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); padding: 25px; border: 1px solid #e2e8f0; position: relative; }
+        .module-card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); text-align: center; cursor: pointer; border: 1px solid #e2e8f0; }
+        .module-card:hover { transform: translateY(-3px); border-color: #d97706; box-shadow: 0 10px 15px rgba(0,0,0,0.05); }
+        .module-card h3 { font-size: 17px; color: #064e3b; margin-bottom: 6px; }
         
-        /* 💧 BILL IN-SCREEN WATERMARK */
-        .billing-container::before {
-            content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('logo.jpg');
-            background-repeat: no-repeat; background-position: center 60%; background-size: 350px;
-            opacity: 0.05; pointer-events: none; z-index: 0;
-        }
-
-        .bill-header-print { display: none; }
-        .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; background: #fafafa; padding: 15px; border-radius: 6px; border: 1px solid #e2e8f0; position: relative; z-index: 2; }
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-size: 12px; color: #064e3b; font-weight: bold; margin-bottom: 5px; }
-        .form-group input { padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; outline: none; background: #fff; }
-        .form-group input:focus { border-color: #d97706; }
-        .search-section { margin-bottom: 20px; position: relative; z-index: 10; }
-        .search-box { width: 100%; padding: 12px; border: 2px solid #064e3b; border-radius: 6px; font-size: 14px; outline: none; }
-        .search-box:focus { border-color: #d97706; box-shadow: 0 0 0 3px rgba(217,119,6,0.1); }
-        .suggestions-box { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #cbd5e1; border-radius: 0 0 6px 6px; max-height: 200px; overflow-y: auto; z-index: 1000; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .suggestion-item { padding: 10px 15px; cursor: pointer; border-bottom: 1px solid #f1f5f9; font-size: 13px; color: #1e293b; text-align: left; }
-        .suggestion-item:hover { background-color: #f0fdf4; color: #064e3b; font-weight: bold; }
+        .card-box { background: white; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 20px; }
+        .panel-title { font-size: 18px; color: #064e3b; margin-bottom: 15px; font-weight: bold; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
         
-        table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 800px; margin-top: 10px; position: relative; z-index: 2; }
+        .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; background: #fafafa; padding: 15px; border-radius: 6px; border: 1px solid #e2e8f0; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 12px; }
+        .form-group label { font-size: 12px; color: #064e3b; font-weight: bold; margin-bottom: 5px; text-align: left; }
+        .form-group input, .form-group select { padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; outline: none; background: white; }
+        .form-group input:focus, .form-group select:focus { border-color: #d97706; }
+        
+        /* Tables Core CSS */
+        table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
         th { background-color: #064e3b; color: white; padding: 12px 10px; text-align: left; border-bottom: 2px solid #d97706; }
-        td { padding: 10px; border-bottom: 1px solid #e2e8f0; text-align: left; background: rgba(255,255,255,0.7); }
-        .qty-input, .disc-input { width: 60px; padding: 5px; border: 1px solid #cbd5e1; border-radius: 4px; text-align: center; }
-        .empty-row td { text-align: center; color: #94a3b8; padding: 40px 0; font-style: italic; }
-        .delete-btn { background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+        td { padding: 10px; border-bottom: 1px solid #e2e8f0; text-align: left; background: rgba(255,255,255,0.8); }
         
-        .summary-box { display: flex; justify-content: flex-end; margin-top: 20px; border-top: 2px solid #eef2f5; padding-top: 15px; position: relative; z-index: 2; }
-        .summary-table { width: 320px; border-collapse: collapse; }
-        .summary-table tr td { padding: 8px 10px; border: none; font-size: 14px; }
-        .summary-table tr td.amt-col { text-align: right; font-weight: bold; width: 120px; }
-        .total-row { font-size: 18px; color: #064e3b; background-color: #f0fdf4; border: 1px solid #bbf7d0; }
-        .btn-container { margin-top: 25px; display: flex; gap: 15px; justify-content: flex-end; position: relative; z-index: 2; }
-        .btn { padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .btn-container { margin-top: 25px; display: flex; gap: 15px; justify-content: flex-end; }
+        .btn { padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 14px; }
         .btn-primary { background: #064e3b; color: #fef08a; border: 1px solid #d97706; }
-        .btn-primary:hover { background: #043d2e; }
+        .btn-primary:hover { background: #043d2e; color: white; }
+        .btn-success { background: #d97706; color: white; }
+        .btn-success:hover { background: #b45309; }
 
-        .placeholder-view { background: white; padding: 40px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: center; color: #64748b; }
+        /* Stats Grid for Reports */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: white; padding: 20px; border-radius: 8px; border-left: 5px solid #064e3b; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .stat-card.gold-border { border-left-color: #d97706; }
+        .stat-card.red-border { border-left-color: #ef4444; }
+        .stat-card h4 { font-size: 12px; color: #64748b; text-transform: uppercase; }
+        .stat-card p { font-size: 24px; font-weight: bold; color: #1e293b; margin-top: 5px; }
 
-        /* 📱 MOBILE RESPONSIVE SETUP */
-        @media (max-width: 768px) {
-            .workspace { flex-direction: column; }
-            .sidebar { width: 100%; padding: 10px 0; }
-            .submenu-list { background: #0f172a; }
-        }
+        .search-box { width: 100%; padding: 12px; border: 2px solid #064e3b; border-radius: 6px; font-size: 14px; outline: none; }
+        .suggestions-box { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #cbd5e1; border-radius: 0 0 6px 6px; max-height: 200px; overflow-y: auto; z-index: 1000; display: none; }
+        .suggestion-item { padding: 10px 15px; cursor: pointer; border-bottom: 1px solid #f1f5f9; text-align: left; }
+        .suggestion-item:hover { background-color: #f0fdf4; color: #064e3b; font-weight: bold; }
+        .qty-input, .disc-input { width: 60px; padding: 5px; border: 1px solid #cbd5e1; border-radius: 4px; text-align: center; }
+        .bill-header-print { display: none; }
 
-        /* 🖨️ PRINT MEDIA STYLES (CASH MEMO LAYOUT) */
         @media print {
-            .sidebar, .top-navbar, .search-section, .btn-container, .delete-btn, th:last-child, td:last-child { display: none !important; }
-            body, .main-content, .billing-container { background: white !important; padding: 0; margin: 0; box-shadow: none; border: none; }
-            
-            /* Show Branded Header on Print */
+            .sidebar, .top-navbar, .search-section, .btn-container, .delete-btn, th:last-child, td:last-child, .meta-grid input { display: none !important; }
+            body, .main-content, .card-box { background: white !important; padding: 0; margin: 0; box-shadow: none; border: none; }
             .bill-header-print { display: flex !important; align-items: center; justify-content: space-between; border-bottom: 2px solid #064e3b; padding-bottom: 15px; margin-bottom: 25px; }
-            .print-logo-box { display: flex; align-items: center; gap: 15px; }
-            .print-logo { width: 90px; height: auto; }
-            .print-brand-title h2 { color: #064e3b; font-size: 24px; font-weight: bold; }
-            .print-brand-title p { color: #475569; font-size: 12px; margin-top: 2px; }
-            .print-meta-right { text-align: right; color: #1e293b; font-size: 13px; }
-            
-            /* 💧 PRINT WATERMARK ON PAPER */
-            .billing-container::before {
-                content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-                background-image: url('logo.jpg') !important;
-                background-repeat: no-repeat !important; background-position: center 50% !important; background-size: 380px !important;
-                opacity: 0.05 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; z-index: 0;
-            }
-            
-            table { min-width: 100%; margin-top: 15px; }
-            th { background-color: #f1f5f9 !important; color: black !important; border: 1px solid #94a3b8 !important; border-bottom: 2px solid #064e3b !important; }
-            td { border: 1px solid #cbd5e1 !important; background: transparent !important; }
-            .qty-input, .disc-input { border: none; background: transparent; font-weight: bold; -webkit-appearance: none; margin: 0; }
-            .total-row { background-color: #f8fafc !important; color: #064e3b !important; border: 1px solid #94a3b8 !important; }
+            th { background-color: #f1f5f9 !important; color: black !important; border: 1px solid #94a3b8 !important; }
+            td { border: 1px solid #cbd5e1 !important; }
         }
     </style>
 </head>
 <body>
 
-<!-- 🔐 PANEL 1: BRANDED LOGIN MODULE -->
 <div id="loginScreen">
     <div class="login-card">
         <img class="login-logo" src="logo.jpg" alt="PharmaVigour Logo">
         <h2>PharmaVigour OS</h2>
         <p>Bridging Expertise with Expansion</p>
-        <div id="loginError" class="login-error">ভুল ইউজার আইডি অথবা পাসওয়ার্ড!</div>
+        <div id="loginError" class="login-error">Wrong Operator User ID or Password!</div>
         <input type="text" id="username" class="login-field" placeholder="Operator User ID" value="admin">
         <input type="password" id="password" class="login-field" placeholder="Security Password" value="password">
         <button class="login-btn" onclick="handleLogin()">Secure Sign In</button>
     </div>
 </div>
 
-<!-- 🏠 PANEL 2: MAIN DASHBOARD SYSTEM -->
 <div id="dashboardScreen">
-    <!-- Navbar -->
     <div class="top-navbar">
         <div class="navbar-brand" onclick="showView('homeView')">
             <img class="navbar-logo" src="logo.jpg" alt="Logo">
@@ -178,129 +121,84 @@
         </div>
     </div>
 
-    <!-- Main Workspace -->
     <div class="workspace">
-        <!-- Sidebar Menu -->
         <div class="sidebar">
-            <!-- SALE -->
             <div class="menu-item" onclick="toggleSubmenu('saleSub')">1. Sale <span>▼</span></div>
             <div id="saleSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('newSaleView', this)">• New Sale (Billing)</div>
-                <div class="submenu-item" onclick="showPlaceholder('Sale -> Patient Details')">• Patient Details</div>
-                <div class="submenu-item" onclick="showPlaceholder('Sale -> Sale Return')">• Sale Return</div>
+                <div class="submenu-item" onclick="showSubView('patientDetailsView', this)">• Patient Details</div>
+                <div class="submenu-item" onclick="showSubView('saleReturnView', this)">• Sale Return</div>
             </div>
 
-            <!-- PURCHASE -->
             <div class="menu-item" onclick="toggleSubmenu('purchaseSub')">2. Purchase <span>▼</span></div>
             <div id="purchaseSub" class="submenu-list">
-                <div class="submenu-item" onclick="showPlaceholder('Purchase -> New Purchase')">• New Purchase</div>
-                <div class="submenu-item" onclick="showPlaceholder('Purchase -> Vendor List')">• Vendor List</div>
-                <div class="submenu-item" onclick="showPlaceholder('Purchase -> Return Stock')">• Purchase Return</div>
+                <div class="submenu-item" onclick="showSubView('newPurchaseView', this)">• New Purchase (Stock Entry)</div>
+                <div class="submenu-item" onclick="showSubView('vendorListView', this)">• Vendor / Distributor List</div>
             </div>
 
-            <!-- REPORTS -->
             <div class="menu-item" onclick="toggleSubmenu('reportsSub')">3. Reports <span>▼</span></div>
             <div id="reportsSub" class="submenu-list">
-                <div class="submenu-item" onclick="showPlaceholder('Reports -> Daily Sales Summary')">• Daily Sales Summary</div>
-                <div class="submenu-item" onclick="showPlaceholder('Reports -> Profit & Loss')">• Profit & Loss</div>
-                <div class="submenu-item" onclick="showPlaceholder('Reports -> Expiry Alert')">• Expiry Dashboard</div>
+                <div class="submenu-item" onclick="showSubView('dailySalesView', this)">• Daily Sales Summary</div>
+                <div class="submenu-item" onclick="showSubView('expiryDashboardView', this)">• Expiry Dashboard</div>
             </div>
 
-            <!-- GST DETAIL -->
             <div class="menu-item" onclick="toggleSubmenu('gstSub')">4. GST Detail <span>▼</span></div>
             <div id="gstSub" class="submenu-list">
-                <div class="submenu-item" onclick="showPlaceholder('GST Detail -> GSTR-1 Summary')">• GSTR-1 Summary</div>
-                <div class="submenu-item" onclick="showPlaceholder('GST Detail -> HSN Summary')">• HSN Summary</div>
+                <div class="submenu-item" onclick="showSubView('gstr1View', this)">• GSTR-1 Summary</div>
             </div>
 
-            <!-- SETTINGS -->
             <div class="menu-item" onclick="toggleSubmenu('settingsSub')">5. Settings <span>▼</span></div>
             <div id="settingsSub" class="submenu-list">
-                <div class="submenu-item" onclick="showPlaceholder('Settings -> Store Configuration')">• Store Configuration</div>
-                <div class="submenu-item" onclick="showPlaceholder('Settings -> Password Security')">• Password Security</div>
+                <div class="submenu-item" onclick="showSubView('storeConfigView', this)">• Store Configuration</div>
             </div>
         </div>
 
-        <!-- Dynamic Content Panel -->
         <div class="main-content">
             
-            <!-- 🏠 VIEW: HOMEPAGE -->
             <div id="homeView" class="view-panel active">
-                <h2>Welcome back, Operator</h2>
-                <p style="color: #64748b; margin-bottom: 20px;">Select a master control core module below to begin operations:</p>
+                <h2>Welcome Back, Rahul Chakraborty</h2>
+                <p style="color: #64748b; margin-bottom: 20px; font-style: italic;">PharmaVigour Operations Dashboard Network</p>
                 <div class="modules-grid">
-                    <div class="module-card" onclick="toggleSubmenu('saleSub')">
-                        <h3>Sale Module</h3>
-                        <p>New Bills, Returns, Patients</p>
-                    </div>
-                    <div class="module-card" onclick="toggleSubmenu('purchaseSub')">
-                        <h3>Purchase</h3>
-                        <p>Stock Entries, Vendor Claims</p>
-                    </div>
-                    <div class="module-card" onclick="toggleSubmenu('reportsSub')">
-                        <h3>Reports</h3>
-                        <p>Profit, Ledger, Live Valuation</p>
-                    </div>
-                    <div class="module-card" onclick="toggleSubmenu('gstSub')">
-                        <h3>GST Detail</h3>
-                        <p>GSTR-1, CGST/SGST Splits</p>
-                    </div>
-                    <div class="module-card" onclick="toggleSubmenu('settingsSub')">
-                        <h3>Settings</h3>
-                        <p>Users, Printers, Database Backups</p>
-                    </div>
+                    <div class="module-card" onclick="toggleSubmenu('saleSub')"><h3>Sale Module</h3><p>New Bills, Returns, Patients Control</p></div>
+                    <div class="module-card" onclick="toggleSubmenu('purchaseSub')"><h3>Purchase Node</h3><p>Live Stock Entries, Vendors Registry</p></div>
+                    <div class="module-card" onclick="toggleSubmenu('reportsSub')"><h3>Reports Engine</h3><p>Sales Book, Expiry Triggers</p></div>
+                    <div class="module-card" onclick="toggleSubmenu('gstSub')"><h3>GST Ledger</h3><p>GSTR-1 Tax Splits & Reports</p></div>
+                    <div class="module-card" onclick="toggleSubmenu('settingsSub')"><h3>Settings Core</h3><p>Store Node Configurations</p></div>
                 </div>
             </div>
 
-            <!-- 🛒 VIEW: NEW SALE -->
             <div id="newSaleView" class="view-panel">
-                <div class="billing-container">
-                    
-                    <!-- 🖨️ Branded Invoice Header (Visible ONLY during print) -->
+                <div class="card-box">
                     <div class="bill-header-print">
-                        <div class="print-logo-box">
-                            <img class="print-logo" src="logo.jpg" alt="Logo">
-                            <div class="print-brand-title">
-                                <h2>PharmaVigour Operations</h2>
-                                <p>Bridging Expertise with Expansion</p>
-                            </div>
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <img src="logo.jpg" style="width:80px; height:auto;">
+                            <div><h2>PharmaVigour Operations</h2><p>Bridging Expertise with Expansion</p></div>
                         </div>
-                        <div class="print-meta-right">
-                            <p><strong>Retail Invoice / Cash Memo</strong></p>
-                            <p>Outlet: Shantipur Station Node</p>
-                            <p>Status: Original Copy</p>
+                        <div style="text-align:right; font-size:13px;">
+                            <p><strong>Retail Invoice / Cash Memo</strong></p><p>Outlet: Shantipur Station Node</p>
                         </div>
                     </div>
-
-                    <div style="display:flex; justify-content: space-between; margin-bottom: 15px;" class="search-section">
-                        <h2 style="font-size: 18px; color: #064e3b;">Core Retail Billing Node (New Sale)</h2>
-                    </div>
-
+                    <div class="panel-title search-section">Core Retail Billing Node (New Sale)</div>
                     <div class="meta-grid">
                         <div class="form-group"><label>Patient Name</label><input type="text" id="patientName" value="Rahul Chakraborty"></div>
                         <div class="form-group"><label>Contact Number</label><input type="text" id="patientContact" value="9829972091"></div>
                         <div class="form-group"><label>Doctor Name</label><input type="text" id="docName" value="Dr. P. Maitra"></div>
                         <div class="form-group"><label>Bill Date</label><input type="text" value="18/06/2026" readonly></div>
                     </div>
-
-                    <div class="search-section">
-                        <input type="text" id="searchBox" class="search-box" placeholder="Type medicine name (e.g. Cil) to search local stock..." autocomplete="off">
+                    <div class="search-section" style="position:relative;">
+                        <input type="text" id="searchBox" class="search-box" placeholder="Type medicine name (e.g. Cil) to search live local stock database..." autocomplete="off">
                         <div id="suggestions" class="suggestions-box"></div>
                     </div>
-
                     <div style="overflow-x: auto;">
                         <table>
                             <thead>
-                                <tr>
-                                    <th>Product Name</th><th>Rack</th><th>Batch</th><th>Expiry</th><th>Qty</th><th>Rate (₹)</th><th>Disc %</th><th>GST %</th><th>Amount (₹)</th><th>Action</th>
-                                </tr>
+                                <tr><th>Product Name</th><th>Rack</th><th>Batch</th><th>Expiry</th><th>Qty</th><th>Rate (₹)</th><th>Disc %</th><th>GST %</th><th>Amount (₹)</th><th class="delete-btn-head">Action</th></tr>
                             </thead>
                             <tbody id="billingBody">
-                                <tr class="empty-row" id="emptyRow"><td colspan="10">No products added yet. Ready to search.</td></tr>
+                                <tr class="empty-row" id="emptyRow"><td colspan="10">No products added yet. Ready to search stock.</td></tr>
                             </tbody>
                         </table>
                     </div>
-
                     <div class="summary-box">
                         <table class="summary-table">
                             <tr><td>Gross Total:</td><td id="grossTotal" class="amt-col">₹ 0.00</td></tr>
@@ -309,18 +207,126 @@
                             <tr class="total-row"><td><strong>Net Payable:</strong></td><td id="netPayable" class="amt-col">₹ 0.00</td></tr>
                         </table>
                     </div>
-
                     <div class="btn-container">
                         <button class="btn btn-primary" onclick="window.print()">Print Bill Cash Memo</button>
                     </div>
                 </div>
             </div>
 
-            <!-- 📁 VIEW: PLACEHOLDER -->
-            <div id="placeholderView" class="view-panel">
-                <div class="placeholder-view">
-                    <h2 id="placeholderTitle" style="color: #064e3b;">Module</h2>
-                    <p style="margin-top: 10px;">This specific subsystem interface is ready for logic deployment.</p>
+            <div id="patientDetailsView" class="view-panel">
+                <div class="card-box">
+                    <div class="panel-title">Patient Management System</div>
+                    <div class="meta-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+                        <div class="form-group"><label>New Patient Name</label><input type="text" id="pNewName" placeholder="Enter Name"></div>
+                        <div class="form-group"><label>Contact Number</label><input type="text" id="pNewMobile" placeholder="Mobile No."></div>
+                        <div class="form-group" style="justify-content: flex-end;"><button class="btn btn-success" style="margin-top:5px;" onclick="addPatientDemo()">+ Add Patient Registry</button></div>
+                    </div>
+                    <table>
+                        <thead><tr><th>ID</th><th>Patient Name</th><th>Mobile Number</th><th>Last Visit</th><th>Status</th></tr></thead>
+                        <tbody id="patientTableBody">
+                            <tr><td>#P101</td><td><strong>Rahul Chakraborty</strong></td><td>9829972091</td><td>18/06/2026</td><td><span style="background:#bbf7d0; color:#166534; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:bold;">Active</span></td></tr>
+                            <tr><td>#P102</td><td>Animesh Chatterjee</td><td>9830012345</td><td>15/05/2026</td><td><span style="background:#bbf7d0; color:#166534; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:bold;">Active</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="saleReturnView" class="view-panel">
+                <div class="card-box">
+                    <div class="panel-title">Instant Sale Return / Credit Note Node</div>
+                    <div class="meta-grid" style="grid-template-columns: 2fr 1fr;">
+                        <div class="form-group"><label>Enter Invoice / Bill Number</label><input type="text" id="returnBillId" placeholder="e.g. PV-2026-9481" value="PV-2026-0311"></div>
+                        <div class="form-group" style="justify-content: flex-end;"><button class="btn btn-primary" onclick="processReturnDemo()">Fetch Invoice Details</button></div>
+                    </div>
+                    <div id="returnStatusBox" style="display:none; padding:15px; background:#fef2f2; border:1px solid #fee2e2; color:#991b1b; border-radius:6px; font-weight:600;">
+                        Invoice data parsed successfully! Return processed for: 1 Strip Cilacar 10mg. Credit Note adjusted in Ledger.
+                    </div>
+                </div>
+            </div>
+
+            <div id="newPurchaseView" class="view-panel">
+                <div class="card-box">
+                    <div class="panel-title">Dynamic Stock Inward Ledger (Add New Item)</div>
+                    <div class="meta-grid">
+                        <div class="form-group"><label>Medicine Name</label><input type="text" id="purName" placeholder="e.g. Pan D Cap"></div>
+                        <div class="form-group"><label>Rack Location</label><input type="text" id="purRack" placeholder="e.g. B-12"></div>
+                        <div class="form-group"><label>Batch Number</label><input type="text" id="purBatch" placeholder="BATCH123"></div>
+                        <div class="form-group"><label>Expiry Date</label><input type="text" id="purExpiry" placeholder="05/29"></div>
+                        <div class="form-group"><label>Rate / Strip (₹)</label><input type="number" id="purRate" placeholder="120.00"></div>
+                        <div class="form-group"><label>GST %</label><select id="purGst"><option value="5">5%</option><option value="12">12%</option><option value="18">18%</option></select></div>
+                        <div class="form-group"><label>Stock Qty (Strips)</label><input type="number" id="purStock" placeholder="50"></div>
+                    </div>
+                    <div class="btn-container" style="margin-top:0;"><button class="btn btn-success" onclick="savePurchaseToStock()">Inward Stock & Update System</button></div>
+                </div>
+            </div>
+
+            <div id="vendorListView" class="view-panel">
+                <div class="card-box">
+                    <div class="panel-title">Registered Distributors / Vendors Profile</div>
+                    <table>
+                        <thead><tr><th>Vendor Code</th><th>Distributor Name</th><th>DL Number</th><th>GSTIN</th><th>Contact Person</th></tr></thead>
+                        <tbody>
+                            <tr><td>#VND01</td><td><strong>Bagree Market Medicine Hub</strong></td><td>DL-48192-M</td><td>19AAACF4810M1Z2</td><td>Mr. J. Jalan</td></tr>
+                            <tr><td>#VND02</td><td>S.R. Pharma Distributor</td><td>DL-99381-M</td><td>19BBAAF9920K1Z5</td><td>Amit K. Saha</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="dailySalesView" class="view-panel">
+                <div class="stats-grid">
+                    <div class="stat-card"><h4>Today's Gross Sales</h4><p id="repGross">₹ 2,250.80</p></div>
+                    <div class="stat-card gold-border"><h4>Total Tax Collected (GST)</h4><p id="repGst">₹ 112.54</p></div>
+                    <div class="stat-card red-border"><h4>Active Hold Bills Count</h4><p>00</p></div>
+                </div>
+                <div class="card-box">
+                    <div class="panel-title">Today's Sales Book Audit</div>
+                    <table>
+                        <thead><tr><th>Invoice No.</th><th>Time</th><th>Patient Name</th><th>Doctor Name</th><th>Bill Value</th></tr></thead>
+                        <tbody>
+                            <tr><td>PV-2026-4812</td><td>11:45 AM</td><td>Rahul Chakraborty</td><td>Dr. P. Maitra</td><td>₹ 1,688.10</td></tr>
+                            <tr><td>PV-2026-4813</td><td>02:30 PM</td><td>Animesh Chatterjee</td><td>Self</td><td>₹ 562.70</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="expiryDashboardView" class="view-panel">
+                <div class="card-box">
+                    <div class="panel-title" style="color:#b91c1c;">Critical Expiry Dashboard Node (Upcoming 3 Months)</div>
+                    <div style="background:#fee2e2; border:1px solid #fca5a5; padding:12px; border-radius:6px; color:#991b1b; font-size:13px; font-weight:bold; margin-bottom:15px;">
+                        ⚠️ Operational Directive: 20 Tarikh er bhetore nicher expiry items gulo management-e report na korle staff account theke salary deduct hobe!
+                    </div>
+                    <table>
+                        <thead><tr style="background:#b91c1c;"><th style="color:white;">Medicine Name</th><th>Batch No</th><th>Expiry Month</th><th>Current Stock</th><th>Action Plan</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Tab Cilacar 10mg</strong></td><td>CIL3452100</td><td>12/28</td><td>1300 Strips</td><td><span style="color:#d97706; font-weight:bold;">Safe (Non-Expired)</span></td></tr>
+                            <tr style="background:rgba(239,68,68,0.05);"><td><strong>Mock Expiring Cap</strong></td><td>MOCK8842</td><td>07/26</td><td>45 Strips</td><td><span style="color:#ef4444; font-weight:bold;">🚨 Push Sale / Return to Bagree</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="gstr1View" class="view-panel">
+                <div class="card-box">
+                    <div class="panel-title">GSTR-1 B2C Sales Tax Ledger Summary</div>
+                    <table>
+                        <thead><tr><th>Month</th><th>Taxable Turnover</th><th>CGST (₹)</th><th>SGST (₹)</th><th>Total GST Payable</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>June 2026 (Current)</strong></td><td>₹ 45,210.00</td><td>₹ 1,130.25</td><td>₹ 1,130.25</td><td><strong>₹ 2,260.50</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="storeConfigView" class="view-panel">
+                <div class="card-box">
+                    <div class="panel-title">Store Node Security & Core Config</div>
+                    <div class="meta-grid" style="grid-template-columns: 1fr 1fr;">
+                        <div class="form-group"><label>Pharmacy Core Brand Name</label><input type="text" id="cfgBrand" value="PharmaVigour Operations" readonly></div>
+                        <div class="form-group"><label>Active Outlet Tag</label><input type="text" id="cfgOutlet" value="Shantipur Railway Station Node"></div>
+                    </div>
+                    <div class="btn-container" style="margin-top:0;"><button class="btn btn-primary" onclick="alert('Configuration Node updated successfully!')">Update Global Node</button></div>
                 </div>
             </div>
 
@@ -329,11 +335,11 @@
 </div>
 
 <script>
-    // 🔐 LOGIN CONTROLLER
+    // 🔐 LOGIC 1: LOGIN ENGINE
     function handleLogin() {
-        const user = document.getElementById('username').value;
-        const pass = document.getElementById('password').value;
-        if(user === 'admin' && pass === 'password') {
+        const u = document.getElementById('username').value;
+        const p = document.getElementById('password').value;
+        if(u === 'admin' && p === 'password') {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('dashboardScreen').style.display = 'flex';
             showView('homeView');
@@ -341,29 +347,24 @@
             document.getElementById('loginError').style.display = 'block';
         }
     }
-
     function handleLogout() {
         document.getElementById('dashboardScreen').style.display = 'none';
         document.getElementById('loginScreen').style.display = 'flex';
-        document.getElementById('loginError').style.display = 'none';
     }
 
-    // 🗺️ VIEW CONTROLLER (SPA ENGINE)
+    // 🗺️ LOGIC 2: SINGLE PAGE NAVIGATION SYSTEM
     function showView(viewId) {
-        document.querySelectorAll('.view-panel').forEach(view => view.classList.remove('active'));
+        document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active'));
         document.getElementById(viewId).classList.add('active');
         if(viewId === 'homeView') {
             document.querySelectorAll('.submenu-item').forEach(i => i.classList.remove('active'));
         }
     }
-
     function showSubView(viewId, element) {
         showView(viewId);
         document.querySelectorAll('.submenu-item').forEach(i => i.classList.remove('active'));
         if(element) element.classList.add('active');
     }
-
-    // Toggle menu
     function toggleSubmenu(id) {
         const target = document.getElementById(id);
         const isOpen = target.classList.contains('open');
@@ -371,124 +372,10 @@
         if(!isOpen) target.classList.add('open');
     }
 
-    function showPlaceholder(moduleName) {
-        document.getElementById('placeholderTitle').innerText = moduleName + " Core System";
-        showView('placeholderView');
-    }
-
-    // 🛒 IN-MEMORY PRODUCT DATABANK
-    const globalStock = [
-        { id: 1, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1300 }
-    ];
-
-    let activeCart = [];
-
-    const searchBox = document.getElementById('searchBox');
-    const suggestionsBox = document.getElementById('suggestions');
-    const billingBody = document.getElementById('billingBody');
-    const emptyRow = document.getElementById('emptyRow');
-
-    searchBox.addEventListener('input', function() {
-        const query = this.value.toLowerCase().trim();
-        suggestionsBox.innerHTML = '';
-        if (query.length < 1) { suggestionsBox.style.display = 'none'; return; }
-        
-        const matches = globalStock.filter(p => p.product_name && p.product_name.toLowerCase().includes(query));
-        if (matches.length > 0) {
-            matches.forEach(product => {
-                const div = document.createElement('div');
-                div.className = 'suggestion-item';
-                div.innerText = `${product.product_name} [Rack: ${product.rack}] [Batch: ${product.batch}] - Rate: ₹${product.rate}`;
-                div.onclick = function() { addProductToCart(product); };
-                suggestionsBox.appendChild(div);
-            });
-            suggestionsBox.style.display = 'block';
-        } else { 
-            suggestionsBox.style.display = 'none'; 
-        }
-    });
-
-    function addProductToCart(product) {
-        searchBox.value = ''; 
-        suggestionsBox.style.display = 'none';
-        let existing = activeCart.find(item => item.id === product.id);
-        if (existing) { 
-            existing.qty += 1; 
-        } else { 
-            activeCart.push({...product, qty: 1, discount: 25}); 
-        }
-        renderCart();
-    }
-
-    function renderCart() {
-        billingBody.querySelectorAll('tr:not(#emptyRow)').forEach(r => r.remove());
-        if (activeCart.length === 0) { 
-            emptyRow.style.display = 'table-row'; 
-            calculateTotals(); 
-            return; 
-        }
-        emptyRow.style.display = 'none';
-        
-        activeCart.forEach((item, index) => {
-            const tr = document.createElement('tr');
-            const rateVal = parseFloat(item.rate) || 0;
-            const discVal = parseFloat(item.discount) || 0;
-            const gstPercent = parseFloat(item.gst) || 0;
-            
-            const subtotal = (rateVal * item.qty) - ((rateVal * item.qty) * (discVal / 100));
-            
-            tr.innerHTML = `<td><strong>${item.product_name}</strong></td>` +
-                `<td>${item.rack || '-'}</td>` +
-                `<td>${item.batch || '-'}</td>` +
-                `<td>${item.expiry || '-'}</td>` +
-                `<td><input type="number" class="qty-input" value="${item.qty}" min="1" oninput="updateQty(${index}, this.value)"></td>` +
-                `<td>₹${rateVal.toFixed(2)}</td>` +
-                `<td><input type="number" class="disc-input" value="${discVal}" min="0" max="100" oninput="updateDisc(${index}, this.value)"></td>` +
-                `<td>${gstPercent}%</td>` +
-                `<td><strong>₹${subtotal.toFixed(2)}</strong></td>` +
-                `<td><button class="delete-btn" onclick="removeItem(${index})">Remove</button></td>`;
-            billingBody.appendChild(tr);
-        });
-        calculateTotals();
-    }
-
-    function updateQty(index, val) {
-        activeCart[index].qty = parseInt(val) || 1;
-        renderCart();
-    }
-
-    function updateDisc(index, val) {
-        activeCart[index].discount = parseFloat(val) || 0;
-        renderCart();
-    }
-
-    function removeItem(index) {
-        activeCart.splice(index, 1);
-        renderCart();
-    }
-
-    function calculateTotals() {
-        let gross = 0, disc = 0, gst = 0;
-        activeCart.forEach(item => {
-            const rateVal = parseFloat(item.rate) || 0;
-            const discVal = parseFloat(item.discount) || 0;
-            const gstPercent = parseFloat(item.gst) || 0;
-
-            const baseAmount = rateVal * item.qty; 
-            const discountAmount = baseAmount * (discVal / 100); 
-            const taxableAmount = baseAmount - discountAmount;
-            const gstAmount = taxableAmount * (gstPercent / 100);
-            
-            gross += baseAmount; 
-            disc += discountAmount; 
-            gst += gstAmount;
-        });
-        
-        document.getElementById('grossTotal').innerText = '₹ ' + gross.toFixed(2);
-        document.getElementById('totalDisc').innerText = '₹ ' + disc.toFixed(2);
-        document.getElementById('gstTotal').innerText = '₹ ' + gst.toFixed(2);
-        document.getElementById('netPayable').innerText = '₹ ' + (gross - disc + gst).toFixed(2);
-    }
-</script>
-</body>
-</html>
+    // 📥 LOGIC 3: DYNAMIC PURCHASE ENTRY ENGINE (Adds directly to searchable stock!)
+    function savePurchaseToStock() {
+        const name = document.getElementById('purName').value;
+        const rack = document.getElementById('purRack').value;
+        const batch = document.getElementById('purBatch').value;
+        const expiry = document.getElementById('purExpiry').value;
+        const rate = parseFloat(document.getElementById('purRate
