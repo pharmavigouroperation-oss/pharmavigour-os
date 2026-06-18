@@ -14,9 +14,13 @@
         .login-logo { width: 140px; height: auto; margin-bottom: 15px; }
         .login-card h2 { color: #064e3b; margin-bottom: 6px; font-size: 22px; font-weight: 700; }
         .login-card p { color: #64748b; font-size: 13px; margin-bottom: 24px; font-style: italic; }
-        .login-field { width: 100%; padding: 12px; margin-bottom: 16px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 15px; outline: none; }
+        .login-field { width: 100%; padding: 12px; margin-bottom: 16px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 15px; outline: none; text-align: left; }
         .login-btn { width: 100%; padding: 12px; background: #064e3b; color: #fef08a; border: 1px solid #d97706; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
         .login-error { color: #ef4444; font-size: 13px; margin-bottom: 12px; display: none; }
+        
+        /* 💡 QUICK DEMO AUTO-LOGIN BUTTON */
+        .quick-demo-btn { margin-top: 15px; background: transparent; color: #d97706; border: 1px dashed #d97706; padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; transition: all 0.2s; }
+        .quick-demo-btn:hover { background: rgba(217,119,6,0.05); }
 
         /* 🏠 MAIN DASHBOARD INTERFACE */
         #dashboardScreen { display: none; min-height: 100vh; flex-direction: column; }
@@ -96,18 +100,23 @@
 </head>
 <body>
 
+<!-- 🔐 1. LOGIN MODULE -->
 <div id="loginScreen">
     <div class="login-card">
         <img class="login-logo" src="logo.jpg" alt="PharmaVigour Logo">
         <h2>PharmaVigour OS</h2>
         <p>Bridging Expertise with Expansion</p>
-        <div id="loginError" class="login-error">Wrong Operator User ID or Password!</div>
+        <div id="loginError" class="login-error">ভুল ইউজার আইডি বা পাসওয়ার্ড!</div>
         <input type="text" id="username" class="login-field" placeholder="Operator User ID" value="admin">
         <input type="password" id="password" class="login-field" placeholder="Security Password" value="password">
         <button class="login-btn" onclick="handleLogin()">Secure Sign In</button>
+        
+        <!-- ⚡ QUICK DEMO LOGIN BUTTON -->
+        <button class="quick-demo-btn" onclick="triggerQuickDemoLogin()">⚡ Quick Demo Autologin</button>
     </div>
 </div>
 
+<!-- 🏠 2. ENTERPRISE DASHBOARD RUNTIME -->
 <div id="dashboardScreen">
     <div class="top-navbar">
         <div class="navbar-brand" onclick="showView('homeView')">
@@ -122,7 +131,9 @@
     </div>
 
     <div class="workspace">
+        <!-- SIDEBAR OPTIONS NAVIGATION -->
         <div class="sidebar">
+            <!-- 1. SALE -->
             <div class="menu-item" onclick="toggleSubmenu('saleSub')">1. Sale <span>▼</span></div>
             <div id="saleSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('newSaleView', this)">• New Sale (Billing)</div>
@@ -130,31 +141,37 @@
                 <div class="submenu-item" onclick="showSubView('saleReturnView', this)">• Sale Return</div>
             </div>
 
+            <!-- 2. PURCHASE -->
             <div class="menu-item" onclick="toggleSubmenu('purchaseSub')">2. Purchase <span>▼</span></div>
             <div id="purchaseSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('newPurchaseView', this)">• New Purchase (Stock Entry)</div>
                 <div class="submenu-item" onclick="showSubView('vendorListView', this)">• Vendor / Distributor List</div>
             </div>
 
+            <!-- 3. REPORTS -->
             <div class="menu-item" onclick="toggleSubmenu('reportsSub')">3. Reports <span>▼</span></div>
             <div id="reportsSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('dailySalesView', this)">• Daily Sales Summary</div>
                 <div class="submenu-item" onclick="showSubView('expiryDashboardView', this)">• Expiry Dashboard</div>
             </div>
 
+            <!-- 4. GST DETAIL -->
             <div class="menu-item" onclick="toggleSubmenu('gstSub')">4. GST Detail <span>▼</span></div>
             <div id="gstSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('gstr1View', this)">• GSTR-1 Summary</div>
             </div>
 
+            <!-- 5. SETTINGS -->
             <div class="menu-item" onclick="toggleSubmenu('settingsSub')">5. Settings <span>▼</span></div>
             <div id="settingsSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('storeConfigView', this)">• Store Configuration</div>
             </div>
         </div>
 
+        <!-- DYNAMIC DESK PANEL CONTROLLER -->
         <div class="main-content">
             
+            <!-- 🏠 VIEW: HOMEPAGE CORE -->
             <div id="homeView" class="view-panel active">
                 <h2>Welcome Back, Rahul Chakraborty</h2>
                 <p style="color: #64748b; margin-bottom: 20px; font-style: italic;">PharmaVigour Operations Dashboard Network</p>
@@ -167,6 +184,7 @@
                 </div>
             </div>
 
+            <!-- 🛒 VIEW: 1.1 NEW SALE (BILLING CORE) -->
             <div id="newSaleView" class="view-panel">
                 <div class="card-box">
                     <div class="bill-header-print">
@@ -213,6 +231,7 @@
                 </div>
             </div>
 
+            <!-- 👥 VIEW: 1.2 PATIENT DETAILS -->
             <div id="patientDetailsView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Patient Management System</div>
@@ -231,6 +250,7 @@
                 </div>
             </div>
 
+            <!-- 🔄 VIEW: 1.3 SALE RETURN -->
             <div id="saleReturnView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Instant Sale Return / Credit Note Node</div>
@@ -244,6 +264,7 @@
                 </div>
             </div>
 
+            <!-- 📥 VIEW: 2.1 NEW PURCHASE -->
             <div id="newPurchaseView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Dynamic Stock Inward Ledger (Add New Item)</div>
@@ -260,6 +281,7 @@
                 </div>
             </div>
 
+            <!-- 🏢 VIEW: 2.2 VENDOR LIST -->
             <div id="vendorListView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Registered Distributors / Vendors Profile</div>
@@ -273,6 +295,7 @@
                 </div>
             </div>
 
+            <!-- 📊 VIEW: 3.1 DAILY SALES REPORT -->
             <div id="dailySalesView" class="view-panel">
                 <div class="stats-grid">
                     <div class="stat-card"><h4>Today's Gross Sales</h4><p id="repGross">₹ 2,250.80</p></div>
@@ -291,6 +314,7 @@
                 </div>
             </div>
 
+            <!-- ⚠️ VIEW: 3.2 EXPIRY ALERT DASHBOARD -->
             <div id="expiryDashboardView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title" style="color:#b91c1c;">Critical Expiry Dashboard Node (Upcoming 3 Months)</div>
@@ -307,6 +331,7 @@
                 </div>
             </div>
 
+            <!-- 📝 VIEW: 4.1 GSTR-1 TAX BOOK -->
             <div id="gstr1View" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">GSTR-1 B2C Sales Tax Ledger Summary</div>
@@ -319,6 +344,7 @@
                 </div>
             </div>
 
+            <!-- ⚙️ VIEW: 5.1 STORE CONFIGURATION -->
             <div id="storeConfigView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Store Node Security & Core Config</div>
@@ -335,10 +361,12 @@
 </div>
 
 <script>
-    // 🔐 LOGIC 1: LOGIN ENGINE
+    // 🔐 LOGIC 1: INTELIGENT LOGIN ENGINE (With Auto-Trim space fix)
     function handleLogin() {
-        const u = document.getElementById('username').value;
-        const p = document.getElementById('password').value;
+        // .trim() ব্যবহার করা হলো যাতে ভুল করে অতিরিক্ত স্পেস পড়লেও লগইন আটকে না যায়
+        const u = document.getElementById('username').value.trim();
+        const p = document.getElementById('password').value.trim();
+        
         if(u === 'admin' && p === 'password') {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('dashboardScreen').style.display = 'flex';
@@ -347,6 +375,14 @@
             document.getElementById('loginError').style.display = 'block';
         }
     }
+    
+    // ⚡ QUICK DEMO LOGIN AUTO-FILL
+    function triggerQuickDemoLogin() {
+        document.getElementById('username').value = 'admin';
+        document.getElementById('password').value = 'password';
+        handleLogin();
+    }
+
     function handleLogout() {
         document.getElementById('dashboardScreen').style.display = 'none';
         document.getElementById('loginScreen').style.display = 'flex';
@@ -372,10 +408,114 @@
         if(!isOpen) target.classList.add('open');
     }
 
-    // 📥 LOGIC 3: DYNAMIC PURCHASE ENTRY ENGINE (Adds directly to searchable stock!)
+    // 📥 LOGIC 3: DYNAMIC PURCHASE ENTRY ENGINE
     function savePurchaseToStock() {
         const name = document.getElementById('purName').value;
         const rack = document.getElementById('purRack').value;
         const batch = document.getElementById('purBatch').value;
         const expiry = document.getElementById('purExpiry').value;
-        const rate = parseFloat(document.getElementById('purRate
+        const rate = parseFloat(document.getElementById('purRate').value);
+        const gst = parseInt(document.getElementById('purGst').value);
+        const stock = parseInt(document.getElementById('purStock').value);
+
+        if(!name || !rate || !stock) { alert('Please enter Name, Rate, and Stock Quantity!'); return; }
+
+        const newItem = { id: globalStock.length + 1, product_name: name, rack: rack, batch: batch, expiry: expiry, rate: rate, gst: gst, stock: stock };
+        globalStock.push(newItem);
+        alert('Stock Updated Successfully! This medicine is now instantly searchable in New Sale Module.');
+        
+        document.getElementById('purName').value = '';
+        document.getElementById('purRack').value = '';
+        document.getElementById('purBatch').value = '';
+        document.getElementById('purExpiry').value = '';
+        document.getElementById('purRate').value = '';
+        showView('homeView');
+    }
+
+    // Interactive Demo Helpers
+    function addPatientDemo() {
+        const n = document.getElementById('pNewName').value;
+        const m = document.getElementById('pNewMobile').value;
+        if(!n || !m) return;
+        const b = document.getElementById('patientTableBody');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>#P${Math.floor(Math.random()*100)+110}</td><td><strong>${n}</strong></td><td>${m}</td><td>18/06/2026</td><td><span style='background:#bbf7d0; color:#166534; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:bold;'>Active</span></td>`;
+        b.appendChild(tr);
+        document.getElementById('pNewName').value = ''; document.getElementById('pNewMobile').value = '';
+    }
+    function processReturnDemo() { document.getElementById('returnStatusBox').style.display = 'block'; }
+
+    // 🛒 LOGIC 4: LIVE RETAIL BILLING ENGINE
+    const globalStock = [
+        { id: 1, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1300 }
+    ];
+    let activeCart = [];
+
+    const searchBox = document.getElementById('searchBox');
+    const suggestionsBox = document.getElementById('suggestions');
+    const billingBody = document.getElementById('billingBody');
+    const emptyRow = document.getElementById('emptyRow');
+
+    searchBox.addEventListener('input', function() {
+        const query = this.value.toLowerCase().trim();
+        suggestionsBox.innerHTML = '';
+        if (query.length < 1) { suggestionsBox.style.display = 'none'; return; }
+        const matches = globalStock.filter(p => p.product_name && p.product_name.toLowerCase().includes(query));
+        if (matches.length > 0) {
+            matches.forEach(product => {
+                const div = document.createElement('div'); div.className = 'suggestion-item';
+                div.innerText = `${product.product_name} [Rack: ${product.rack}] [Batch: ${product.batch}] - Rate: ₹${product.rate}`;
+                div.onclick = function() { addProductToCart(product); };
+                suggestionsBox.appendChild(div);
+            });
+            suggestionsBox.style.display = 'block';
+        } else { suggestionsBox.style.display = 'none'; }
+    });
+
+    function addProductToCart(product) {
+        searchBox.value = ''; suggestionsBox.style.display = 'none';
+        let existing = activeCart.find(item => item.id === product.id);
+        if (existing) { existing.qty += 1; } else { activeCart.push({...product, qty: 1, discount: 25}); }
+        renderCart();
+    }
+
+    function renderCart() {
+        billingBody.querySelectorAll('tr:not(#emptyRow)').forEach(r => r.remove());
+        if (activeCart.length === 0) { emptyRow.style.display = 'table-row'; calculateTotals(); return; }
+        emptyRow.style.display = 'none';
+        activeCart.forEach((item, index) => {
+            const tr = document.createElement('tr');
+            const rateVal = parseFloat(item.rate) || 0;
+            const discVal = parseFloat(item.discount) || 0;
+            const gstPercent = parseFloat(item.gst) || 0;
+            const subtotal = (rateVal * item.qty) - ((rateVal * item.qty) * (discVal / 100));
+            tr.innerHTML = `<td><strong>${item.product_name}</strong></td><td>${item.rack || '-'}</td><td>${item.batch || '-'}</td><td>${item.expiry || '-'}</td>`+
+                `<td><input type="number" class="qty-input" value="${item.qty}" min="1" oninput="updateQty(${index}, this.value)"></td><td>₹${rateVal.toFixed(2)}</td>`+
+                `<td><input type="number" class="disc-input" value="${discVal}" min="0" max="100" oninput="updateDisc(${index}, this.value)"></td><td>${gstPercent}%</td>`+
+                `<td><strong>₹${subtotal.toFixed(2)}</strong></td><td><button class="delete-btn" onclick="removeItem(${index})">Remove</button></td>`;
+            billingBody.appendChild(tr);
+        });
+        calculateTotals();
+    }
+    function updateQty(i, val) { activeCart[i].qty = parseInt(val) || 1; renderCart(); }
+    function updateDisc(i, val) { activeCart[i].discount = parseFloat(val) || 0; renderCart(); }
+    function removeItem(i) { activeCart.splice(i, 1); renderCart(); }
+
+    function calculateTotals() {
+        let gross = 0, disc = 0, gst = 0;
+        activeCart.forEach(item => {
+            const rateVal = parseFloat(item.rate) || 0;
+            const discVal = parseFloat(item.discount) || 0;
+            const gstPercent = parseFloat(item.gst) || 0;
+            const baseAmount = rateVal * item.qty; const discountAmount = baseAmount * (discVal / 100);
+            const taxableAmount = baseAmount - discountAmount; const gstAmount = taxableAmount * (gstPercent / 100);
+            gross += baseAmount; disc += discountAmount; gst += gstAmount;
+        });
+        document.getElementById('grossTotal').innerText = '₹ ' + gross.toFixed(2);
+        document.getElementById('totalDisc').innerText = '₹ ' + disc.toFixed(2);
+        document.getElementById('gstTotal').innerText = '₹ ' + gst.toFixed(2);
+        document.getElementById('netPayable').innerText = '₹ ' + (gross - disc + gst).toFixed(2);
+    }
+</script>
+</body>
+</html>
