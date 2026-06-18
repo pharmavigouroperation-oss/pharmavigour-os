@@ -86,6 +86,9 @@
         .bill-header-print { display: none; }
         .print-text-val { display: none; font-weight: bold; font-size: 14px; }
 
+        /* CSV Section Custom Elements */
+        .csv-upload-box { background: #fffbeb; border: 2px dashed #d97706; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px; }
+
         @media print {
             .sidebar, .top-navbar, .search-section, .btn-container, .delete-btn, th:last-child, td:last-child, .meta-grid input, .qty-input, .disc-input { display: none !important; }
             .print-text-val { display: inline-block !important; }
@@ -269,10 +272,18 @@
                 </div>
             </div>
 
-            <!-- 📥 VIEW: 2.1 NEW PURCHASE -->
+            <!-- 📥 VIEW: 2.1 NEW PURCHASE (WITH BULK CSV UPLOAD!) -->
             <div id="newPurchaseView" class="view-panel">
+                <!-- 🚀 BULK CSV FILE UPLOAD NODE -->
+                <div class="csv-upload-box">
+                    <h3 style="color:#064e3b; margin-bottom:10px;">📦 Bulk Stock Inward via CSV File</h3>
+                    <p style="color:#64748b; font-size:13px; margin-bottom:15px; font-style:italic;">Upload distributors' invoice billing sheet (.csv) to auto-populate master stock inventory node.</p>
+                    <input type="file" id="csvFileInput" accept=".csv" style="display:none;" onchange="handleBulkCSVUpload(event)">
+                    <button class="btn btn-primary" onclick="document.getElementById('csvFileInput').click()">📤 Select & Upload CSV Invoice</button>
+                </div>
+
                 <div class="card-box">
-                    <div class="panel-title">Dynamic Stock Inward Ledger (Add New Item)</div>
+                    <div class="panel-title">Manual Stock Inward Ledger (Single Item Entry)</div>
                     <div class="meta-grid">
                         <div class="form-group"><label>Medicine Name</label><input type="text" id="purName" placeholder="e.g. Pan D Cap"></div>
                         <div class="form-group"><label>Rack Location</label><input type="text" id="purRack" placeholder="e.g. B-12"></div>
@@ -392,7 +403,52 @@
         target.classList.toggle('open'); 
     }
 
-    // 📥 LOGIC: DYNAMIC PURCHASE ENTRY ENGINE
+    // 📤 LOGIC 3: INTELLIGENT BULK CSV PARSER & UPLOADER Engine
+    function handleBulkCSVUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const text = e.target.result;
+            const lines = text.split('\n');
+            let addedCount = 0;
+
+            // Header mapping logic (Skip line 0)
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                const cols = lines[i].split(',');
+                
+                // CSV schema template format check
+                if (cols.length >= 5) {
+                    const name = cols[2] ? cols[2].trim().replace(/"/g, '') : '';
+                    const rack = cols[3] ? cols[3].trim() : 'N/A';
+                    const batch = cols[4] ? cols[4].trim() : 'N/A';
+                    const expiry = cols[5] ? cols[5].trim() : 'N/A';
+                    const rate = parseFloat(cols[6]) || 0;
+                    const gst = parseInt(cols[7]) || 5;
+
+                    if (name && rate > 0) {
+                        globalStock.push({
+                            id: globalStock.length + 1,
+                            product_name: name,
+                            rack: rack,
+                            batch: batch,
+                            expiry: expiry,
+                            rate: rate,
+                            gst: gst
+                        });
+                        addedCount++;
+                    }
+                }
+            }
+            alert(`🎉 Success! Bulk Invoice upload processed. ${addedCount} medicines have been compiled and pushed to the master network node database.`);
+            showView('homeView');
+        };
+        reader.readAsText(file);
+    }
+
+    // Manual Purchase Module Logic
     function savePurchaseToStock() {
         const name = document.getElementById('purName').value;
         const rack = document.getElementById('purRack').value;
@@ -428,7 +484,7 @@
     }
     function processReturnDemo() { document.getElementById('returnStatusBox').style.display = 'block'; }
 
-    // 🛒 IN-MEMORY PRODUCT DATABANK
+    // 🛒 LOGIC 4: RETAIL CORE BILLING INTERACTIVE MATHEMATICAL ENGINE
     const globalStock = [
         { id: 1, product_name: "Rantac 300mg Tab", rack: "R-02", batch: "RAN548904HJ", expiry: "6/27", rate: 40.00, gst: 5 },
         { id: 2, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5 }
@@ -473,7 +529,6 @@
             const discVal = parseFloat(item.discount) || 0;
             const gstPercent = parseFloat(item.gst) || 0;
             
-            // 📊 নিখুঁত প্রিন্ট ও জিএসটি ট্যাক্স ক্যালকুলেশন লজিক
             const baseAmount = rateVal * item.qty;
             const discountAmount = baseAmount * (discVal / 100);
             const taxableAmount = baseAmount - discountAmount;
