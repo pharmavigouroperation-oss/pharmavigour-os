@@ -75,15 +75,14 @@
         .suggestion-item:hover { background-color: #f0fdf4; color: #064e3b; font-weight: bold; }
         .qty-input, .disc-input { width: 65px; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; text-align: center; font-weight: bold; }
         .summary-box { margin-top: 20px; display: flex; justify-content: flex-end; }
-        .summary-table { width: 300px; border: 1px solid #e2e8f0; }
-        .summary-table td { padding: 8px 12px; border-bottom: 1px solid #e2e8f0; }
-        .total-row { background: #f8fafc !important; font-size: 15px; color: #064e3b; font-weight: bold; border-top: 2px solid #e2e8f0 !important; }
+        .summary-table { width: 300px; border: 1px solid #cbd5e1; background: #ffffff; }
+        .summary-table td { padding: 10px 12px; border-bottom: 1px solid #cbd5e1; font-weight: bold; }
+        .total-row { background: #f8fafc !important; font-size: 15px; color: #064e3b; font-weight: bold; }
 
         .bill-header-print { display: none; }
         .print-text-val { display: none; font-weight: bold; }
-        .print-summary-val { font-weight: bold; color: #000000; }
 
-        /* 🖨️ ADVANCED HARD LOCKED PRINT ENGINE ARCHITECTURE */
+        /* 🖨️ PERFECT RAW-DOM PRINT INJECTION MATRIX */
         @media print {
             .sidebar, .top-navbar, .search-section, .btn-container, .btn-danger, th:last-child, td:last-child, .meta-grid input, .qty-input, .disc-input { display: none !important; }
             .print-text-val { display: inline-block !important; }
@@ -93,8 +92,7 @@
             td { border: 1px solid #cbd5e1 !important; background: transparent !important; }
             .summary-box { display: flex !important; width: 100% !important; justify-content: flex-end !important; margin-top: 20px !important; }
             .summary-table { width: 300px !important; border: 1px solid #000000 !important; }
-            .summary-table td { border-bottom: 1px solid #000000 !important; padding: 8px !important; color: #000000 !important; }
-            .print-summary-val { display: inline-block !important; font-weight: bold !important; color: #000000 !important; }
+            .summary-table td { border-bottom: 1px solid #000000 !important; padding: 10px !important; color: #000000 !important; font-size: 14px !important; }
         }
     </style>
 </head>
@@ -237,25 +235,15 @@
                         </table>
                     </div>
 
-                    <!-- Financial Math Calculator Manifest Table -->
+                    <!-- Financial Math Calculator Manifest Table (RE-DESIGNED RAW CELL INJECTION) -->
                     <div class="summary-box">
-                        <table class="summary-table">
-                            <tr>
-                                <td>Gross Total:</td>
-                                <td style="text-align:right;"><span id="grossTotal" class="print-summary-val">₹ 0.00</span></td>
-                            </tr>
-                            <tr>
-                                <td>Total Discount:</td>
-                                <td style="text-align:right;"><span id="totalDisc" class="print-summary-val" style="color:#dc2626;">₹ 0.00</span></td>
-                            </tr>
-                            <tr>
-                                <td>GST Tax Amount:</td>
-                                <td style="text-align:right;"><span id="gstTotal" class="print-summary-val">₹ 0.00</span></td>
-                            </tr>
-                            <tr class="total-row">
-                                <td><strong>Net Payable:</strong></td>
-                                <td style="text-align:right;"><span id="netPayable" class="print-summary-val" style="font-size:16px;">₹ 0.00</span></td>
-                            </tr>
+                        <table class="summary-table" id="summaryPrintTable">
+                            <tbody>
+                                <tr><td>Gross Total:</td><td style="text-align:right;" id="cell_gross">₹ 0.00</td></tr>
+                                <tr><td>Total Discount:</td><td style="text-align:right; color:#dc2626;" id="cell_disc">₹ 0.00</td></tr>
+                                <tr><td>GST Tax Amount:</td><td style="text-align:right;" id="cell_gst">₹ 0.00</td></tr>
+                                <tr class="total-row"><td>Net Payable:</td><td style="text-align:right;" id="cell_net">₹ 0.00</td></tr>
+                            </tbody>
                         </table>
                     </div>
 
@@ -530,6 +518,7 @@
         renderActiveCartTableManifest();
     }
 
+    // 🌟 FULL HARD INJECTION RAW FINANCES COMPILER ENGINE
     function calculateBillFinancialTotals() {
         let gross = 0, totalDiscount = 0, gstTotal = 0;
         activeCart.forEach(item => {
@@ -550,11 +539,11 @@
 
         const netPayable = gross - totalDiscount + gstTotal;
 
-        // Synchronize and force HTML inject into document labels
-        document.getElementById('grossTotal').innerText = '₹ ' + gross.toFixed(2);
-        document.getElementById('totalDisc').innerText = '₹ ' + totalDiscount.toFixed(2);
-        document.getElementById('gstTotal').innerText = '₹ ' + gstTotal.toFixed(2);
-        document.getElementById('netPayable').innerText = '₹ ' + netPayable.toFixed(2);
+        // RAW NODE CELL INJECTION OVERRIDE (Fights standard innerText layout dropping)
+        document.getElementById('cell_gross').innerHTML = '₹ ' + gross.toFixed(2);
+        document.getElementById('cell_disc').innerHTML = '₹ ' + totalDiscount.toFixed(2);
+        document.getElementById('cell_gst').innerHTML = '₹ ' + gstTotal.toFixed(2);
+        document.getElementById('cell_net').innerHTML = '₹ ' + netPayable.toFixed(2);
     }
 
     function processSaleInvoiceDeductStockCentral() {
@@ -571,7 +560,7 @@
             if(item) { item.stock -= cartItem.qty; }
         });
 
-        const finalNet = parseFloat(document.getElementById('netPayable').innerText.replace('₹ ', ''));
+        const finalNet = parseFloat(document.getElementById('cell_net').innerText.replace('₹ ', ''));
         sales.push({
             invoice: `PV-2026-00${Math.floor(Math.random()*900)+100}`,
             patient: document.getElementById('patientName').value,
