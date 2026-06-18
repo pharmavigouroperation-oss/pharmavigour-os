@@ -24,7 +24,7 @@
         .login-error { background: #fee2e2; color: #ef4444; padding: 10px; border-radius: 6px; font-size: 13px; font-weight: bold; margin-bottom: 15px; display: none; border: 1px solid #fca5a5; }
         
         .otp-box-section { display: none; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #cbd5e1; }
-        .demo-shortcut-box { margin-top: 20px; background: #f1f5f9; padding: 10px; border-radius: 6px; font-size: 11px; color: #475569; }
+        .demo-shortcut-box { margin-top: 20px; background: #f1f5f9; padding: 10px; border-radius: 6px; font-size: 11px; color: #475569; line-height: 1.6; }
 
         /* 🏠 MAIN DASHBOARD INTERFACE */
         #dashboardScreen { display: none; min-height: 100vh; flex-direction: column; }
@@ -66,7 +66,6 @@
         .btn-container { margin-top: 25px; display: flex; gap: 15px; justify-content: flex-end; }
         .btn { padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 14px; }
         .btn-success { background: #d97706; color: white; border: 1px solid #b45309; }
-        .btn-danger { background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; }
         .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
         .module-card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); text-align: center; cursor: pointer; border: 1px solid #e2e8f0; }
         .module-card h3 { font-size: 17px; color: #064e3b; margin-bottom: 6px; }
@@ -86,7 +85,7 @@
         <!-- Phone Inward Field -->
         <div id="phoneSection">
             <label class="field-label">ENTER REGISTERED MOBILE NUMBER</label>
-            <input type="tel" id="userPhone" class="login-field" placeholder="98XXXXXXXX" maxlength="10">
+            <input type="tel" id="userPhone" class="login-field" placeholder="70XXXXXXXX" maxlength="10">
             
             <!-- Outlet Selector Block (Enabled dynamically for Admin Demo) -->
             <div id="outletSelectGroup" style="margin-bottom:15px; text-align:left;">
@@ -112,9 +111,8 @@
         </div>
 
         <div class="demo-shortcut-box">
-            <strong>Demo Shortcuts:</strong><br>
-            • Admin: <span style="text-decoration:underline; cursor:pointer; font-weight:bold;" onclick="fillQuickDemoAccount('9829972091')">9829972091</span><br>
-            • Staff Counter: <span style="text-decoration:underline; cursor:pointer; font-weight:bold;" onclick="fillQuickDemoAccount('9830012345')">9830012345</span>
+            <strong>Active Owner Authorized ID:</strong><br>
+            • Super Admin: <span style="text-decoration:underline; cursor:pointer; font-weight:bold;" onclick="fillQuickDemoAccount('7029719074')">7029719074</span>
         </div>
     </div>
 </div>
@@ -250,8 +248,7 @@
                     <table>
                         <thead><tr><th>Phone Number</th><th>User Name</th><th>Assigned Outlet Node</th><th>Role Level Rights</th></tr></thead>
                         <tbody id="usersDirectoryBody">
-                            <tr><td><strong>9829972091</strong></td><td>Rahul Chakraborty</td><td><span style="color:#d97706; font-weight:bold;">All Outlets Master Control</span></td><td><span class="role-badge">Super Admin / Owner</span></td></tr>
-                            <tr><td>9830012345</td><td>Animesh Chatterjee</td><td>Shantipur Railway Station Node</td><td>Sales Counter Staff</td></tr>
+                            <tr><td><strong>7029719074</strong></td><td>Rahul Chakraborty</td><td><span style="color:#d97706; font-weight:bold;">All Outlets Master Control</span></td><td><span class="role-badge">Super Admin / Owner</span></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -262,10 +259,9 @@
 </div>
 
 <script>
-    // 🧠 SYSTEM MASTER IN-MEMORY USER REGISTRY STATE
+    // 🧠 SYSTEM MASTER IN-MEMORY USER REGISTRY STATE (HARD-CODED WITH RAHUL-DA'S SOHOL NUMBER)
     const usersRegistry = {
-        '9829972091': { name: 'Rahul Chakraborty', role: 'superadmin', outlet: 'All Outlets Hub', permissions: ['sale', 'purchase', 'reports', 'management'] },
-        '9830012345': { name: 'Animesh Chatterjee', role: 'staff_counter', outlet: 'Shantipur Railway Station Node', permissions: ['sale'] }
+        '7029719074': { name: 'Rahul Chakraborty', role: 'superadmin', outlet: 'All Outlets Hub', permissions: ['sale', 'purchase', 'reports', 'management'] }
     };
 
     const DEFAULT_STOCK_MOCK = [
@@ -276,11 +272,9 @@
     let generatedOTPCode = "";
     let activeLoggedUser = null;
 
-    // 🔒 OTP GENERATION & SIMULATION ENGINE
     function generateAndSendSecureOTP() {
         const phoneInput = document.getElementById('userPhone').value.trim();
         const errorDiv = document.getElementById('loginError');
-        
         errorDiv.style.display = 'none';
 
         if (phoneInput.length !== 10 || isNaN(phoneInput)) {
@@ -297,35 +291,28 @@
 
         activeLoggedUser = usersRegistry[phoneInput];
         activeLoggedUser.phone = phoneInput;
-
-        // Generate 4-digit token
         generatedOTPCode = Math.floor(1000 + Math.random() * 9000).toString();
 
-        // Simulate Hardware Carrier Delivery Gateway via Prompt Message
         alert(`✉️ PharmaVigour SMS Gateway [LIVE DELIVERED]\n----------------------------------------\nTo: +91-${phoneInput}\nYour 4-Digit Secure Login OTP is: ${generatedOTPCode}\n----------------------------------------\n(ডেমো দেখানোর সুবিধার্থে এই কোডটি কপি করে ওটিপি বক্সে টাইপ করুন)`);
 
         document.getElementById('phoneSection').style.display = 'none';
         document.getElementById('otpBoxSection').style.display = 'block';
     }
 
-    // 🔓 OTP CODE VALIDATION MECHANISM
     function verifyReceivedOTPCode() {
         const enteredOtp = document.getElementById('inputOtp').value.trim();
         const errorDiv = document.getElementById('loginError');
 
         if (enteredOtp === generatedOTPCode) {
-            // Success Verification Trigger
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('dashboardScreen').style.display = 'flex';
 
-            // Set contextual outlet state if SuperAdmin overrides dropdown selector
             if (activeLoggedUser.role === 'superadmin') {
                 activeLoggedUser.selectedOutlet = document.getElementById('loginOutlet').value;
             } else {
                 activeLoggedUser.selectedOutlet = activeLoggedUser.outlet;
             }
 
-            // Bind layout tags
             document.getElementById('welcomeUserGreeting').innerText = `Welcome Back, ${activeLoggedUser.name}`;
             document.getElementById('activeRoleBadge').innerText = activeLoggedUser.role === 'superadmin' ? 'Super Admin 👑' : activeLoggedUser.role;
             document.getElementById('activeOutletBadge').innerText = activeLoggedUser.selectedOutlet;
@@ -337,7 +324,6 @@
         }
     }
 
-    // DYNAMIC INTERFACE COMPILER PARAMETERS
     function applyRoleEnforcedUIPermissions(allowedModules) {
         document.getElementById('side_sale').style.display = allowedModules.includes('sale') ? 'flex' : 'none';
         document.getElementById('side_purchase').style.display = allowedModules.includes('purchase') ? 'flex' : 'none';
@@ -353,7 +339,6 @@
         renderInventoryTableMock();
     }
 
-    // ADMIN USER REGISTRATION ACTION
     function addNewUserToMemoryRegistry() {
         const phone = document.getElementById('newStaffPhone').value.trim();
         const name = document.getElementById('newStaffName').value.trim();
@@ -364,7 +349,6 @@
             alert('অনুগ্রহ করে সঠিক ফোন নম্বর এবং নাম টাইপ করুন!'); return;
         }
 
-        // Map permission parameters
         let assignedPerms = ['sale'];
         if(role.includes('Inventory')) assignedPerms.push('purchase');
 
@@ -389,7 +373,6 @@
         });
     }
 
-    // HELPER HANDLERS
     function fillQuickDemoAccount(num) {
         document.getElementById('userPhone').value = num;
         toggleOutletSelectorDropdown();
@@ -398,13 +381,11 @@
     function toggleOutletSelectorDropdown() {
         const phone = document.getElementById('userPhone').value.trim();
         const group = document.getElementById('outletSelectGroup');
-        // Show outlet selector dynamically ONLY if the number belongs to the Super Admin (All Outlets Hub Master)
-        if(phone === '9829972091') { group.style.display = 'block'; } 
+        if(phone === '7029719074') { group.style.display = 'block'; } 
         else { group.style.display = 'none'; }
     }
 
     document.getElementById('userPhone').addEventListener('input', toggleOutletSelectorDropdown);
-    // Init state
     toggleOutletSelectorDropdown();
 
     function handleLogoutSystemSession() { location.reload(); }
