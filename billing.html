@@ -61,7 +61,7 @@
             <div class="form-group"><label>Bill Date</label><input type="text" value="18/06/2026" readonly></div>
         </div>
         <div class="search-section">
-            <input type="text" id="searchBox" class="search-box" placeholder="Type medicine name to search from Supabase Cloud Stock..." autocomplete="off">
+            <input type="text" id="searchBox" class="search-box" placeholder="Search medicine name from local stock..." autocomplete="off">
             <div id="suggestions" class="suggestions-box"></div>
         </div>
         <div style="overflow-x: auto;">
@@ -72,7 +72,7 @@
                     </tr>
                 </thead>
                 <tbody id="billingBody">
-                    <tr class="empty-row" id="emptyRow"><td colspan="10">Loading master stock from cloud database...</td></tr>
+                    <tr class="empty-row" id="emptyRow"><td colspan="10">No products added yet. Ready to search.</td></tr>
                 </tbody>
             </table>
         </div>
@@ -91,42 +91,26 @@
 </div>
 
 <script>
-    const SUPABASE_ANON_KEY = "EyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZob3F0ZG5tZnVicXRmZ3p5amFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MzA0MzMsImV4cCI6MjA5NzIwNjQzM30.k0olwUwMqAQRzV1wZ5afHokEdc4nel2e39ooHmGqDn4=";
+    // 💡 আপনার CSV ফাইল থেকে ওষুধের লাইভ ডাটা সরাসরি কোডে এম্বেড করে দেওয়া হলো
+    const globalStock = [
+        {
+            id: 1,
+            product_name: "Cilacar 10mg Tab",
+            rack: "A-04",
+            batch: "CIL3452100",
+            expiry: "12/28",
+            rate: 112.54,
+            gst: 5,
+            stock: 1300
+        }
+    ];
 
-    let globalStock = [];
     let activeCart = [];
 
     const searchBox = document.getElementById('searchBox');
     const suggestionsBox = document.getElementById('suggestions');
     const billingBody = document.getElementById('billingBody');
     const emptyRow = document.getElementById('emptyRow');
-
-    window.onload = function() {
-        fetchLiveSupabaseInventory();
-    };
-
-    async function fetchLiveSupabaseInventory() {
-        try {
-            const url = `https://fhoqtdnmfubqtfgyzjao.supabase.co/rest/v1/products?select=*&apikey=${SUPABASE_ANON_KEY}`;
-            const res = await fetch(url, {
-                method: "GET",
-                headers: { 
-                    "Authorization": "Bearer " + SUPABASE_ANON_KEY,
-                    "Prefer": "return=representation"
-                }
-            });
-            globalStock = await res.json();
-            if(emptyRow) {
-                emptyRow.innerHTML = '<td colspan="10">No products added yet. Ready to search.</td>';
-            }
-            console.log("Cloud Database Connection Successful! Loaded:", globalStock.length);
-        } catch (e) {
-            console.error("Database sync error", e);
-            if(emptyRow) {
-                emptyRow.innerHTML = '<td colspan="10" style="color:red;">Database Sync Error! Please refresh.</td>';
-            }
-        }
-    }
 
     searchBox.addEventListener('input', function() {
         const query = this.value.toLowerCase().trim();
