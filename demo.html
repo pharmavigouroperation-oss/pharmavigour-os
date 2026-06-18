@@ -7,16 +7,18 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
         body { background: #f8fafc; }
-        #loginScreen { width: 100%; max-width: 400px; margin: 50px auto; padding: 20px; }
-        .login-card { background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+        #loginScreen { width: 100%; max-width: 400px; margin: 50px auto; padding: 20px; text-align: center; }
+        .login-card { background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         #dashboardScreen { display: none; height: 100vh; flex-direction: column; }
         .navbar { background: #064e3b; color: white; padding: 15px; display: flex; justify-content: space-between; }
         .workspace { display: flex; flex: 1; }
-        .sidebar { background: #0f172a; color: white; width: 200px; padding-top: 20px; }
+        .sidebar { background: #0f172a; color: white; width: 220px; padding-top: 20px; }
         .menu-item { padding: 15px; cursor: pointer; border-bottom: 1px solid #1e293b; }
         .main-content { flex: 1; padding: 20px; }
-        .view-panel { display: none; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .view-panel { display: none; background: white; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; }
         .view-panel.active { display: block; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; border: 1px solid #e2e8f0; text-align: left; }
     </style>
 </head>
 <body>
@@ -53,18 +55,18 @@
             </div>
         </div>
         <div class="main-content">
-            <div id="homeView" class="view-panel active"><h2>Welcome to PharmaVigour</h2></div>
-            <div id="newSale" class="view-panel"><h2>New Sale Bill Terminal</h2></div>
-            <div id="saleHist" class="view-panel"><h2>Sale History Record</h2></div>
-            <div id="newPur" class="view-panel"><h2>New Stock Inward</h2></div>
-            <div id="purHist" class="view-panel"><h2>Purchase History Ledger</h2></div>
-            <div id="inventory" class="view-panel"><h2>Current Inventory</h2></div>
+            <div id="homeView" class="view-panel active"><h2>Welcome to PharmaVigour Operations</h2></div>
+            <div id="newSale" class="view-panel"><h2>New Sale Bill Terminal</h2><input type="text" placeholder="Search products..." style="padding:10px; width:100%; margin-top:10px;"></div>
+            <div id="saleHist" class="view-panel"><h2>Sale History Record</h2><table><tr><th>Invoice</th><th>Patient</th><th>Total</th></tr></table></div>
+            <div id="newPur" class="view-panel"><h2>New Stock Inward</h2><button style="padding:10px;">Upload CSV</button></div>
+            <div id="purHist" class="view-panel"><h2>Purchase History Ledger</h2><table><tr><th>ID</th><th>Supplier</th><th>Value</th></tr></table></div>
+            <div id="inventory" class="view-panel"><h2>Current Inventory</h2><table><tr><th>Product</th><th>Stock</th></tr></table></div>
         </div>
     </div>
 </div>
 
 <script>
-    function loginSuccess() { document.getElementById('loginScreen').style.display='none'; document.getElementById('dashboardScreen').style.display='flex'; }
+    function loginSuccess() { document.getElementById('loginScreen').style.display='none'; document.getElementById('dashboardScreen').style.display='flex'; show('homeView'); }
     function show(vId) { 
         document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); 
         document.getElementById(vId).classList.add('active'); 
