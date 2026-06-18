@@ -291,7 +291,7 @@
 </div>
 
 <script>
-    // ☁️ CENTRAL DUAL-LAYER STORAGE ENGINE (PERSISTS AUTOMATICALLY ACROSS BROWSERS!)
+    // CENTRAL CLOUD LAYER ENGINE
     const DEFAULT_STOCK = [
         { id: 1, product_name: "Rantac 300mg Tab", rack: "R-02", batch: "RAN548904HJ", expiry: "06/27", rate: 40.00, gst: 5, stock: 500 },
         { id: 2, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1300 }
@@ -300,13 +300,12 @@
         { invoice: "PV-2026-00481", patient: "Rahul Chakraborty", doctor: "Dr. P. Maitra", value: 1688.10 }
     ];
 
-    // Read state from centralized LocalStorage mapping
-    function getLiveStockFromStorage() { 
-        return JSON.parse(localStorage.getItem('PV_CENTRAL_STOCK')) || DEFAULT_STOCK; 
-    }
-    function getLiveSalesFromStorage() { 
-        return JSON.parse(localStorage.getItem('PV_CENTRAL_SALES')) || DEFAULT_SALES; 
-    }
+    // Force initialize if not existing
+    if (!localStorage.getItem('PV_CENTRAL_STOCK')) { localStorage.setItem('PV_CENTRAL_STOCK', JSON.stringify(DEFAULT_STOCK)); }
+    if (!localStorage.getItem('PV_CENTRAL_SALES')) { localStorage.setItem('PV_CENTRAL_SALES', JSON.stringify(DEFAULT_SALES)); }
+
+    function getLiveStockFromStorage() { return JSON.parse(localStorage.getItem('PV_CENTRAL_STOCK')); }
+    function getLiveSalesFromStorage() { return JSON.parse(localStorage.getItem('PV_CENTRAL_SALES')); }
     function syncDatabaseWithBrowser(stockData, salesData) {
         if(stockData) localStorage.setItem('PV_CENTRAL_STOCK', JSON.stringify(stockData));
         if(salesData) localStorage.setItem('PV_CENTRAL_SALES', JSON.stringify(salesData));
@@ -315,7 +314,8 @@
     function clearLocalStorageFactoryReset() {
         if(confirm("আপনি কি নিশ্চিত যে সেন্ট্রাল ডেমো ডাটাবেস সম্পূর্ণ রিসেট করবেন?")) {
             localStorage.clear();
-            syncDatabaseWithBrowser(DEFAULT_STOCK, DEFAULT_SALES);
+            localStorage.setItem('PV_CENTRAL_STOCK', JSON.stringify(DEFAULT_STOCK));
+            localStorage.setItem('PV_CENTRAL_SALES', JSON.stringify(DEFAULT_SALES));
             sessionStorage.clear();
             alert("সেন্ট্রাল ক্লাউড রিসেট সফল হয়েছে!");
             location.reload();
@@ -331,7 +331,6 @@
     let temporaryPurchaseCart = []; 
     let currentUserRole = "superadmin";
 
-    // 🔒 HARDBOUND SESSION RETAINER
     window.onload = function() {
         const savedSessionUser = sessionStorage.getItem('PV_ACTIVE_USER');
         if (savedSessionUser && usersDatabase[savedSessionUser]) {
@@ -383,7 +382,7 @@
         document.getElementById('newStaffUser').value = '';
     }
 
-    // 📊 REALTIME SYNCED TABLE BUILDERS
+    // 🌟 FIXED RENDERER: Force-pull live table DOM injection loop
     function renderInventoryTable() {
         const tbody = document.getElementById('inventoryTableBody'); const thAction = document.getElementById('th_inventory_action');
         if(!tbody) return; tbody.innerHTML = '';
@@ -437,18 +436,23 @@
         syncDatabaseWithBrowser(null, salesList); renderSalesBookTable();
     }
 
-    // DYNAMIC VIEW ENGINE
+    // 🚀 DYNAMIC ENGINE HARNESS FIXED FOR TABLETS
     function showView(viewId) { 
         document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); 
         document.getElementById(viewId).classList.add('active'); 
         
-        // 🌟 FORCE REAL-TIME FETCH ON CLOUD CHANNELS
-        if(viewId === 'stockInventoryView' || viewId === 'homeView') { renderInventoryTable(); }
-        if(viewId === 'dailySalesView') { renderSalesBookTable(); }
+        // Always reconstruct DOM nodes on view shift
+        renderInventoryTable(); 
+        renderSalesBookTable();
         if(viewId === 'newSaleView') { calculateTotals(); }
     }
     
-    function showSubView(viewId, element) { showView(viewId); document.querySelectorAll('.submenu-item').forEach(i => i.classList.remove('active')); if(element) element.classList.add('active'); }
+    function showSubView(viewId, element) { 
+        showView(viewId); 
+        document.querySelectorAll('.submenu-item').forEach(i => i.classList.remove('active')); 
+        if(element) element.classList.add('active'); 
+    }
+    
     function toggleSubmenu(id) { document.getElementById(id).classList.toggle('open'); }
 
     function addSingleItemToPurchaseCart() {
@@ -490,7 +494,8 @@
         });
         syncDatabaseWithBrowser(dbStock, null); 
         alert(`🎉 সফলভাবে সেন্ট্রাল ক্লাউড ডাটাবেসে স্টক আপডেট লক হয়েছে!`);
-        temporaryPurchaseCart = []; renderPurchaseCartTable(); showView('stockInventoryView');
+        temporaryPurchaseCart = []; renderPurchaseCartTable(); 
+        showView('stockInventoryView'); // Trigger forced UI pull re-render loop
     }
 
     function handleSmartCSVUpload(event) {
@@ -594,7 +599,7 @@
 
         syncDatabaseWithBrowser(dbStock, dbSales); 
         alert("🎉 বিক্রয় রসিদ সফলভাবে সম্পন্ন হয়েছে এবং সেন্ট্রাল স্টক থেকে মাইনাস করা হয়েছে!");
-        activeCart = []; renderCart(); renderInventoryTable();
+        activeCart = []; renderCart(); showView('stockInventoryView');
     }
 </script>
 </body>
