@@ -8,7 +8,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
         body { background-color: #f5f4f0; color: #1e293b; min-height: 100vh; }
         
-        /* 🎨 MOBILE CONTAINER FIX */
+        /* 🎨 BRAND CONTAINER DISPLAY STYLES */
         #loginScreen { display: block; background: linear-gradient(135deg, #022c22 0%, #064e3b 100%); min-height: 100vh; padding: 40px 15px; }
         .login-card { background: #fdfdfb; width: 100%; max-width: 400px; margin: 0 auto; padding: 30px 20px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); text-align: center; border-top: 5px solid #d97706; }
         .login-logo { width: 120px; height: auto; margin-bottom: 12px; }
@@ -20,7 +20,7 @@
         .demo-btn-group { display: flex; gap: 10px; margin-top: 15px; width: 100%; }
         .quick-demo-btn { flex: 1; background: #0f172a; color: #ffffff; border: 1px solid #d97706; padding: 10px 4px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; }
 
-        /* 🏠 DASHBOARD INTERFACE CONTAINER */
+        /* 🏠 MAIN DASHBOARD INTERFACE */
         #dashboardScreen { display: none; min-height: 100vh; flex-direction: column; }
         .top-navbar { background: #064e3b; color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #d97706; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
         .navbar-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
@@ -73,7 +73,7 @@
 </head>
 <body>
 
-<!-- 🔐 1. LOGIN SCREEN -->
+<!-- 🔐 1. LOGIN SYSTEM SCREEN -->
 <div id="loginScreen">
     <div class="login-card">
         <img class="login-logo" src="logo.jpg" alt="PharmaVigour Logo">
@@ -91,7 +91,7 @@
     </div>
 </div>
 
-<!-- 🏠 2. DASHBOARD SCREREN -->
+<!-- 🏠 2. DASHBOARD SCREREN RUNTIME -->
 <div id="dashboardScreen">
     <div class="top-navbar">
         <div class="navbar-brand" onclick="showView('homeView')">
@@ -285,7 +285,7 @@
 </div>
 
 <script>
-    // 🧠 REALTIME BROWSER DATABASE ENGINE HARD-LOCKS
+    // CORE MASTER LOCALSTORAGE INITIALIZER
     const DEFAULT_STOCK = [
         { id: 1, product_name: "Rantac 300mg Tab", rack: "R-02", batch: "RAN548904HJ", expiry: "06/27", rate: 40.00, gst: 5, stock: 500 },
         { id: 2, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1300 }
@@ -294,7 +294,6 @@
         { invoice: "PV-2026-00481", patient: "Rahul Chakraborty", doctor: "Dr. P. Maitra", value: 1688.10 }
     ];
 
-    // Enforce instant local database setup on browser runtime boot
     if (!localStorage.getItem('PV_STOCK')) { localStorage.setItem('PV_STOCK', JSON.stringify(DEFAULT_STOCK)); }
     if (!localStorage.getItem('PV_SALES')) { localStorage.setItem('PV_SALES', JSON.stringify(DEFAULT_SALES)); }
 
@@ -310,7 +309,7 @@
             localStorage.clear();
             localStorage.setItem('PV_STOCK', JSON.stringify(DEFAULT_STOCK));
             localStorage.setItem('PV_SALES', JSON.stringify(DEFAULT_SALES));
-            sessionStorage.clear(); // clear active session too
+            sessionStorage.clear();
             alert("ডাটাবেস রিসেট সফল হয়েছে!");
             location.reload();
         }
@@ -324,14 +323,12 @@
     let activeCart = [];
     let temporaryPurchaseCart = []; 
 
-    // 🔒 🚀 ⚡ FINAL HARD-LOCKED STATE LOADER ENGINE (Prevents logout on refresh!)
     window.onload = function() {
         const savedSessionUser = sessionStorage.getItem('PV_ACTIVE_USER');
         if (savedSessionUser && usersDatabase[savedSessionUser]) {
             currentUserRole = usersDatabase[savedSessionUser].role;
             executeSessionUIBoot(savedSessionUser);
         } else {
-            // No active session, stay on login panel
             document.getElementById('loginScreen').style.display = 'block';
             document.getElementById('dashboardScreen').style.display = 'none';
         }
@@ -342,7 +339,7 @@
         const p = document.getElementById('password').value.trim();
         if (usersDatabase[u] && usersDatabase[u].pass === p) {
             currentUserRole = usersDatabase[u].role;
-            sessionStorage.setItem('PV_ACTIVE_USER', u); // 🚀 Lock active session state tightly
+            sessionStorage.setItem('PV_ACTIVE_USER', u); 
             executeSessionUIBoot(u);
         } else { document.getElementById('loginError').style.display = 'block'; }
     }
@@ -355,17 +352,8 @@
         showView('homeView');
     }
 
-    function triggerQuickLogin(u, p) { 
-        document.getElementById('username').value = u; 
-        document.getElementById('password').value = p; 
-        handleLogin(); 
-    }
-    
-    function handleLogout() { 
-        sessionStorage.clear(); // Wipe only active session, keep DB intact
-        document.getElementById('dashboardScreen').style.display = 'none'; 
-        document.getElementById('loginScreen').style.display = 'block'; 
-    }
+    function triggerQuickLogin(u, p) { document.getElementById('username').value = u; document.getElementById('password').value = p; handleLogin(); }
+    function handleLogout() { sessionStorage.clear(); document.getElementById('dashboardScreen').style.display = 'none'; document.getElementById('loginScreen').style.display = 'block'; }
 
     function applyRolePermissionsMatrix(allowedModules) {
         document.getElementById('side_management').style.display = allowedModules.includes('management') ? 'flex' : 'none';
@@ -386,12 +374,13 @@
         document.getElementById('newStaffUser').value = '';
     }
 
+    // 📊 FORCE LOCALSTORAGE READ ON ANY RENDER TRIGGER CALL
     function renderInventoryTable() {
         const tbody = document.getElementById('inventoryTableBody'); const thAction = document.getElementById('th_inventory_action');
         if(!tbody) return; tbody.innerHTML = '';
         thAction.style.display = currentUserRole === 'superadmin' ? 'table-cell' : 'none';
 
-        let currentStockList = getLiveStockFromStorage(); 
+        let currentStockList = getLiveStockFromStorage(); // Always pull fresh data lock directly from LocalStorage
         currentStockList.forEach((item, index) => {
             const tr = document.createElement('tr');
             let actionTd = currentUserRole === 'superadmin' ? 
@@ -439,12 +428,22 @@
         syncDatabaseWithBrowser(null, salesList); renderSalesBookTable();
     }
 
+    // 🚀 ⚡ DYNAMIC VIEW ENGINE FORCE COUPLING (Guarantees instant sync!)
     function showView(viewId) { 
         document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); 
         document.getElementById(viewId).classList.add('active'); 
-        if(viewId === 'stockInventoryView') { renderInventoryTable(); }
+        
+        // 🌟 FORCE LOAD: এই ভিউগুলোতে গেলেই রিয়েল-টাইমে লোকাল স্টোরেজ থেকে ডাটা টেনে আনা হবে
+        if(viewId === 'stockInventoryView' || viewId === 'homeView') { renderInventoryTable(); }
+        if(viewId === 'newSaleView') { calculateTotals(); }
     }
-    function showSubView(viewId, element) { showView(viewId); document.querySelectorAll('.submenu-item').forEach(i => i.classList.remove('active')); if(element) element.classList.add('active'); }
+    
+    function showSubView(viewId, element) { 
+        showView(viewId); 
+        document.querySelectorAll('.submenu-item').forEach(i => i.classList.remove('active')); 
+        if(element) element.classList.add('active'); 
+    }
+    
     function toggleSubmenu(id) { document.getElementById(id).classList.toggle('open'); }
 
     function addSingleItemToPurchaseCart() {
@@ -486,7 +485,7 @@
         });
         syncDatabaseWithBrowser(dbStock, null); 
         alert(`🎉 সফলভাবে স্টক মেমোরি ডাটাবেসে লক হয়েছে!`);
-        temporaryPurchaseCart = []; renderPurchaseCartTable(); renderInventoryTable(); showView('stockInventoryView');
+        temporaryPurchaseCart = []; renderPurchaseCartTable(); showView('stockInventoryView');
     }
 
     function handleSmartCSVUpload(event) {
@@ -522,7 +521,7 @@
     }
     function deleteUploadedCSVProcess() { temporaryPurchaseCart = []; renderPurchaseCartTable(); document.getElementById('deleteCsvBtn').style.display = 'none'; document.getElementById('csvFileInput').value = ''; }
 
-    // 🛒 RETAIL SALES RUNTIME
+    // RETAIL SALES ENGINE
     const searchBox = document.getElementById('searchBox'); const suggestionsBox = document.getElementById('suggestions'); const billingBody = document.getElementById('billingBody'); const emptyRow = document.getElementById('emptyRow');
     
     searchBox.addEventListener('input', function() {
@@ -590,7 +589,7 @@
 
         syncDatabaseWithBrowser(dbStock, dbSales); 
         alert("🎉 বিক্রয় রসিদ সফলভাবে সম্পন্ন হয়েছে!");
-        activeCart = []; renderCart(); renderInventoryTable(); renderSalesBookTable();
+        activeCart = []; renderCart(); renderSalesBookTable();
     }
 </script>
 </body>
