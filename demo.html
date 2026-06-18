@@ -52,7 +52,7 @@
         </div>
         <div id="otpBoxSection" style="display:none;">
             <input type="password" id="inputOtp" class="login-field" placeholder="••••">
-            <button class="login-btn" onclick="verifyReceivedOTPCode()">Authorize</button>
+            <button class="login-btn" onclick="verifyReceivedOTPCode()">Authorize Access</button>
         </div>
     </div>
 </div>
@@ -60,6 +60,7 @@
 <div id="dashboardScreen">
     <div class="top-navbar">
         <div class="navbar-brand" onclick="showView('homeView')"><h1>PharmaVigour OS</h1></div>
+        <div class="navbar-user"><span class="logout-link" onclick="handleLogoutSystemSession()" style="cursor:pointer; color:white;">Logout</span></div>
     </div>
     <div class="workspace">
         <div class="sidebar">
@@ -67,11 +68,12 @@
             <div id="saleSub" class="submenu-list" style="display:none;">
                 <div class="submenu-item" onclick="showSubView('newSaleView', this)">New Sale Bill</div>
                 <div class="submenu-item" onclick="showSubView('saleHistoryView', this)">Sale History</div>
-                <div class="submenu-item" onclick="showSubView('grossChartView', this)">Today Gross Sale Chart</div>
+                <div class="submenu-item" onclick="showSubView('grossChartView', this)">Gross Sales Chart</div>
             </div>
             <div class="menu-item" onclick="toggleSubmenu('purchaseSub')">📦 <span class="menu-text">PharmaVigour Purchase</span></div>
             <div id="purchaseSub" class="submenu-list" style="display:none;">
                 <div class="submenu-item" onclick="showSubView('newPurchaseView', this)">New Stock Inward</div>
+                <div class="submenu-item" onclick="showSubView('purchaseHistoryView', this)">Purchase History</div>
                 <div class="submenu-item" onclick="showSubView('stockInventoryView', this)">Current Inventory</div>
             </div>
         </div>
@@ -79,21 +81,26 @@
             <div id="homeView" class="view-panel active">
                 <div class="card-box" style="text-align:center;">
                     <img src="logo.jpg" style="width:150px; margin-bottom:20px;">
-                    <h2>PharmaVigour Operations - Enterprise Dashboard</h2>
+                    <h2>PharmaVigour Operations - Central Enterprise Dashboard</h2>
                 </div>
             </div>
-            <div id="newSaleView" class="view-panel"><div class="card-box"><div class="panel-title">New Sale Bill</div><input type="text" class="search-box" placeholder="Search... (Press F3)"></div></div>
-            <div id="stockInventoryView" class="view-panel"><div class="card-box"><div class="panel-title">Current Inventory</div></div></div>
+            <div id="newSaleView" class="view-panel"><div class="card-box"><div class="panel-title">New Sale Bill Terminal</div><input type="text" class="search-box" placeholder="Search products..."></div></div>
+            <div id="saleHistoryView" class="view-panel"><div class="card-box"><div class="panel-title">Historic Sales Record</div></div></div>
+            <div id="grossChartView" class="view-panel"><div class="card-box"><div class="panel-title">Gross Sales Analytics</div></div></div>
+            <div id="newPurchaseView" class="view-panel"><div class="card-box"><div class="panel-title">New Stock Inward</div></div></div>
+            <div id="purchaseHistoryView" class="view-panel"><div class="card-box"><div class="panel-title">Purchase History Ledger</div></div></div>
+            <div id="stockInventoryView" class="view-panel"><div class="card-box"><div class="panel-title">Current Inventory Levels</div></div></div>
         </div>
     </div>
 </div>
 
 <script>
-    function generateAndSendSecureOTP() { document.getElementById('phoneSection').style.display='none'; document.getElementById('otpBoxSection').style.display='block'; alert("Token: 1234"); }
+    function generateAndSendSecureOTP() { document.getElementById('phoneSection').style.display='none'; document.getElementById('otpBoxSection').style.display='block'; alert("Your Secure Access Token: 1234"); }
     function verifyReceivedOTPCode() { if(document.getElementById('inputOtp').value=='1234') { document.getElementById('loginScreen').style.display='none'; document.getElementById('dashboardScreen').style.display='flex'; } }
     function showView(vId) { document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); document.getElementById(vId).classList.add('active'); }
     function showSubView(vId, el) { showView(vId); }
     function toggleSubmenu(id) { document.getElementById(id).style.display = document.getElementById(id).style.display === 'none' ? 'block' : 'none'; }
+    function handleLogoutSystemSession() { location.reload(); }
 </script>
 </body>
 </html>
