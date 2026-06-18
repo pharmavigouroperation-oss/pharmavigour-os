@@ -94,6 +94,7 @@
 </head>
 <body>
 
+<!-- 🔐 1. SECURE OTP LOG-IN CONTAINER -->
 <div id="loginScreen">
     <div class="login-card">
         <img class="login-logo" src="logo.jpg" alt="PharmaVigour Logo">
@@ -102,6 +103,7 @@
         
         <div id="loginError" class="login-error"></div>
 
+        <!-- Phone Inward Field -->
         <div id="phoneSection">
             <label class="field-label">ENTER REGISTERED MOBILE NUMBER</label>
             <input type="tel" id="userPhone" class="login-field" placeholder="70XXXXXXXX" maxlength="10">
@@ -120,6 +122,7 @@
             <button class="login-btn" id="sendOtpBtn" onclick="generateAndSendSecureOTP()">Send Secure OTP ✉️</button>
         </div>
 
+        <!-- 4-Digit OTP Inward Field -->
         <div id="otpBoxSection" class="otp-box-section">
             <label class="field-label" style="color:#d97706;">ENTER 4-DIGIT VERIFICATION CODE</label>
             <input type="password" id="inputOtp" class="login-field" placeholder="••••" maxlength="4" style="letter-spacing:10px; font-size:22px;">
@@ -134,6 +137,7 @@
     </div>
 </div>
 
+<!-- 🏠 2. ENTERPRISE DASHBOARD RUNTIME SYSTEM -->
 <div id="dashboardScreen">
     <div class="top-navbar">
         <div class="navbar-brand" onclick="showView('homeView')">
@@ -173,15 +177,18 @@
         </div>
 
         <div class="main-content">
+            <!-- 🏠 VIEW: HOMEPAGE CORE -->
             <div id="homeView" class="view-panel">
                 <h2 id="welcomeUserGreeting">Welcome Back, User</h2>
                 <p style="color: #64748b; margin-bottom: 20px; font-style: italic;">PharmaVigour Operations Central Dashboard</p>
                 <div class="modules-grid" id="homeModulesGrid"></div>
             </div>
 
+            <!-- 🛒 VIEW: 1.1 NEW SALE -->
             <div id="newSaleView" class="view-panel active">
                 <div class="card-box billing-container">
                     
+                    <!-- Print Layout Header Node -->
                     <div class="bill-header-print">
                         <div style="display:flex; align-items:center; gap:15px;">
                             <img src="logo.jpg" style="width:75px; height:auto;">
@@ -198,6 +205,7 @@
 
                     <div class="panel-title search-section">Core Retail Billing Counter (Live Sale)</div>
                     
+                    <!-- Patient Meta Grid Form -->
                     <div class="meta-grid">
                         <div class="form-group"><label>Patient Name</label><input type="text" id="patientName" value="Rahul Chakraborty"><span class="print-text-val" id="lbl_patientName">Rahul Chakraborty</span></div>
                         <div class="form-group"><label>Contact Number</label><input type="text" id="patientContact" value="9829972091"><span class="print-text-val" id="lbl_patientContact">9829972091</span></div>
@@ -205,11 +213,13 @@
                         <div class="form-group"><label>Bill Date</label><input type="text" value="18/06/2026" readonly><span class="print-text-val">18/06/2026</span></div>
                     </div>
 
+                    <!-- Instant Stock Lookup Live Box Search Section -->
                     <div class="search-section" style="position:relative; margin-bottom: 20px;">
                         <input type="text" id="searchBox" class="search-box" placeholder="Type medicine name to sell (e.g. Ran or Cil)..." autocomplete="off">
                         <div id="suggestions" class="suggestions-box"></div>
                     </div>
 
+                    <!-- Active Bill Table Row Manifest -->
                     <div style="overflow-x: auto;">
                         <table>
                             <thead>
@@ -221,6 +231,7 @@
                         </table>
                     </div>
 
+                    <!-- Financial Math Calculator Manifest Table -->
                     <div class="summary-box">
                         <table class="summary-table">
                             <tr><td>Gross Total:</td><td id="grossTotal" style="text-align:right; font-weight:bold;">₹ 0.00</td></tr>
@@ -236,6 +247,7 @@
                 </div>
             </div>
 
+            <!-- 📥 VIEW: 2.1 NEW PURCHASE -->
             <div id="newPurchaseView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Interactive Purchase Bill Cart Entry</div>
@@ -243,6 +255,7 @@
                 </div>
             </div>
 
+            <!-- 📊 VIEW: 2.2 LIVE INVENTORY -->
             <div id="stockInventoryView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Live Central Stock Inventory Manager</div>
@@ -257,6 +270,7 @@
                 </div>
             </div>
 
+            <!-- 📊 VIEW: 3.1 DAILY SALES REPORT BOOK -->
             <div id="dailySalesView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Today's Sales Book Audit Ledger</div>
@@ -269,6 +283,7 @@
                 </div>
             </div>
 
+            <!-- 🔑 VIEW: 4.1 USER RIGHTS ASSIGNMENT MANAGEMENT -->
             <div id="userManagementView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Create Store Credentials & Assign Responsibilities</div>
@@ -300,7 +315,7 @@
 </div>
 
 <script>
-    // 🖥️ CENTRAL PERMANENT REPOSITORY STORAGE (BOOTSTRAPS MASTER CATALOG DATA LIVE)
+    // CENTRAL REPOSITORY DATABASE SEEDS
     const IMMUTABLE_STOCK_SEED = [
         { id: 101, product_name: "Rantac 300mg Tab", rack: "R-02", batch: "RAN548904HJ", expiry: "06/27", rate: 40.00, gst: 5, stock: 480 },
         { id: 102, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1250 },
@@ -327,36 +342,58 @@
     let generatedOTPCode = "";
     let activeLoggedUser = null;
 
-    // LOGIN & SESSIONS HANDLERS
-    window.onload = function() {
-        const savedSessionUser = sessionStorage.getItem('PV_ACTIVE_USER');
-        if (savedSessionUser && usersDatabase[savedSessionUser]) {
-            currentUserRole = usersDatabase[savedSessionUser].role;
-            executeSessionUIBoot(savedSessionUser);
-        } else {
-            document.getElementById('loginScreen').style.display = 'block';
-            document.getElementById('dashboardScreen').style.display = 'none';
-        }
-    };
+    // 🔒 FIXED LOGIN CONTROLLER MECHANISM (Reads input value from phone container correctly)
+    function generateAndSendSecureOTP() {
+        const phoneInput = document.getElementById('userPhone').value.trim();
+        const errorDiv = document.getElementById('loginError');
+        errorDiv.style.display = 'none';
 
-    function handleLogin() {
-        const u = document.getElementById('username').value.trim();
-        if (usersRegistry[u]) {
-            activeLoggedUser = usersRegistry[u];
+        if (phoneInput.length !== 10 || isNaN(phoneInput)) {
+            errorDiv.innerText = "⚠️ ভুল মোবাইল নম্বর! দয়া করে ১০ সংখ্যার সঠিক ফোন নম্বর টাইপ করুন।";
+            errorDiv.style.display = 'block';
+            return;
+        }
+
+        if (!usersRegistry[phoneInput]) {
+            errorDiv.innerText = "⚠️ এই নম্বরটি রেজিস্টার্ড নেই! অনুগ্রহ করে ৭0২৯৭১৯০৭৪ টাইপ করুন।";
+            errorDiv.style.display = 'block';
+            return;
+        }
+
+        activeLoggedUser = usersRegistry[phoneInput];
+        activeLoggedUser.phone = phoneInput;
+        generatedOTPCode = Math.floor(1000 + Math.random() * 9000).toString();
+
+        alert(`✉️ PharmaVigour SMS Gateway [LIVE DELIVERED]\n----------------------------------------\nTo: +91-${phoneInput}\nYour 4-Digit Secure Login OTP is: ${generatedOTPCode}\n----------------------------------------`);
+
+        document.getElementById('phoneSection').style.display = 'none';
+        document.getElementById('otpBoxSection').style.display = 'block';
+    }
+
+    function verifyReceivedOTPCode() {
+        const enteredOtp = document.getElementById('inputOtp').value.trim();
+        const errorDiv = document.getElementById('loginError');
+
+        if (enteredOtp === generatedOTPCode) {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('dashboardScreen').style.display = 'flex';
-            
+
             activeLoggedUser.selectedOutlet = document.getElementById('loginOutlet').value;
             document.getElementById('print_outlet_name').innerText = `Outlet: ${activeLoggedUser.selectedOutlet}`;
+            document.getElementById('welcomeUserGreeting').innerText = `Welcome Back, ${activeLoggedUser.name}`;
             document.getElementById('activeRoleBadge').innerText = "Super Admin 👑";
             document.getElementById('activeOutletBadge').innerText = activeLoggedUser.selectedOutlet;
+
             applyRoleEnforcedUIPermissions(activeLoggedUser.permissions);
             showView('newSaleView');
+        } else {
+            errorDiv.innerText = "❌ ভুল ওটিপি কোড! অনুগ্রহ করে আবার চেষ্টা করুন।";
+            errorDiv.style.display = 'block';
         }
     }
-    function generateAndSendSecureOTP() { handleLogin(); } // Straight skip bypass token for instant demo comfort
-    function triggerQuickLogin(u, p) { handleLogin(); }
-    function fillQuickDemoAccount(num) { document.getElementById('userPhone').value = num; handleLogin(); }
+
+    function triggerQuickLogin(u, p) { fillQuickDemoAccount(u); }
+    function fillQuickDemoAccount(num) { document.getElementById('userPhone').value = num; generateAndSendSecureOTP(); }
     function handleLogoutSystemSession() { location.reload(); }
 
     function applyRoleEnforcedUIPermissions(allowedModules) {
@@ -364,7 +401,6 @@
         renderSalesBookTable();
     }
 
-    // 📊 RENDERERS
     function renderInventoryTable() {
         const tbody = document.getElementById('inventoryTableBody'); if(!tbody) return; tbody.innerHTML = '';
         let list = pullStock();
@@ -388,7 +424,7 @@
         });
     }
 
-    // 🛒 🧠 SALE BILLING ENGINE AND MATHEMATICAL CALCULATIONS COMPILER
+    // 🛒 SALE COUNTER LOGIC MODULE
     const searchBox = document.getElementById('searchBox');
     const suggestionsBox = document.getElementById('suggestions');
     const billingBody = document.getElementById('billingBody');
@@ -419,7 +455,7 @@
             if(existing.qty >= product.stock) { alert("দুঃখিত, স্টকে আর অতিরিক্ত ওষুধ নেই!"); return; }
             existing.qty += 1;
         } else {
-            activeCart.push({...product, qty: 1, discount: 0}); // Default 0% discount, editable
+            activeCart.push({...product, qty: 1, discount: 0});
         }
         renderActiveCartTableManifest();
     }
@@ -475,33 +511,24 @@
             const disc = base * (item.discount / 100);
             const taxable = base - disc;
             const tax = taxable * (item.gst / 100);
-            
-            gross += base;
-            totalDiscount += disc;
-            gstTotal += tax;
+            gross += base; totalDiscount += disc; gstTotal += tax;
         });
-
         const netPayable = gross - totalDiscount + gstTotal;
-
         document.getElementById('grossTotal').innerText = '₹ ' + gross.toFixed(2);
         document.getElementById('totalDisc').innerText = '₹ ' + totalDiscount.toFixed(2);
         document.getElementById('gstTotal').innerText = '₹ ' + gstTotal.toFixed(2);
         document.getElementById('netPayable').innerText = '₹ ' + netPayable.toFixed(2);
     }
 
-    // 💾 COMPLETE TRANSACTION & SUBTRACT FROM CENTRAL DATA LATCH
     function processSaleInvoiceDeductStockCentral() {
         if(activeCart.length === 0) { alert("অনুগ্রহ করে বিলে অন্তত একটি ওষুধ যোগ করুন!"); return; }
-        
         let stock = pullStock();
         let sales = pullSales();
 
-        // Synchronize labels for print blueprint layout
         document.getElementById('lbl_patientName').innerText = document.getElementById('patientName').value;
         document.getElementById('lbl_patientContact').innerText = document.getElementById('patientContact').value;
         document.getElementById('lbl_docName').innerText = document.getElementById('docName').value;
 
-        // Subtract from central stock allocation loop
         activeCart.forEach(cartItem => {
             let item = stock.find(s => s.id === cartItem.id);
             if(item) { item.stock -= cartItem.qty; }
@@ -515,11 +542,9 @@
             value: finalNet
         });
 
-        // Hardbound rewrite directly inside Central LocalStorage Database
         commitDb(stock, sales);
-        
-        alert("🎉 বিক্রয় রসিদ সফলভাবে সম্পন্ন হয়েছে!\nসেন্ট্রাল ডাটাবেস থেকে স্টক স্বয়ংক্রিয়ভাবে মাইনাস করে সেলস বুকে লগড করা হয়েছে।");
-        window.print(); // Trigger browser printing framework hardware matrix
+        alert("🎉 বিক্রয় রসিদ সফলভাবে সম্পন্ন হয়েছে এবং সেন্ট্রাল স্টক মাইনাস করা হয়েছে।");
+        window.print();
 
         activeCart = [];
         renderActiveCartTableManifest();
@@ -527,8 +552,7 @@
         renderSalesBookTable();
     }
 
-    // VIEWS DISPATCH NAVIGATION CONTROLLERS
-    function showView(vId) { document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); document.getElementById(vId).classList.add('active'); if(vId === 'stockInventoryView') renderInventoryTable(); }
+    function showView(vId) { document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); document.getElementById(vId).classList.add('active'); if(vId === 'stockInventoryView') renderInventoryTable(); if(vId === 'dailySalesView') renderSalesBookTable(); }
     function showSubView(vId, el) { showView(vId); document.querySelectorAll('.submenu-item').forEach(i => i.classList.remove('active')); if(el) el.classList.add('active'); }
     function toggleSubmenu(id) { document.getElementById(id).classList.toggle('open'); }
 </script>
