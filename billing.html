@@ -7,7 +7,7 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
         
-        /* 🎨 BRAND COLOR THEME (Based on Logo Image) */
+        /* 🎨 BRAND COLOR THEME */
         body { background-color: #f5f4f0; color: #1e293b; }
         
         /* 🔐 LOGIN SCREEN STYLES */
@@ -54,9 +54,9 @@
         /* 💧 SOFTWARE SCREEN WATERMARK */
         .main-content::before {
             content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('f5eb406d-bea9-4875-a070-db2dbd808024-1_all_31077.jpg');
+            background-image: url('logo.jpg');
             background-repeat: no-repeat; background-position: center center; background-size: 450px;
-            opacity: 0.035; pointer-events: none; z-index: 0;
+            opacity: 0.04; pointer-events: none; z-index: 0;
         }
 
         .view-panel { display: none; position: relative; z-index: 1; }
@@ -75,9 +75,9 @@
         /* 💧 BILL IN-SCREEN WATERMARK */
         .billing-container::before {
             content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('f5eb406d-bea9-4875-a070-db2dbd808024-1_all_31077.jpg');
+            background-image: url('logo.jpg');
             background-repeat: no-repeat; background-position: center 60%; background-size: 350px;
-            opacity: 0.04; pointer-events: none; z-index: 0;
+            opacity: 0.05; pointer-events: none; z-index: 0;
         }
 
         .bill-header-print { display: none; }
@@ -135,9 +135,9 @@
             /* 💧 PRINT WATERMARK ON PAPER */
             .billing-container::before {
                 content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-                background-image: url('f5eb406d-bea9-4875-a070-db2dbd808024-1_all_31077.jpg') !important;
+                background-image: url('logo.jpg') !important;
                 background-repeat: no-repeat !important; background-position: center 50% !important; background-size: 380px !important;
-                opacity: 0.045 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; z-index: 0;
+                opacity: 0.05 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; z-index: 0;
             }
             
             table { min-width: 100%; margin-top: 15px; }
@@ -153,7 +153,7 @@
 <!-- 🔐 PANEL 1: BRANDED LOGIN MODULE -->
 <div id="loginScreen">
     <div class="login-card">
-        <img class="login-logo" src="f5eb406d-bea9-4875-a070-db2dbd808024-1_all_31077.jpg" alt="PharmaVigour Logo">
+        <img class="login-logo" src="logo.jpg" alt="PharmaVigour Logo">
         <h2>PharmaVigour OS</h2>
         <p>Bridging Expertise with Expansion</p>
         <div id="loginError" class="login-error">ভুল ইউজার আইডি অথবা পাসওয়ার্ড!</div>
@@ -168,7 +168,7 @@
     <!-- Navbar -->
     <div class="top-navbar">
         <div class="navbar-brand" onclick="showView('homeView')">
-            <img class="navbar-logo" src="f5eb406d-bea9-4875-a070-db2dbd808024-1_all_31077.jpg" alt="Logo">
+            <img class="navbar-logo" src="logo.jpg" alt="Logo">
             <h1>PharmaVigour OS</h1>
         </div>
         <div class="navbar-user">
@@ -252,14 +252,14 @@
                 </div>
             </div>
 
-            <!-- 🛒 VIEW: NEW SALE (BILLING NODAL NODE WITH PRINT LOGO) -->
+            <!-- 🛒 VIEW: NEW SALE -->
             <div id="newSaleView" class="view-panel">
                 <div class="billing-container">
                     
                     <!-- 🖨️ Branded Invoice Header (Visible ONLY during print) -->
                     <div class="bill-header-print">
                         <div class="print-logo-box">
-                            <img class="print-logo" src="f5eb406d-bea9-4875-a070-db2dbd808024-1_all_31077.jpg" alt="Logo">
+                            <img class="print-logo" src="logo.jpg" alt="Logo">
                             <div class="print-brand-title">
                                 <h2>PharmaVigour Operations</h2>
                                 <p>Bridging Expertise with Expansion</p>
@@ -363,6 +363,7 @@
         if(element) element.classList.add('active');
     }
 
+    // Toggle menu
     function toggleSubmenu(id) {
         const target = document.getElementById(id);
         const isOpen = target.classList.contains('open');
