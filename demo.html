@@ -44,7 +44,6 @@
         .submenu-list { background: #020617; display: none; padding: 4px 0; }
         .submenu-list.open { display: block; }
         .submenu-item { padding: 10px 20px 10px 35px; font-size: 13px; color: #94a3b8; cursor: pointer; }
-        .submenu-item:hover, .submenu-item.active { color: #fef08a; background: #0f172a; }
 
         .main-content { flex: 1; padding: 25px; overflow-y: auto; position: relative; }
         .main-content::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('logo.jpg'); background-repeat: no-repeat; background-position: center center; background-size: 450px; opacity: 0.035; pointer-events: none; z-index: 0; }
@@ -74,6 +73,7 @@
         .suggestion-item { padding: 10px 15px; cursor: pointer; border-bottom: 1px solid #f1f5f9; text-align: left; font-size: 13px; }
         .suggestion-item:hover { background-color: #f0fdf4; color: #064e3b; font-weight: bold; }
         .qty-input, .disc-input { width: 65px; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; text-align: center; font-weight: bold; }
+        
         .summary-box { margin-top: 20px; display: flex; justify-content: flex-end; }
         .summary-table { width: 300px; border: 1px solid #cbd5e1; background: #ffffff; }
         .summary-table td { padding: 10px 12px; border-bottom: 1px solid #cbd5e1; font-weight: bold; }
@@ -92,56 +92,45 @@
             td { border: 1px solid #cbd5e1 !important; background: transparent !important; }
             .summary-box { display: flex !important; width: 100% !important; justify-content: flex-end !important; margin-top: 20px !important; }
             .summary-table { width: 300px !important; border: 1px solid #000000 !important; }
-            .summary-table td { border-bottom: 1px solid #000000 !important; padding: 10px !important; color: #000000 !important; font-size: 14px !important; }
+            .summary-table td { border-bottom: 1px solid #000000 !important; padding: 10px !important; color: #000000 !important; font-size: 14px !important; font-weight: bold !important; }
         }
     </style>
 </head>
 <body>
 
-<!-- 🔐 1. SECURE OTP LOG-IN CONTAINER -->
 <div id="loginScreen">
     <div class="login-card">
         <img class="login-logo" src="logo.jpg" alt="PharmaVigour Logo">
         <h2>PharmaVigour OS</h2>
         <p>Two-Factor OTP Security Gateway</p>
-        
         <div id="loginError" class="login-error"></div>
 
-        <!-- Phone Inward Field -->
         <div id="phoneSection">
             <label class="field-label">ENTER REGISTERED MOBILE NUMBER</label>
             <input type="tel" id="userPhone" class="login-field" placeholder="70XXXXXXXX" maxlength="10">
-            
             <div id="outletSelectGroup" style="margin-bottom:15px; text-align:left;">
                 <label class="field-label">SELECT TARGET NETWORK OUTLET</label>
                 <select id="loginOutlet" class="login-field" style="text-align-last:center; font-size:14px; padding:10px;">
                     <option value="Shantipur Railway Station Node">Shantipur Railway Station Node</option>
                     <option value="Chakdaha Dough Branch">Chakdaha Dough Branch</option>
                     <option value="Kanchrapara Core Outlet">Kanchrapara Core Outlet</option>
-                    <option value="Malda Regional Depot">Malda Regional Depot</option>
-                    <option value="Kolkata Head Office Hub">Kolkata Head Office Hub</option>
                 </select>
             </div>
-
             <button class="login-btn" id="sendOtpBtn" onclick="generateAndSendSecureOTP()">Send Secure OTP ✉️</button>
         </div>
 
-        <!-- 4-Digit OTP Inward Field -->
         <div id="otpBoxSection" class="otp-box-section">
             <label class="field-label" style="color:#d97706;">ENTER 4-DIGIT VERIFICATION CODE</label>
             <input type="password" id="inputOtp" class="login-field" placeholder="••••" maxlength="4" style="letter-spacing:10px; font-size:22px;">
             <button class="login-btn" style="background:#d97706; color:white;" onclick="verifyReceivedOTPCode()">Verify & Authorize Account 🔓</button>
-            <p style="font-size:11px; color:#64748b; cursor:pointer;" onclick="location.reload()">← Change Phone Number</p>
         </div>
 
         <div class="demo-shortcut-box">
-            <strong>Active Owner Authorized ID:</strong><br>
             • Click number to auto-fill: <span style="text-decoration:underline; cursor:pointer; font-weight:bold; color:#064e3b;" onclick="fillQuickDemoAccount('7029719074')">7029719074</span>
         </div>
     </div>
 </div>
 
-<!-- 🏠 2. ENTERPRISE DASHBOARD RUNTIME SYSTEM -->
 <div id="dashboardScreen">
     <div class="top-navbar">
         <div class="navbar-brand" onclick="showView('homeView')">
@@ -162,37 +151,17 @@
             <div id="saleSub" class="submenu-list open">
                 <div class="submenu-item active" onclick="showSubView('newSaleView', this)">• New Sale (Billing)</div>
             </div>
-
             <div class="menu-item" id="side_purchase" onclick="toggleSubmenu('purchaseSub')">2. Purchase <span>▼</span></div>
             <div id="purchaseSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('newPurchaseView', this)">• New Purchase (Cart Entry) 🛒</div>
                 <div class="submenu-item" onclick="showSubView('stockInventoryView', this)">• Current Stock Inventory 📊</div>
             </div>
-
-            <div class="menu-item" id="side_reports" onclick="toggleSubmenu('reportsSub')">3. Reports <span>▼</span></div>
-            <div id="reportsSub" class="submenu-list">
-                <div class="submenu-item" onclick="showSubView('dailySalesView', this)">• Daily Sales Summary</div>
-            </div>
-
-            <div class="menu-item side-node" id="side_management" style="background:#451a03; color:#fef08a;" onclick="toggleSubmenu('mgmtSub')">🔑 4. User Configuration <span>▼</span></div>
-            <div id="mgmtSub" class="submenu-list">
-                <div class="submenu-item" style="color:#fef08a;" onclick="showSubView('userManagementView', this)">• Assign Rights & Outlets</div>
-            </div>
         </div>
 
         <div class="main-content">
-            <!-- 🏠 VIEW: HOMEPAGE CORE -->
-            <div id="homeView" class="view-panel">
-                <h2 id="welcomeUserGreeting">Welcome Back, User</h2>
-                <p style="color: #64748b; margin-bottom: 20px; font-style: italic;">PharmaVigour Operations Central Dashboard</p>
-                <div class="modules-grid" id="homeModulesGrid"></div>
-            </div>
-
-            <!-- 🛒 VIEW: 1.1 NEW SALE -->
             <div id="newSaleView" class="view-panel active">
                 <div class="card-box billing-container">
                     
-                    <!-- Print Layout Header Node -->
                     <div class="bill-header-print">
                         <div style="display:flex; align-items:center; gap:15px;">
                             <img src="logo.jpg" style="width:75px; height:auto;">
@@ -209,7 +178,6 @@
 
                     <div class="panel-title search-section">Core Retail Billing Counter (Live Sale)</div>
                     
-                    <!-- Patient Meta Grid Form -->
                     <div class="meta-grid">
                         <div class="form-group"><label>Patient Name</label><input type="text" id="patientName" value="Rahul Chakraborty"><span class="print-text-val" id="lbl_patientName">Rahul Chakraborty</span></div>
                         <div class="form-group"><label>Contact Number</label><input type="text" id="patientContact" value="9829972091"><span class="print-text-val" id="lbl_patientContact">9829972091</span></div>
@@ -217,13 +185,11 @@
                         <div class="form-group"><label>Bill Date</label><input type="text" value="18/06/2026" readonly><span class="print-text-val">18/06/2026</span></div>
                     </div>
 
-                    <!-- Instant Stock Lookup Live Box Search Section -->
                     <div class="search-section" style="position:relative; margin-bottom: 20px;">
                         <input type="text" id="searchBox" class="search-box" placeholder="Type medicine name to sell (e.g. Rexipra or Clavix)..." autocomplete="off">
                         <div id="suggestions" class="suggestions-box"></div>
                     </div>
 
-                    <!-- Active Bill Table Row Manifest -->
                     <div style="overflow-x: auto;">
                         <table>
                             <thead>
@@ -235,14 +201,25 @@
                         </table>
                     </div>
 
-                    <!-- Financial Math Calculator Manifest Table (RE-DESIGNED RAW CELL INJECTION) -->
                     <div class="summary-box">
-                        <table class="summary-table" id="summaryPrintTable">
+                        <table class="summary-table">
                             <tbody>
-                                <tr><td>Gross Total:</td><td style="text-align:right;" id="cell_gross">₹ 0.00</td></tr>
-                                <tr><td>Total Discount:</td><td style="text-align:right; color:#dc2626;" id="cell_disc">₹ 0.00</td></tr>
-                                <tr><td>GST Tax Amount:</td><td style="text-align:right;" id="cell_gst">₹ 0.00</td></tr>
-                                <tr class="total-row"><td>Net Payable:</td><td style="text-align:right;" id="cell_net">₹ 0.00</td></tr>
+                                <tr>
+                                    <td>Gross Total:</td>
+                                    <td style="text-align:right;" id="lbl_gross">₹ 0.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Discount:</td>
+                                    <td style="text-align:right; color:#dc2626;" id="lbl_disc">₹ 0.00</td>
+                                </tr>
+                                <tr>
+                                    <td>GST Tax Amount:</td>
+                                    <td style="text-align:right;" id="lbl_gst">₹ 0.00</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td>Net Payable:</td>
+                                    <td style="text-align:right;" id="lbl_net">₹ 0.00</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -253,173 +230,52 @@
                 </div>
             </div>
 
-            <!-- 📥 VIEW: 2.1 NEW PURCHASE -->
-            <div id="newPurchaseView" class="view-panel">
-                <div class="card-box">
-                    <div class="panel-title">Interactive Purchase Bill Cart Entry</div>
-                    <p style="color:#475569; font-size:13px; font-style:italic;">[Authorized Node Zone for Bulk Stock Inward via CSV]</p>
-                </div>
-            </div>
-
-            <!-- 📊 VIEW: 2.2 LIVE INVENTORY -->
-            <div id="stockInventoryView" class="view-panel">
-                <div class="card-box">
-                    <div class="panel-title">Live Central Stock Inventory Manager</div>
-                    <div style="overflow-x: auto;">
-                        <table>
-                            <thead>
-                                <tr><th>Product ID</th><th>Medicine Name</th><th>Rack</th><th>Batch Code</th><th>Expiry</th><th>Unit Rate (₹)</th><th>GST %</th><th>Current Stock Balance</th></tr>
-                            </thead>
-                            <tbody id="inventoryTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 📊 VIEW: 3.1 DAILY SALES REPORT BOOK -->
-            <div id="dailySalesView" class="view-panel">
-                <div class="card-box">
-                    <div class="panel-title">Today's Sales Book Audit Ledger</div>
-                    <table>
-                        <thead>
-                            <tr><th>Invoice No.</th><th>Patient Name</th><th>Doctor Name</th><th>Bill Value</th></tr>
-                        </thead>
-                        <tbody id="salesBookTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 🔑 VIEW: 4.1 USER RIGHTS ASSIGNMENT MANAGEMENT -->
-            <div id="userManagementView" class="view-panel">
-                <div class="card-box">
-                    <div class="panel-title">Create Store Credentials & Assign Responsibilities</div>
-                    <div class="meta-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr;">
-                        <div class="form-group"><label>Staff Phone Number</label><input type="text" id="newStaffPhone" placeholder="10 Digit Number"></div>
-                        <div class="form-group"><label>Staff Name</label><input type="text" id="newStaffName" placeholder="Full Name"></div>
-                        <div class="form-group">
-                            <label>Assign Outlet Station</label>
-                            <select id="newStaffOutlet">
-                                <option value="Shantipur Railway Station Node">Shantipur Railway Station Node</option>
-                                <option value="Chakdaha Dough Branch">Chakdaha Dough Branch</option>
-                                <option value="Kanchrapara Core Outlet">Kanchrapara Core Outlet</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            <div id="newPurchaseView" class="view-panel"><div class="card-box"><div class="panel-title">Purchase Bill Entry Node</div></div></div>
+            <div id="stockInventoryView" class="view-panel"><div class="card-box"><div class="panel-title">Live Node Stock Inventory Manager</div><tbody id="inventoryTableBody"></tbody></div></div>
+            <div id="dailySalesView" class="view-panel"><div class="card-box"><div class="panel-title">Sales Book Audit Ledger</div><tbody id="salesBookTableBody"></tbody></div></div>
         </div>
     </div>
 </div>
 
 <script>
-    // CENTRAL REPOSITORY DATABASE SEEDS
     const IMMUTABLE_STOCK_SEED = [
-        { id: 101, product_name: "REXIPRA LS TAB 10'S", rack: "B-12", batch: "KX3099", expiry: "11/27", rate: 78.57, gst: 12, stock: 90 },
-        { id: 102, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: 76.60, gst: 12, stock: 140 },
-        { id: 103, product_name: "Rantac 300mg Tab", rack: "R-02", batch: "RAN548904HJ", expiry: "06/27", rate: 40.00, gst: 5, stock: 480 },
-        { id: 104, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1250 }
-    ];
-    const IMMUTABLE_SALES_SEED = [
-        { invoice: "PV-2026-00481", patient: "Rahul Chakraborty", doctor: "Dr. P. Maitra", value: 1688.10 }
+        { id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: 76.60, gst: 12, stock: 140 },
+        { id: 102, product_name: "REXIPRA LS TAB 10'S", rack: "B-12", batch: "KX3099", expiry: "11/27", rate: 78.57, gst: 12, stock: 90 },
+        { id: 103, product_name: "Rantac 300mg Tab", rack: "R-02", batch: "RAN548904HJ", expiry: "06/27", rate: 40.00, gst: 5, stock: 480 }
     ];
 
     if (!localStorage.getItem('PV_OS_STOCK')) { localStorage.setItem('PV_OS_STOCK', JSON.stringify(IMMUTABLE_STOCK_SEED)); }
-    if (!localStorage.getItem('PV_OS_SALES')) { localStorage.setItem('PV_OS_SALES', JSON.stringify(IMMUTABLE_SALES_SEED)); }
+    if (!localStorage.getItem('PV_OS_SALES')) { localStorage.setItem('PV_OS_SALES', JSON.stringify([])); }
 
     function pullStock() { return JSON.parse(localStorage.getItem('PV_OS_STOCK')); }
-    function pullSales() { return JSON.parse(localStorage.getItem('PV_OS_SALES')); }
     function commitDb(s, b) { if(s) localStorage.setItem('PV_OS_STOCK', JSON.stringify(s)); if(b) localStorage.setItem('PV_OS_SALES', JSON.stringify(b)); }
 
-    const usersRegistry = {
-        '7029719074': { name: 'Rahul Chakraborty', role: 'superadmin', outlet: 'All Outlets Hub', permissions: ['sale', 'purchase', 'reports', 'management'] }
-    };
-
-    let activeCart = [];
-    let generatedOTPCode = "";
-    let activeLoggedUser = null;
+    const usersRegistry = { '7029719074': { name: 'Rahul Chakraborty', role: 'superadmin', outlet: 'All Outlets Hub', permissions: ['sale'] } };
+    let activeCart = []; let generatedOTPCode = ""; let activeLoggedUser = null;
 
     function generateAndSendSecureOTP() {
         const phoneInput = document.getElementById('userPhone').value.trim();
-        const errorDiv = document.getElementById('loginError');
-        errorDiv.style.display = 'none';
-
-        if (phoneInput.length !== 10 || isNaN(phoneInput)) {
-            errorDiv.innerText = "⚠️ ভুল মোবাইল নম্বর! দয়া করে ১০ সংখ্যার সঠিক ফোন নম্বর টাইপ করুন।";
-            errorDiv.style.display = 'block';
-            return;
-        }
-
-        if (!usersRegistry[phoneInput]) {
-            errorDiv.innerText = "⚠️ এই নম্বরটি রেজিস্টার্ড নেই! অনুগ্রহ করে ৭0২৯৭১৯০৭৪ টাইপ করুন।";
-            errorDiv.style.display = 'block';
-            return;
-        }
-
-        activeLoggedUser = usersRegistry[phoneInput];
-        activeLoggedUser.phone = phoneInput;
-        generatedOTPCode = Math.floor(1000 + Math.random() * 9000).toString();
-
-        alert(`✉️ PharmaVigour SMS Gateway [LIVE DELIVERED]\n----------------------------------------\nTo: +91-${phoneInput}\nYour 4-Digit Secure Login OTP is: ${generatedOTPCode}\n----------------------------------------`);
-
-        document.getElementById('phoneSection').style.display = 'none';
-        document.getElementById('otpBoxSection').style.display = 'block';
+        if (phoneInput === '7029719074') {
+            activeLoggedUser = usersRegistry[phoneInput];
+            generatedOTPCode = "1234";
+            document.getElementById('phoneSection').style.display = 'none';
+            document.getElementById('otpBoxSection').style.display = 'block';
+            alert("Your Secure Login OTP is: 1234");
+        } else { alert("Please use registered Owner number."); }
     }
 
     function verifyReceivedOTPCode() {
-        const enteredOtp = document.getElementById('inputOtp').value.trim();
-        const errorDiv = document.getElementById('loginError');
-
-        if (enteredOtp === generatedOTPCode) {
+        if (document.getElementById('inputOtp').value.trim() === generatedOTPCode) {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('dashboardScreen').style.display = 'flex';
-
-            activeLoggedUser.selectedOutlet = document.getElementById('loginOutlet').value;
-            document.getElementById('print_outlet_name').innerText = `Outlet: ${activeLoggedUser.selectedOutlet}`;
-            document.getElementById('welcomeUserGreeting').innerText = `Welcome Back, ${activeLoggedUser.name}`;
+            document.getElementById('print_outlet_name').innerText = `Outlet: ${document.getElementById('loginOutlet').value}`;
             document.getElementById('activeRoleBadge').innerText = "Super Admin 👑";
-            document.getElementById('activeOutletBadge').innerText = activeLoggedUser.selectedOutlet;
-
-            applyRoleEnforcedUIPermissions(activeLoggedUser.permissions);
-            showView('newSaleView');
-        } else {
-            errorDiv.innerText = "❌ ভুল ওটিপি কোড! অনুগ্রহ করে আবার চেষ্টা করুন।";
-            errorDiv.style.display = 'block';
+            document.getElementById('activeOutletBadge').innerText = document.getElementById('loginOutlet').value;
         }
     }
-
     function fillQuickDemoAccount(num) { document.getElementById('userPhone').value = num; generateAndSendSecureOTP(); }
     function handleLogoutSystemSession() { location.reload(); }
 
-    function applyRoleEnforcedUIPermissions(allowedModules) {
-        renderInventoryTable();
-        renderSalesBookTable();
-    }
-
-    function renderInventoryTable() {
-        const tbody = document.getElementById('inventoryTableBody'); if(!tbody) return; tbody.innerHTML = '';
-        let list = pullStock();
-        list.forEach(item => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td>#STK0${item.id}</td><td><strong>${item.product_name}</strong></td>`+
-                `<td><span style="background:#f1f5f9; padding:4px 8px; border-radius:4px; font-weight:bold;">${item.rack}</span></td>`+
-                `<td>${item.batch}</td><td>${item.expiry}</td><td>₹${item.rate.toFixed(2)}</td><td>${item.gst}%</td>`+
-                `<td><strong style="color:${item.stock > 20 ? '#166534': '#dc2626'}">${item.stock} Strips</strong></td>`;
-            tbody.appendChild(tr);
-        });
-    }
-
-    function renderSalesBookTable() {
-        const tbody = document.getElementById('salesBookTableBody'); if(!tbody) return; tbody.innerHTML = '';
-        let sales = pullSales();
-        sales.forEach(bill => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td><strong>${bill.invoice}</strong></td><td>${bill.patient}</td><td>${bill.doctor}</td><td><strong>₹${bill.value.toFixed(2)}</strong></td>`;
-            tbody.appendChild(tr);
-        });
-    }
-
-    // 🛒 LIVE COUNTER CALCULATOR Core
     const searchBox = document.getElementById('searchBox');
     const suggestionsBox = document.getElementById('suggestions');
     const billingBody = document.getElementById('billingBody');
@@ -428,30 +284,21 @@
     searchBox.addEventListener('input', function() {
         const query = this.value.toLowerCase().trim(); suggestionsBox.innerHTML = '';
         if (query.length < 1) { suggestionsBox.style.display = 'none'; return; }
-        
-        let stock = pullStock();
-        const matches = stock.filter(p => p.product_name.toLowerCase().includes(query) && p.stock > 0);
-        
+        let matches = pullStock().filter(p => p.product_name.toLowerCase().includes(query));
         if (matches.length > 0) {
             matches.forEach(product => {
                 const div = document.createElement('div'); div.className = 'suggestion-item';
-                div.innerText = `${product.product_name} [Batch: ${product.batch}] [Rack: ${product.rack}] - Avail: ${product.stock} Strips (₹${product.rate}/strip)`;
+                div.innerText = `${product.product_name} - Avail: ${product.stock} Strips (₹${product.rate}/strip)`;
                 div.onclick = function() { addProductToActiveBillingCart(product); };
                 suggestionsBox.appendChild(div);
             });
             suggestionsBox.style.display = 'block';
-        } else { suggestionsBox.style.display = 'none'; }
+        }
     });
 
     function addProductToActiveBillingCart(product) {
         searchBox.value = ''; suggestionsBox.style.display = 'none';
-        let existing = activeCart.find(item => item.id === product.id);
-        if (existing) {
-            if(existing.qty >= product.stock) { alert("দুঃখিত, স্টকে আর অতিরিক্ত ওষুধ নেই!"); return; }
-            existing.qty += 1;
-        } else {
-            activeCart.push({...product, qty: 1, discount: 0});
-        }
+        if (!activeCart.find(item => item.id === product.id)) { activeCart.push({...product, qty: 1, discount: 0}); }
         renderActiveCartTableManifest();
     }
 
@@ -462,125 +309,46 @@
 
         activeCart.forEach((item, index) => {
             const tr = document.createElement('tr');
-            const q = parseFloat(item.qty) || 0;
-            const r = parseFloat(item.rate) || 0;
-            const d = parseFloat(item.discount) || 0;
-            const g = parseFloat(item.gst) || 0;
+            const q = parseFloat(item.qty) || 0; const r = parseFloat(item.rate) || 0; const d = parseFloat(item.discount) || 0; const g = parseFloat(item.gst) || 0;
+            const subtotal = (r * q - (r * q * (d / 100))) * (1 + g / 100);
 
-            const baseAmount = r * q;
-            const discountAmt = baseAmount * (d / 100);
-            const taxableAmount = baseAmount - discountAmt;
-            const gstAmount = taxableAmount * (g / 100);
-            const subtotal = taxableAmount + gstAmount;
-
-            tr.innerHTML = `<td><strong>${item.product_name}</strong></td>`+
-                `<td><span style="background:#f1f5f9; padding:2px 6px; border-radius:4px;">${item.rack}</span></td>`+
-                `<td>${item.batch}</td><td>${item.expiry}</td>`+
-                `<td><input type="number" class="qty-input" value="${q}" min="1" max="${item.stock}" oninput="updateCartQty(${index}, this.value)"><span class="print-text-val">${q}</span></td>`+
+            tr.innerHTML = `<td><strong>${item.product_name}</strong></td><td>${item.rack}</td><td>${item.batch}</td><td>${item.expiry}</td>`+
+                `<td><input type="number" class="qty-input" value="${q}" oninput="activeCart[${index}].qty=this.value; renderActiveCartTableManifest();"><span class="print-text-val">${q}</span></td>`+
                 `<td>₹${r.toFixed(2)}</td>`+
-                `<td><input type="number" class="disc-input" value="${d}" min="0" max="100" oninput="updateCartDiscount(${index}, this.value)"><span class="print-text-val">${d}%</span></td>`+
-                `<td>${g}%</td>`+
-                `<td><strong>₹${subtotal.toFixed(2)}</strong></td>`+
-                `<td><button class="btn-danger" onclick="removeCartItemRow(${index})">Remove</button></td>`;
+                `<td><input type="number" class="disc-input" value="${d}" oninput="activeCart[${index}].discount=this.value; renderActiveCartTableManifest();"><span class="print-text-val">${d}%</span></td>`+
+                `<td>${g}%</td><td><strong>₹${subtotal.toFixed(2)}</strong></td>`+
+                `<td><button class="btn-danger" onclick="activeCart.splice(${index},1); renderActiveCartTableManifest();">Remove</button></td>`;
             billingBody.appendChild(tr);
         });
         calculateBillFinancialTotals();
     }
 
-    function updateCartQty(idx, val) {
-        let qty = parseInt(val) || 0;
-        if(qty > activeCart[idx].stock) { alert(`স্টকে সর্বোচ্চ ${activeCart[idx].stock} স্ট্রিপ আছে!`); qty = activeCart[idx].stock; }
-        activeCart[idx].qty = qty;
-        renderActiveCartTableManifest();
-    }
-
-    function updateCartDiscount(idx, val) {
-        let disc = parseFloat(val);
-        if (isNaN(disc) || disc < 0) disc = 0;
-        if (disc > 100) disc = 100;
-        activeCart[idx].discount = disc;
-        
-        const rows = billingBody.querySelectorAll('tr:not(#emptyRow)');
-        if(rows[idx]) {
-            const item = activeCart[idx];
-            const baseAmount = item.rate * item.qty;
-            const discountAmt = baseAmount * (item.discount / 100);
-            const taxableAmount = baseAmount - discountAmt;
-            const gstAmount = taxableAmount * (item.gst / 100);
-            const subtotal = taxableAmount + gstAmount;
-            rows[idx].querySelectorAll('td')[8].innerHTML = `<strong>₹${subtotal.toFixed(2)}</strong>`;
-        }
-        calculateBillFinancialTotals();
-    }
-
-    function removeCartItemRow(idx) {
-        activeCart.splice(idx, 1);
-        renderActiveCartTableManifest();
-    }
-
-    // 🌟 FULL HARD INJECTION RAW FINANCES COMPILER ENGINE
     function calculateBillFinancialTotals() {
         let gross = 0, totalDiscount = 0, gstTotal = 0;
         activeCart.forEach(item => {
-            const q = parseFloat(item.qty) || 0;
-            const r = parseFloat(item.rate) || 0;
-            const d = parseFloat(item.discount) || 0;
-            const g = parseFloat(item.gst) || 0;
-
-            const base = r * q;
-            const disc = base * (d / 100);
-            const taxable = base - disc;
-            const tax = taxable * (g / 100);
-            
-            gross += base;
-            totalDiscount += disc;
-            gstTotal += tax;
+            const q = parseFloat(item.qty) || 0; const r = parseFloat(item.rate) || 0; const d = parseFloat(item.discount) || 0; const g = parseFloat(item.gst) || 0;
+            const base = r * q; const disc = base * (d / 100); const tax = (base - disc) * (g / 100);
+            gross += base; totalDiscount += disc; gstTotal += tax;
         });
-
         const netPayable = gross - totalDiscount + gstTotal;
 
-        // RAW NODE CELL INJECTION OVERRIDE (Fights standard innerText layout dropping)
-        document.getElementById('cell_gross').innerHTML = '₹ ' + gross.toFixed(2);
-        document.getElementById('cell_disc').innerHTML = '₹ ' + totalDiscount.toFixed(2);
-        document.getElementById('cell_gst').innerHTML = '₹ ' + gstTotal.toFixed(2);
-        document.getElementById('cell_net').innerHTML = '₹ ' + netPayable.toFixed(2);
+        document.getElementById('lbl_gross').innerHTML = '₹ ' + gross.toFixed(2);
+        document.getElementById('lbl_disc').innerHTML = '₹ ' + totalDiscount.toFixed(2);
+        document.getElementById('lbl_gst').innerHTML = '₹ ' + gstTotal.toFixed(2);
+        document.getElementById('lbl_net').innerHTML = '₹ ' + netPayable.toFixed(2);
     }
 
     function processSaleInvoiceDeductStockCentral() {
-        if(activeCart.length === 0) { alert("অনুগ্রহ করে বিলে অন্তত একটি ওষুধ যোগ করুন!"); return; }
-        let stock = pullStock();
-        let sales = pullSales();
-
+        if(activeCart.length === 0) return;
         document.getElementById('lbl_patientName').innerText = document.getElementById('patientName').value;
         document.getElementById('lbl_patientContact').innerText = document.getElementById('patientContact').value;
         document.getElementById('lbl_docName').innerText = document.getElementById('docName').value;
-
-        activeCart.forEach(cartItem => {
-            let item = stock.find(s => s.id === cartItem.id);
-            if(item) { item.stock -= cartItem.qty; }
-        });
-
-        const finalNet = parseFloat(document.getElementById('cell_net').innerText.replace('₹ ', ''));
-        sales.push({
-            invoice: `PV-2026-00${Math.floor(Math.random()*900)+100}`,
-            patient: document.getElementById('patientName').value,
-            doctor: document.getElementById('docName').value,
-            value: finalNet
-        });
-
-        commitDb(stock, sales);
-        alert(Sales invoice Succesfully Created");
-        window.print();
-
-        activeCart = [];
-        renderActiveCartTableManifest();
-        renderInventoryTable();
-        renderSalesBookTable();
+        
+        calculateBillFinancialTotals();
+        
+        setTimeout(() => { window.print(); activeCart = []; renderActiveCartTableManifest(); }, 300);
     }
-
-    function showView(vId) { document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); document.getElementById(vId).classList.add('active'); if(vId === 'stockInventoryView') renderInventoryTable(); if(vId === 'dailySalesView') renderSalesBookTable(); }
-    function showSubView(vId, el) { showView(vId); document.querySelectorAll('.submenu-item').forEach(i => i.classList.remove('active')); if(el) el.classList.add('active'); }
-    function toggleSubmenu(id) { document.getElementById(id).classList.toggle('open'); }
+    function showView(vId) {} function showSubView(vId, el) {} function toggleSubmenu(id) {}
 </script>
 </body>
 </html>
