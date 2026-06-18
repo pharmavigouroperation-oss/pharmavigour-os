@@ -75,13 +75,15 @@
         .suggestion-item:hover { background-color: #f0fdf4; color: #064e3b; font-weight: bold; }
         .qty-input, .disc-input { width: 65px; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; text-align: center; font-weight: bold; }
         .summary-box { margin-top: 20px; display: flex; justify-content: flex-end; }
-        .summary-table { width: 300px; }
-        .summary-table td { padding: 6px 10px; border: none; }
+        .summary-table { width: 300px; border: 1px solid #e2e8f0; }
+        .summary-table td { padding: 8px 12px; border-bottom: 1px solid #e2e8f0; }
         .total-row { background: #f8fafc !important; font-size: 15px; color: #064e3b; font-weight: bold; border-top: 2px solid #e2e8f0 !important; }
 
         .bill-header-print { display: none; }
         .print-text-val { display: none; font-weight: bold; }
+        .print-summary-val { font-weight: bold; color: #000000; }
 
+        /* 🖨️ ADVANCED HARD LOCKED PRINT ENGINE ARCHITECTURE */
         @media print {
             .sidebar, .top-navbar, .search-section, .btn-container, .btn-danger, th:last-child, td:last-child, .meta-grid input, .qty-input, .disc-input { display: none !important; }
             .print-text-val { display: inline-block !important; }
@@ -89,11 +91,16 @@
             .bill-header-print { display: flex !important; align-items: center; justify-content: space-between; border-bottom: 2px solid #064e3b; padding-bottom: 15px; margin-bottom: 25px; }
             th { background-color: #f1f5f9 !important; color: black !important; border: 1px solid #94a3b8 !important; }
             td { border: 1px solid #cbd5e1 !important; background: transparent !important; }
+            .summary-box { display: flex !important; width: 100% !important; justify-content: flex-end !important; margin-top: 20px !important; }
+            .summary-table { width: 300px !important; border: 1px solid #000000 !important; }
+            .summary-table td { border-bottom: 1px solid #000000 !important; padding: 8px !important; color: #000000 !important; }
+            .print-summary-val { display: inline-block !important; font-weight: bold !important; color: #000000 !important; }
         }
     </style>
 </head>
 <body>
 
+<!-- 🔐 1. SECURE OTP LOG-IN CONTAINER -->
 <div id="loginScreen">
     <div class="login-card">
         <img class="login-logo" src="logo.jpg" alt="PharmaVigour Logo">
@@ -102,6 +109,7 @@
         
         <div id="loginError" class="login-error"></div>
 
+        <!-- Phone Inward Field -->
         <div id="phoneSection">
             <label class="field-label">ENTER REGISTERED MOBILE NUMBER</label>
             <input type="tel" id="userPhone" class="login-field" placeholder="70XXXXXXXX" maxlength="10">
@@ -120,6 +128,7 @@
             <button class="login-btn" id="sendOtpBtn" onclick="generateAndSendSecureOTP()">Send Secure OTP ✉️</button>
         </div>
 
+        <!-- 4-Digit OTP Inward Field -->
         <div id="otpBoxSection" class="otp-box-section">
             <label class="field-label" style="color:#d97706;">ENTER 4-DIGIT VERIFICATION CODE</label>
             <input type="password" id="inputOtp" class="login-field" placeholder="••••" maxlength="4" style="letter-spacing:10px; font-size:22px;">
@@ -134,6 +143,7 @@
     </div>
 </div>
 
+<!-- 🏠 2. ENTERPRISE DASHBOARD RUNTIME SYSTEM -->
 <div id="dashboardScreen">
     <div class="top-navbar">
         <div class="navbar-brand" onclick="showView('homeView')">
@@ -173,15 +183,18 @@
         </div>
 
         <div class="main-content">
+            <!-- 🏠 VIEW: HOMEPAGE CORE -->
             <div id="homeView" class="view-panel">
                 <h2 id="welcomeUserGreeting">Welcome Back, User</h2>
                 <p style="color: #64748b; margin-bottom: 20px; font-style: italic;">PharmaVigour Operations Central Dashboard</p>
                 <div class="modules-grid" id="homeModulesGrid"></div>
             </div>
 
+            <!-- 🛒 VIEW: 1.1 NEW SALE -->
             <div id="newSaleView" class="view-panel active">
                 <div class="card-box billing-container">
                     
+                    <!-- Print Layout Header Node -->
                     <div class="bill-header-print">
                         <div style="display:flex; align-items:center; gap:15px;">
                             <img src="logo.jpg" style="width:75px; height:auto;">
@@ -198,6 +211,7 @@
 
                     <div class="panel-title search-section">Core Retail Billing Counter (Live Sale)</div>
                     
+                    <!-- Patient Meta Grid Form -->
                     <div class="meta-grid">
                         <div class="form-group"><label>Patient Name</label><input type="text" id="patientName" value="Rahul Chakraborty"><span class="print-text-val" id="lbl_patientName">Rahul Chakraborty</span></div>
                         <div class="form-group"><label>Contact Number</label><input type="text" id="patientContact" value="9829972091"><span class="print-text-val" id="lbl_patientContact">9829972091</span></div>
@@ -205,11 +219,13 @@
                         <div class="form-group"><label>Bill Date</label><input type="text" value="18/06/2026" readonly><span class="print-text-val">18/06/2026</span></div>
                     </div>
 
+                    <!-- Instant Stock Lookup Live Box Search Section -->
                     <div class="search-section" style="position:relative; margin-bottom: 20px;">
                         <input type="text" id="searchBox" class="search-box" placeholder="Type medicine name to sell (e.g. Rexipra or Clavix)..." autocomplete="off">
                         <div id="suggestions" class="suggestions-box"></div>
                     </div>
 
+                    <!-- Active Bill Table Row Manifest -->
                     <div style="overflow-x: auto;">
                         <table>
                             <thead>
@@ -221,12 +237,25 @@
                         </table>
                     </div>
 
+                    <!-- Financial Math Calculator Manifest Table -->
                     <div class="summary-box">
                         <table class="summary-table">
-                            <tr><td>Gross Total:</td><td id="grossTotal" style="text-align:right; font-weight:bold;">₹ 0.00</td></tr>
-                            <tr><td>Total Discount:</td><td id="totalDisc" style="text-align:right; font-weight:bold; color:#dc2626;">₹ 0.00</td></tr>
-                            <tr><td>GST Tax Amount:</td><td id="gstTotal" style="text-align:right; font-weight:bold;">₹ 0.00</td></tr>
-                            <tr class="total-row"><td><strong>Net Payable:</strong></td><td id="netPayable" style="text-align:right; font-weight:bold; font-size:16px;">₹ 0.00</td></tr>
+                            <tr>
+                                <td>Gross Total:</td>
+                                <td style="text-align:right;"><span id="grossTotal" class="print-summary-val">₹ 0.00</span></td>
+                            </tr>
+                            <tr>
+                                <td>Total Discount:</td>
+                                <td style="text-align:right;"><span id="totalDisc" class="print-summary-val" style="color:#dc2626;">₹ 0.00</span></td>
+                            </tr>
+                            <tr>
+                                <td>GST Tax Amount:</td>
+                                <td style="text-align:right;"><span id="gstTotal" class="print-summary-val">₹ 0.00</span></td>
+                            </tr>
+                            <tr class="total-row">
+                                <td><strong>Net Payable:</strong></td>
+                                <td style="text-align:right;"><span id="netPayable" class="print-summary-val" style="font-size:16px;">₹ 0.00</span></td>
+                            </tr>
                         </table>
                     </div>
 
@@ -236,6 +265,7 @@
                 </div>
             </div>
 
+            <!-- 📥 VIEW: 2.1 NEW PURCHASE -->
             <div id="newPurchaseView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Interactive Purchase Bill Cart Entry</div>
@@ -243,6 +273,7 @@
                 </div>
             </div>
 
+            <!-- 📊 VIEW: 2.2 LIVE INVENTORY -->
             <div id="stockInventoryView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Live Central Stock Inventory Manager</div>
@@ -257,6 +288,7 @@
                 </div>
             </div>
 
+            <!-- 📊 VIEW: 3.1 DAILY SALES REPORT BOOK -->
             <div id="dailySalesView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Today's Sales Book Audit Ledger</div>
@@ -269,6 +301,7 @@
                 </div>
             </div>
 
+            <!-- 🔑 VIEW: 4.1 USER RIGHTS ASSIGNMENT MANAGEMENT -->
             <div id="userManagementView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Create Store Credentials & Assign Responsibilities</div>
@@ -292,7 +325,7 @@
 </div>
 
 <script>
-    // CENTRAL DATA MASTER SEEDS
+    // CENTRAL REPOSITORY DATABASE SEEDS
     const IMMUTABLE_STOCK_SEED = [
         { id: 101, product_name: "REXIPRA LS TAB 10'S", rack: "B-12", batch: "KX3099", expiry: "11/27", rate: 78.57, gst: 12, stock: 90 },
         { id: 102, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: 76.60, gst: 12, stock: 140 },
@@ -479,7 +512,6 @@
         if (disc > 100) disc = 100;
         activeCart[idx].discount = disc;
         
-        // Dynamic Row Re-calculation handler
         const rows = billingBody.querySelectorAll('tr:not(#emptyRow)');
         if(rows[idx]) {
             const item = activeCart[idx];
@@ -498,7 +530,6 @@
         renderActiveCartTableManifest();
     }
 
-    // 🌟 FIXED MATHEMATICAL TOTALS ENGINE LATCH
     function calculateBillFinancialTotals() {
         let gross = 0, totalDiscount = 0, gstTotal = 0;
         activeCart.forEach(item => {
@@ -519,7 +550,7 @@
 
         const netPayable = gross - totalDiscount + gstTotal;
 
-        // Force UI injection straight into labels
+        // Synchronize and force HTML inject into document labels
         document.getElementById('grossTotal').innerText = '₹ ' + gross.toFixed(2);
         document.getElementById('totalDisc').innerText = '₹ ' + totalDiscount.toFixed(2);
         document.getElementById('gstTotal').innerText = '₹ ' + gstTotal.toFixed(2);
