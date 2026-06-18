@@ -52,7 +52,7 @@
     <div class="container">
         <div class="header">
             <h1>PharmaVigour OS</h1>
-            <span class="store-tag">Outlet: main</span>
+            <span class="store-tag">Outlet: Shantipur</span>
         </div>
         <div class="meta-grid">
             <div class="form-group"><label>Patient Name</label><input type="text" id="patientName" value="Rahul Chakraborty"></div>
@@ -91,7 +91,8 @@
 </div>
 
 <script>
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJKV1QiLCJiaWQiOiJmYm9xdGRubWZ1YnF0Zmd5emphbyIsImlzcyI6InN1cGFiYXNlIiwicm9sZSI6ImFub24ifQ.eyJzdWIiOiJhbm9uIiwiaWF0IjoxNzAxNzQzNjYzLCJleHAiOjIwNTczMzE2NjN9.kliolUwNQgRzV1m2SaTHokEdc4na12a39ooHwGqDn44";
+    // 💡 আপনার আসল সুপাবেস চাবিটি এই নিচের লাইনে পেস্ট করুন
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZob3F0ZG5tZnVicXRmZ3p5amFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MzA0MzMsImV4cCI6MjA5NzIwNjQzM30.k0olwUwMqAQRzV1wZ5afHokEdc4nel2e39ooHmGqDn4";
 
     let globalStock = [];
     let activeCart = [];
@@ -107,11 +108,13 @@
 
     async function fetchLiveSupabaseInventory() {
         try {
-            const res = await fetch("https://fhoqtdnmfubqtfgyzjao.supabase.co/rest/v1/products?select=*", {
+            //  URL প্যারামিটার হিসেবে apikey পাস করা হলো যাতে CORS পলিসি ব্লক না করে
+            const url = `https://fhoqtdnmfubqtfgyzjao.supabase.co/rest/v1/products?select=*&apikey=${SUPABASE_ANON_KEY}`;
+            const res = await fetch(url, {
                 method: "GET",
                 headers: { 
-                    "apikey": SUPABASE_ANON_KEY, 
-                    "Authorization": "Bearer " + SUPABASE_ANON_KEY 
+                    "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+                    "Prefer": "return=representation"
                 }
             });
             globalStock = await res.json();
