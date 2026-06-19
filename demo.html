@@ -3,73 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PharmaVigour OS - Corporate Cloud ERP</title>
+    <title>PharmaVigour OS - Corporate ERP</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { background: #f8fafc; min-height: 100vh; padding: 10px; }
-        #loginScreen { max-width: 400px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
-        #dashboardScreen { display: none; flex-direction: column; height: 100vh; }
-        .navbar { background: #064e3b; color: white; padding: 15px; display: flex; justify-content: space-between; }
-        .workspace { display: flex; flex: 1; }
-        .sidebar { background: #0f172a; color: white; width: 60px; padding-top: 10px; }
-        .sidebar:hover { width: 200px; }
-        .menu-item { padding: 15px; cursor: pointer; white-space: nowrap; overflow: hidden; }
-        .submenu-item { padding: 10px 10px 10px 40px; font-size: 12px; color: #94a3b8; cursor: pointer; }
-        .main-content { flex: 1; padding: 15px; overflow-y: auto; }
-        .view-panel { display: none; background: white; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
-        .view-panel.active { display: block; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
-        th, td { padding: 10px; border: 1px solid #e2e8f0; text-align: left; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background: #f8fafc; }
+        /* Login Styles */
+        #loginScreen { width: 100%; max-width: 400px; margin: 50px auto; padding: 20px; text-align: center; }
+        .card { background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        /* Dashboard */
+        #dashboardScreen { display: none; height: 100vh; flex-direction: column; }
+        .nav { background: #064e3b; color: white; padding: 15px; display: flex; justify-content: space-between; }
+        .main { display: flex; flex: 1; }
+        .sidebar { background: #0f172a; color: white; width: 220px; }
+        .item { padding: 15px; cursor: pointer; border-bottom: 1px solid #1e293b; }
+        .sub { display: none; background: #1e293b; }
+        .sub div { padding: 12px 40px; cursor: pointer; font-size: 13px; color: #cbd5e1; }
+        /* View Area */
+        .content { flex: 1; padding: 25px; }
+        .panel { display: none; background: white; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .panel.active { display: block !important; } /* Force display */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; border: 1px solid #e2e8f0; text-align: left; }
     </style>
 </head>
 <body>
 
 <div id="loginScreen">
-    <div class="login-card">
+    <div class="card">
         <h2>PharmaVigour OS</h2>
         <input type="tel" id="userPhone" placeholder="Enter Number" style="width:100%; padding:10px; margin:10px 0;">
         <button onclick="document.getElementById('otpBox').style.display='block'" style="width:100%; padding:10px;">Get Token</button>
         <div id="otpBox" style="display:none; margin-top:10px;">
             <input type="password" id="inputOtp" placeholder="1234" style="width:100%; padding:10px;">
-            <button onclick="loginSuccess()" style="width:100%; padding:10px; margin-top:5px;">Login</button>
+            <button onclick="login()" style="width:100%; padding:10px; margin-top:5px;">Login</button>
         </div>
     </div>
 </div>
 
 <div id="dashboardScreen">
-    <div class="navbar">
-        <span>PharmaVigour OS</span>
-        <span onclick="location.reload()" style="cursor:pointer;">Logout</span>
-    </div>
+    <div class="nav"><span>PharmaVigour OS</span><span onclick="location.reload()" style="cursor:pointer;">Logout</span></div>
     <div class="workspace">
         <div class="sidebar">
-            <div class="menu-item" onclick="toggleSub('saleSub')">🧮 <span class="menu-text">Sales</span></div>
-            <div id="saleSub" style="display:none; background:#1e293b;">
-                <div class="submenu-item" onclick="show('newSale')">New Sale Bill</div>
-                <div class="submenu-item" onclick="show('saleHist')">Sale History</div>
+            <div class="item" onclick="toggle('saleSub')">Sales</div>
+            <div id="saleSub" class="sub">
+                <div class="submenu-item" onclick="showPanel('newSale')">New Sale Bill</div>
+                <div class="submenu-item" onclick="showPanel('saleHist')">Sale History</div>
             </div>
-            <div class="menu-item" onclick="toggleSub('purSub')">📦 <span class="menu-text">Purchase</span></div>
-            <div id="purSub" style="display:none; background:#1e293b;">
-                <div class="submenu-item" onclick="show('newPur')">New Stock Inward</div>
-                <div class="submenu-item" onclick="show('purHist')">Purchase History</div>
-                <div class="submenu-item" onclick="show('inventory')">Current Inventory</div>
+            <div class="item" onclick="toggle('purSub')">Purchase</div>
+            <div id="purSub" class="sub">
+                <div class="submenu-item" onclick="showPanel('newPur')">New Stock Inward</div>
+                <div class="submenu-item" onclick="showPanel('inventory')">Current Inventory</div>
             </div>
         </div>
-        <div class="main-content">
-            <div id="homeView" class="view-panel active"><h2>Welcome PharmaVigour Operations</h2></div>
-            <div id="newSale" class="view-panel"><h2>New Sale Bill Terminal</h2></div>
-            <div id="saleHist" class="view-panel"><h2>Sale History Record</h2></div>
-            <div id="newPur" class="view-panel"><h2>New Stock Inward</h2></div>
-            <div id="purHist" class="view-panel"><h2>Purchase History Ledger</h2></div>
-            <div id="inventory" class="view-panel"><h2>Current Inventory</h2></div>
+        <div class="content">
+            <div id="home" class="panel active"><h2>Dashboard Home</h2></div>
+            <div id="newSale" class="panel">
+                <h2>New Sale Bill Terminal</h2>
+                <input type="text" placeholder="Search products..." style="width:100%; padding:12px; margin:10px 0;">
+                <table><thead><tr><th>Product</th><th>Rate</th><th>Qty</th></tr></thead><tbody><tr><td>Example Medicine</td><td>₹100</td><td>1</td></tr></tbody></table>
+            </div>
+            <div id="saleHist" class="panel"><h2>Sale History</h2></div>
+            <div id="newPur" class="panel"><h2>New Stock Inward</h2></div>
+            <div id="inventory" class="panel"><h2>Current Inventory</h2></div>
         </div>
     </div>
 </div>
 
 <script>
-    function loginSuccess() { document.getElementById('loginScreen').style.display='none'; document.getElementById('dashboardScreen').style.display='flex'; show('homeView'); }
-    function show(vId) { document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); document.getElementById(vId).classList.add('active'); }
-    function toggleSub(id) { let el = document.getElementById(id); el.style.display = el.style.display === 'none' ? 'block' : 'none'; }
+    function login() { if(document.getElementById('inputOtp').value=='1234') { document.getElementById('loginScreen').style.display='none'; document.getElementById('dashboardScreen').style.display='flex'; } }
+    function showPanel(vId) { 
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); 
+        document.getElementById(vId).classList.add('active'); 
+    }
+    function toggle(id) { let el = document.getElementById(id); el.style.display = el.style.display === 'none' ? 'block' : 'none'; }
 </script>
 </body>
 </html>
