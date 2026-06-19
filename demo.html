@@ -1,81 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PharmaVigour OS - PVO ERP</title>
+    <title>PVO Operations</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background: #f8fafc; height: 100vh; display: flex; flex-direction: column; }
-        /* Layout */
-        .header { background: #064e3b; color: #fef08a; padding: 15px; display: flex; justify-content: space-between; font-weight: bold; }
-        .wrapper { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { background: #0f172a; color: white; width: 200px; overflow-y: auto; }
-        .menu-item { padding: 15px; cursor: pointer; border-bottom: 1px solid #1e293b; }
-        .sub-menu { display: none; background: #1e293b; }
-        .sub-menu div { padding: 12px 30px; font-size: 13px; color: #cbd5e1; cursor: pointer; }
-        /* Content */
-        .content { flex: 1; padding: 20px; overflow-y: auto; }
-        .panel { display: none; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .panel.active { display: block !important; }
-        /* Billing Section Style */
-        .search-box { width: 100%; padding: 15px; border: 2px solid #064e3b; border-radius: 6px; font-size: 16px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th { background: #064e3b; color: white; padding: 10px; text-align: left; }
-        td { padding: 10px; border-bottom: 1px solid #e2e8f0; }
+        body { font-family: sans-serif; margin: 0; }
+        .nav { background: #064e3b; color: white; padding: 15px; }
+        .content { padding: 20px; }
+        .panel { display: none; }
+        .active { display: block !important; }
+        .search-box { width: 100%; padding: 15px; border: 2px solid #064e3b; }
+        table { width: 100%; margin-top: 20px; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 10px; }
     </style>
 </head>
 <body>
-
-<div class="header">
-    <span>PVO Cloud OS</span>
-    <span onclick="location.reload()">Logout</span>
-</div>
-
-<div class="wrapper">
-    <div class="sidebar">
-        <div class="menu-item" onclick="toggle('saleSub')">Sales</div>
-        <div id="saleSub" class="sub-menu">
-            <div onclick="show('newSale')">New Sale Bill</div>
-            <div onclick="show('saleHist')">Sale History</div>
-        </div>
-        <div class="menu-item" onclick="toggle('purSub')">Purchase</div>
-        <div id="purSub" class="sub-menu">
-            <div onclick="show('newPur')">New Stock Inward</div>
-            <div onclick="show('inventory')">Current Inventory</div>
-        </div>
-    </div>
-    
+    <div class="nav">PVO Central System</div>
     <div class="content">
-        <div id="home" class="panel active"><h2>Welcome PharmaVigour Operations</h2></div>
-        
-        <div id="newSale" class="panel">
-            <h2>New Sale Bill Terminal</h2>
-            <input type="text" class="search-box" placeholder="Scan or Search Product... (F3)">
-            <table id="cartTable">
-                <thead><tr><th>Product</th><th>Batch</th><th>Qty</th><th>Price</th></tr></thead>
-                <tbody id="cartBody">
-                    <tr><td colspan="4" style="text-align:center; color:#94a3b8;">Add products to start billing</td></tr>
-                </tbody>
+        <div id="newSale" class="panel active">
+            <h2>Sale Terminal</h2>
+            <input type="text" class="search-box" placeholder="Search product...">
+            <table>
+                <thead><tr><th>Item</th><th>Qty</th><th>Price</th></tr></thead>
+                <tbody><tr><td>Example Medicine</td><td>1</td><td>₹50</td></tr></tbody>
             </table>
-            <button style="margin-top:20px; width:100%; padding:15px; background:#064e3b; color:white; border:none; border-radius:6px;">Process Bill</button>
         </div>
-
-        <div id="saleHist" class="panel"><h2>Sale History</h2></div>
-        <div id="newPur" class="panel"><h2>Stock Inward</h2></div>
-        <div id="inventory" class="panel"><h2>Current Inventory</h2></div>
     </div>
-</div>
-
-<script>
-    function show(vId) { 
-        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); 
-        document.getElementById(vId).classList.add('active'); 
-    }
-    function toggle(id) { 
-        let el = document.getElementById(id); 
-        el.style.display = el.style.display === 'block' ? 'none' : 'block'; 
-    }
-</script>
 </body>
 </html>
