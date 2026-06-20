@@ -381,7 +381,7 @@
 </div>
 <script 
  src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-</script>
+"></script>
 
  <script>
   const SUPABASE_URL ='https://fhoqtdnmfubqtfgzyjao.supabase.co';
@@ -393,6 +393,15 @@ const supabase =window.supabase.createClient(
 );
 
 console.log("Supabase Connected");
+(async () => {
+    const { data, error } = await supabase
+        .from('otp_logs')
+        .select('*')
+        .limit(1);
+
+    console.log(data);
+    console.log(error);
+})();
     
     // DATA SEEDS
     const IMMUTABLE_STOCK_SEED = [
