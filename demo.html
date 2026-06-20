@@ -363,7 +363,7 @@
             <!-- 📊 VIEW: 2.3 CURRENT STOCK INVENTORY -->
             <div id="stockInventoryView" class="view-panel">
                 <div class="hotkey-banner-strip" style="background:#fee2e2; border-color:#fca5a5; color:#b91c1c;">
-                    <span>⚠️ Marg Watchdog System Active: Items expiring before June 2026 are auto-flagged below.</span>
+                    <span>⚠️ PVO Watchdog System Active: Items expiring before June 2026 are auto-flagged below.</span>
                 </div>
                 <div class="card-box">
                     <div class="panel-title">Live Network Stock Inventory Balance Ledger</div>
@@ -379,8 +379,21 @@
         </div>
     </div>
 </div>
+<script 
+ src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</script>
 
-<script>
+ <script>
+  const SUPABASE_URL ='https://fhoqtdnmfubqtfgzyjao.supabase.co';
+  const SUPABASE_ANON_KEY ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZob3F0ZG5tZnVicXRmZ3p5amFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MzA0MzMsImV4cCI6MjA5NzIwNjQzM30.k0olwUwMqAQRzV1wZ5afHokEdc4nel2e39ooHmGqDn4';
+
+const supabase =window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+console.log("Supabase Connected");
+    
     // DATA SEEDS
     const IMMUTABLE_STOCK_SEED = [
         { id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: 76.60, gst: 12, stock: 140 },
