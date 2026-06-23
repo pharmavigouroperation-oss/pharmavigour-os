@@ -1527,3 +1527,110 @@
 </body>
 
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PharmaVigour OS - Corporate Cloud ERP</title>
+    <style>
+        /* [Common Styles Maintained] */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: #f8fafc; color: #0f172a; min-height: 100vh; display: flex; }
+        
+        .sidebar { background: #0f172a; color: #cbd5e1; width: 60px; height: 100vh; position: fixed; z-index: 1000; transition: width 0.25s; overflow: hidden; white-space: nowrap; }
+        .sidebar:hover { width: 260px; }
+        .menu-item { padding: 15px 20px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; border-left: 4px solid transparent; }
+        .menu-item:hover { background: #1e293b; border-left-color: #d97706; }
+        .menu-text { margin-left: 15px; opacity: 0; }
+        .sidebar:hover .menu-text { opacity: 1; }
+        
+        .submenu-list { background: #020617; display: none; padding: 4px 0; }
+        .submenu-list.open { display: block; }
+        .submenu-item { padding: 11px 20px 11px 55px; font-size: 13px; color: #94a3b8; cursor: pointer; }
+        .submenu-item:hover { color: #fef08a; background: #0f172a; }
+
+        .main-content { flex: 1; margin-left: 60px; padding: 20px; }
+        .view-panel { display: none; }
+        .view-panel.active { display: block; }
+        
+        .card-box { background: #ffffff; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+        th { background: #064e3b; color: white; padding: 12px; text-align: left; }
+        td { padding: 12px; border: 1px solid #e2e8f0; }
+        input[type="text"], input[type="number"] { width: 100%; padding: 6px; border: 1px solid #ccc; }
+        
+        @media print { .sidebar, .no-print { display: none !important; } }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="menu-item" onclick="toggleSubmenu('saleSub')"><span class="menu-icon">🧮</span><span class="menu-text">1. Sale</span></div>
+    <div id="saleSub" class="submenu-list open">
+        <div class="submenu-item" onclick="showSubView('newSaleView')">New Sale Bill</div>
+        <div class="submenu-item" onclick="showSubView('salesReturnView')">Sales Return</div>
+    </div>
+    <!-- Other pillars remain unchanged -->
+</div>
+
+<div class="main-content">
+    <!-- SALES RETURN VIEW -->
+    <div id="salesReturnView" class="view-panel">
+        <div class="card-box">
+            <h3 class="panel-title">Sales Return / Credit Note</h3>
+            <div class="search-wrapper" style="margin-bottom:20px;">
+                <input type="text" id="returnBillNo" placeholder="Enter Original Bill Number..." style="padding:10px; width:200px;">
+                <button class="btn btn-primary" onclick="fetchBillForReturn()">Fetch Bill Details</button>
+            </div>
+            <table id="returnTable">
+                <thead>
+                    <tr><th>Product Name</th><th>Batch</th><th>Original Qty</th><th>Return Qty</th><th>Rate</th><th>Total Refund</th></tr>
+                </thead>
+                <tbody id="returnBody"></tbody>
+            </table>
+            <div id="returnSummary" style="margin-top:20px; text-align:right;"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Logic for Sales Return
+    function fetchBillForReturn() {
+        const billNo = document.getElementById('returnBillNo').value;
+        const sales = pullSales();
+        const bill = sales.find(s => s.invoice === billNo);
+        
+        if(!bill) { alert("Bill not found!"); return; }
+        
+        const tbody = document.getElementById('returnBody');
+        tbody.innerHTML = '';
+        
+        bill.items.forEach((item, idx) => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${item.product_name}</td>
+                    <td><input type="text" value="${item.batch}"></td>
+                    <td>${item.qty}</td>
+                    <td><input type="number" id="retQty_${idx}" value="0" oninput="calculateReturnTotals()"></td>
+                    <td>${item.rate}</td>
+                    <td id="rowTotal_${idx}">0.00</td>
+                </tr>`;
+        });
+    }
+
+    function calculateReturnTotals() {
+        let total = 0;
+        // Logic to calculate refund based on return qty * rate
+        // Then display in #returnSummary
+    }
+
+    function processSalesReturn() {
+        // Update stock (add back), generate credit note print, show receipt
+        window.print();
+    }
+
+    // Existing functions...
+</script>
+</body>
+</html>
