@@ -21,8 +21,6 @@
         
         .login-btn { width: 100%; padding: 14px; background: #064e3b; color: #fef08a; border: 1px solid #d97706; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; margin-bottom: 10px; display: block; transition: background 0.2s; }
         .login-btn:hover { background: #022c22; }
-        
-        .demo-shortcut-box { margin-top: 20px; background: #f1f5f9; padding: 12px; border-radius: 6px; font-size: 12px; color: #475569; line-height: 1.6; text-align: left; border: 1px solid #e2e8f0; }
 
         /* TOP NAVIGATION BAR PANELS */
         #dashboardScreen { display: none; min-height: 100vh; flex-direction: column; background-color: #f8fafc; }
@@ -126,7 +124,7 @@
 </head>
 <body>
 
-<!-- 1. SECURE OTP LOG-IN CONTAINER -->
+<!-- 🔒 1. SECURE ZERO-TRUST OTP LOG-IN CONTAINER -->
 <div id="loginScreen">
     <div class="login-card">
         <img class="login-logo" src="logo.jpg" alt="PharmaVigour Logo">
@@ -136,7 +134,7 @@
 
         <div id="phoneSection">
             <label class="field-label">ENTER REGISTERED MOBILE NUMBER</label>
-            <input type="tel" id="userPhone" class="login-field" placeholder="7029719074 or 9123665890" maxlength="10">
+            <input type="tel" id="userPhone" class="login-field" placeholder="Enter 10-Digit Mobile ID" maxlength="10" autocomplete="off">
             <div id="outletSelectGroup" style="margin-bottom:18px; text-align:left;">
                 <label class="field-label">SELECT SYSTEM NETWORK OUTLET</label>
                 <select id="loginOutlet" class="login-field" style="text-align-last:center; font-size:14px; padding:11px;">
@@ -152,11 +150,6 @@
             <label class="field-label" style="color:#d97706; text-align:center;">ENTER 4-DIGIT SECURITY TOKEN</label>
             <input type="password" id="inputOtp" class="login-field" placeholder="••••" maxlength="4" style="letter-spacing:10px; font-size:22px;">
             <button class="login-btn" style="background:#d97706; color:white; border-color:#b45309;" onclick="verifyReceivedOTPCode()">Verify Token & Authorize Session</button>
-        </div>
-
-        <div class="demo-shortcut-box" style="display:flex; justify-content:space-around; gap:10px;">
-            <span>• SuperAdmin: <b style="cursor:pointer; color:#064e3b; text-decoration:underline;" onclick="fillQuickDemoAccount('7029719074')">7029719074</b></span>
-            <span>• Cashier: <b style="cursor:pointer; color:#b45309; text-decoration:underline;" onclick="fillQuickDemoAccount('9123665890')">9123665890</b></span>
         </div>
     </div>
 </div>
@@ -222,7 +215,7 @@
                 </div>
             </div>
 
-            <!-- 🧮 VIEW: 1.1 DUAL-MODE POINT OF SALE TERMINAL (NEW BILL & EDIT BILL) -->
+            <!-- 🧮 VIEW: 1.1 DUAL-MODE POINT OF SALE TERMINAL -->
             <div id="newSaleView" class="view-panel">
                 <div class="hotkey-banner-strip">
                     <span>⚡ PVO Quick Hotkeys Active:</span>
@@ -282,7 +275,7 @@
                         </table>
                     </div>
 
-                    <!-- 🟢/🟠 DYNAMIC BUTTONS (WITH CANCEL EDIT OPTION) -->
+                    <!-- 🟢/🟠 DYNAMIC BUTTONS -->
                     <div class="btn-container" style="align-items:center;">
                         <button id="cancelEditModeBtn" class="btn btn-danger" style="display:none; padding:12px 20px; font-size:14px; background:#ef4444;" onclick="resetTerminalToNormalNewSaleMode()">❌ Cancel Editing</button>
                         <button id="mainProcessBtn" class="btn btn-primary" style="padding:12px 25px; font-size:15px; transition:all 0.3s;" onclick="processSaleInvoiceDeductStockCentral()">Complete Bill & Authorize Hardware Print </button>
@@ -290,7 +283,7 @@
                 </div>
             </div>
 
-            <!-- VIEW: 1.2 SALE HISTORY -->
+            <!-- VIEW: 1.2 SALE HISTORY (WITH DUAL BUTTONS) -->
             <div id="saleHistoryView" class="view-panel">
                 <div class="card-box">
                     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:20px; border-bottom:2px solid #f1f5f9; padding-bottom:10px;">
@@ -469,7 +462,6 @@
         { id: 104, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1250 }
     ];
     
-    // ⚡ DEEP SEEDED HISTORIC INVOICES (পেটের ভেতর আইটেমসহ)
     const IMMUTABLE_SALES_SEED = [
         { 
             invoice: "PV-2025-00102", date: "12/05/2025", time: "02:30 PM", patient: "Old 2025 Client", contact: "9830012345", doctor: "Dr. A. Sen", value: 450.00,
@@ -509,7 +501,6 @@
 
     let activeCart = []; let temporaryPurchaseCart = []; let generatedOTPCode = ""; let activeLoggedUser = null;
 
-    // ⚡ DUAL-MODE EDIT STATE TRACKER
     let activeEditingVoucherId = null; let originalEditingItemsBackup = [];
 
     window.addEventListener('keydown', function(event) {
@@ -553,7 +544,6 @@
             renderInventoryTable(); renderSalesBookTable(); renderPurchaseHistoryTable(); triggerMargWatchdogAudit(); showView('homeView');
         } else { alert("Invalid PIN verification verification failed."); }
     }
-    function fillQuickDemoAccount(num) { document.getElementById('userPhone').value = num; generateAndSendSecureOTP(); }
     function handleLogoutSystemSession() { location.reload(); }
 
     function renderInventoryTable() {
@@ -565,7 +555,7 @@
         });
     }
 
-    // ⚡ 5. THE GOD MODE POS COUNTER PULLER
+    // ⚡ 5. THE DUAL-ACTION LEDGER (✏️ Load POS & 🖨️ Print)
     function renderSalesBookTable() {
         const tbody = document.getElementById('salesBookTableBody'); if(!tbody) return; tbody.innerHTML = ''; let totalSum = 0;
         let filterBox = document.getElementById('saleDateFilterInput'); let rawFilterDate = filterBox ? filterBox.value : ""; let targetFormattedDate = "";
@@ -578,8 +568,13 @@
             salesToShow.forEach(bill => {
                 let stampBadge = `<span style="background:#fef3c7; color:#92400e; padding:4px 10px; border-radius:6px; font-weight:bold; font-size:12px; border:1px solid #fde68a;">📅 ${bill.date || 'N/A'} &nbsp;|&nbsp; ⏰ ${bill.time || '12:00 PM'}</span>`;
                 
-                // ⚡ সুপার এডমিন চাপলেই সোজা মেইন কাউন্টারে বিল হাজির!
-                let actionBtnHtml = (activeLoggedUser && activeLoggedUser.role === 'superadmin') ? `<button onclick="loadHistoricBillIntoMainPosCounter('${bill.invoice}')" style="background:#d97706; color:white; border:none; padding:5px 12px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">✏️ Load to POS</button>` : `<span style="color:#94a3b8; font-size:11px;">🔒 Restricted</span>`;
+                // ⚡ সুপার এডমিনের জন্য পাশাপাশি দুই বাটন!
+                let actionBtnHtml = (activeLoggedUser && activeLoggedUser.role === 'superadmin') 
+                    ? `<div style="display:flex; gap:6px; justify-content:center;">`+
+                      `<button onclick="loadHistoricBillIntoMainPosCounter('${bill.invoice}')" style="background:#d97706; color:white; border:none; padding:5px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">✏️ Load POS</button>`+
+                      `<button onclick="reprintHistoricInvoiceVoucher('${bill.invoice}')" style="background:#064e3b; color:#fef08a; border:1px solid #d97706; padding:5px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">🖨️ Print</button>`+
+                      `</div>` 
+                    : `<span style="color:#94a3b8; font-size:11px;">🔒 Restricted</span>`;
                 
                 let tr = document.createElement('tr'); tr.innerHTML = `<td><strong>${bill.invoice}</strong></td><td>${stampBadge}</td><td>${bill.patient}</td><td>${bill.doctor}</td><td><strong>₹${bill.value.toFixed(2)}</strong></td><td style="text-align:center;">${actionBtnHtml}</td>`;
                 tbody.appendChild(tr); totalSum += bill.value;
@@ -588,53 +583,68 @@
         const chartLabel = document.getElementById('chart_live_val'); if(chartLabel) chartLabel.innerText = '₹ ' + totalSum.toFixed(2);
     }
 
+    // ⚡ 6. GHOST PRINT ENGINE (সাইলেন্ট রি-প্রিন্টার)
+    function reprintHistoricInvoiceVoucher(invRef) {
+        let targetBill = pullSales().find(s => s.invoice === invRef);
+        if(!targetBill) { alert("Voucher missing from database!"); return; }
+
+        // ১. রানিং কাউন্টারে কিছু থাকলে তার স্ন্যাপশট ব্যাকআপ নাও
+        let runningCartSnapshot = JSON.parse(JSON.stringify(activeCart));
+
+        // ২. প্রিন্ট টেবিলে দেখানোর জন্য টার্গেট বিলের আইটেমগুলো কার্টে ঢোকাও
+        let itemsToPrint = targetBill.items ? JSON.parse(JSON.stringify(targetBill.items)) : [];
+        if(itemsToPrint.length === 0) {
+            itemsToPrint = [{ id: 999, product_name: "Consolidated Invoiced Catalog", rack: "---", batch: "LEGACY", expiry: "---", qty: 1, rate: targetBill.value, discount: 0, gst: 0 }];
+        }
+        activeCart = itemsToPrint;
+
+        let pNameEl = document.getElementById('lbl_patientName');
+        let pContactEl = document.getElementById('lbl_patientContact');
+        let docEl = document.getElementById('lbl_docName');
+        let dateEl = document.getElementById('lbl_billDate');
+
+        if(pNameEl) pNameEl.innerText = targetBill.patient || "Cash Walk-in";
+        if(pContactEl) pContactEl.innerText = targetBill.contact || "---";
+        if(docEl) docEl.innerText = targetBill.doctor || "Self";
+        if(dateEl) dateEl.innerText = `${targetBill.date || ''} - ${targetBill.time || ''} (DUPLICATE COPY)`;
+
+        renderActiveCartTableManifest();
+
+        setTimeout(() => {
+            window.print();
+            
+            // ৩. প্রিন্ট শেষ হওয়ামাত্র আগের কার্ট সাইলেন্টলি রিস্টোর করে দাও!
+            activeCart = runningCartSnapshot;
+            renderActiveCartTableManifest();
+        }, 350);
+    }
+
     function loadHistoricBillIntoMainPosCounter(invRef) {
         if(!activeLoggedUser || activeLoggedUser.role !== 'superadmin') return;
         let target = pullSales().find(s => s.invoice === invRef); if(!target) return;
 
         activeEditingVoucherId = target.invoice;
         let itemsToLoad = target.items ? JSON.parse(JSON.stringify(target.items)) : [];
-        if(itemsToLoad.length === 0) {
-            itemsToLoad = [{ id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: target.value, qty: 1, discount: 0, gst: 0 }];
-        }
-        originalEditingItemsBackup = JSON.parse(JSON.stringify(itemsToLoad));
-        activeCart = itemsToLoad;
+        if(itemsToLoad.length === 0) { itemsToLoad = [{ id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: target.value, qty: 1, discount: 0, gst: 0 }]; }
+        originalEditingItemsBackup = JSON.parse(JSON.stringify(itemsToLoad)); activeCart = itemsToLoad;
 
-        // কাউন্টারে জাম্প করাচ্ছে
         showSubView('newSaleView', document.querySelector('#side_sale .submenu-item'));
+        document.getElementById('patientName').value = target.patient || ''; document.getElementById('patientContact').value = target.contact || '9829972091'; document.getElementById('docName').value = target.doctor || ''; document.getElementById('billDateInput').value = `${target.date || getStandardTodayDate()} - ${target.time || '12:00 PM'}`;
 
-        document.getElementById('patientName').value = target.patient || '';
-        document.getElementById('patientContact').value = target.contact || '9829972091';
-        document.getElementById('docName').value = target.doctor || '';
-        document.getElementById('billDateInput').value = `${target.date || getStandardTodayDate()} - ${target.time || '12:00 PM'}`;
-
-        // 🟢 -> 🟠 কাউন্টারের রূপবদল
-        let titleEl = document.getElementById('terminalTitleLabel');
-        let procBtn = document.getElementById('mainProcessBtn');
-        let cancelBtn = document.getElementById('cancelEditModeBtn');
-
+        let titleEl = document.getElementById('terminalTitleLabel'); let procBtn = document.getElementById('mainProcessBtn'); let cancelBtn = document.getElementById('cancelEditModeBtn');
         if(titleEl) { titleEl.innerText = `🛠️ ALTERING LIVE INVOICE VOUCHER: [ ${target.invoice} ]`; titleEl.style.background = "#d97706"; titleEl.style.color = "white"; }
         if(procBtn) { procBtn.innerText = `💾 Overwrite & Save Bill [ ${target.invoice} ]`; procBtn.style.background = "#d97706"; procBtn.style.borderColor = "#b45309"; }
-        if(cancelBtn) { cancelBtn.style.display = 'inline-block'; }
-
-        renderActiveCartTableManifest();
+        if(cancelBtn) { cancelBtn.style.display = 'inline-block'; } renderActiveCartTableManifest();
     }
 
     function resetTerminalToNormalNewSaleMode() {
         activeEditingVoucherId = null; originalEditingItemsBackup = []; activeCart = [];
-        document.getElementById('patientName').value = ''; document.getElementById('patientContact').value = ''; document.getElementById('docName').value = '';
-        document.getElementById('billDateInput').value = `${getStandardTodayDate()} - ${getLiveCurrentTime()}`;
+        document.getElementById('patientName').value = ''; document.getElementById('patientContact').value = ''; document.getElementById('docName').value = ''; document.getElementById('billDateInput').value = `${getStandardTodayDate()} - ${getLiveCurrentTime()}`;
 
-        // 🟠 -> 🟢 কাউন্টার আবার সবুজ স্বাভাবিক!
-        let titleEl = document.getElementById('terminalTitleLabel');
-        let procBtn = document.getElementById('mainProcessBtn');
-        let cancelBtn = document.getElementById('cancelEditModeBtn');
-
+        let titleEl = document.getElementById('terminalTitleLabel'); let procBtn = document.getElementById('mainProcessBtn'); let cancelBtn = document.getElementById('cancelEditModeBtn');
         if(titleEl) { titleEl.innerText = "Retail Cash Memo Core Terminal (New Sale Bill)"; titleEl.style.background = "#f1f5f9"; titleEl.style.color = "#064e3b"; }
         if(procBtn) { procBtn.innerText = "Complete Bill & Authorize Hardware Print "; procBtn.style.background = "#064e3b"; procBtn.style.borderColor = "#d97706"; }
-        if(cancelBtn) { cancelBtn.style.display = 'none'; }
-
-        renderActiveCartTableManifest();
+        if(cancelBtn) { cancelBtn.style.display = 'none'; } renderActiveCartTableManifest();
     }
 
     function registerNewEnterpriseStaff() {
@@ -675,40 +685,26 @@
         let lblGross = document.getElementById('lbl_gross'); if(lblGross) lblGross.innerHTML = '₹ ' + gross.toFixed(2); let lblDisc = document.getElementById('lbl_disc'); if(lblDisc) lblDisc.innerHTML = '₹ ' + totalDiscount.toFixed(2); let lblGst = document.getElementById('lbl_gst'); if(lblGst) lblGst.innerHTML = '₹ ' + gstTotal.toFixed(2); let lblNet = document.getElementById('lbl_net'); if(lblNet) lblNet.innerHTML = '₹ ' + (gross - totalDiscount + gstTotal).toFixed(2);
     }
 
-    // ⚡ DUAL-FORK PROCESS BUTTON (নতুন বিল vs ওভাররাইট বিল)
     function processSaleInvoiceDeductStockCentral() {
         if(activeCart.length === 0) return; let stockDb = pullStock(); let salesDb = pullSales();
         let inputPName = document.getElementById('patientName'); let inputPContact = document.getElementById('patientContact'); let inputDoc = document.getElementById('docName');
         let pNameEl = document.getElementById('lbl_patientName'); let pContactEl = document.getElementById('lbl_patientContact'); let docEl = document.getElementById('lbl_docName');
         if(pNameEl && inputPName) pNameEl.innerText = inputPName.value || "Cash Walk-in"; if(pContactEl && inputPContact) pContactEl.innerText = inputPContact.value || "---"; if(docEl && inputDoc) docEl.innerText = inputDoc.value || "Self";
         
-        calculateBillFinancialTotals();
-        let netEl = document.getElementById('lbl_net'); let netVal = netEl ? parseFloat(netEl.innerText.replace('₹ ', '')) : 0;
-        let pNameValSaved = inputPName ? (inputPName.value || "Cash Walk-in") : "Cash Walk-in";
-        let contactValSaved = inputPContact ? (inputPContact.value || "9829972091") : "9829972091";
-        let docValSaved = inputDoc ? (inputDoc.value || "Self") : "Self";
+        calculateBillFinancialTotals(); let netEl = document.getElementById('lbl_net'); let netVal = netEl ? parseFloat(netEl.innerText.replace('₹ ', '')) : 0;
+        let pNameValSaved = inputPName ? (inputPName.value || "Cash Walk-in") : "Cash Walk-in"; let contactValSaved = inputPContact ? (inputPContact.value || "9829972091") : "9829972091"; let docValSaved = inputDoc ? (inputDoc.value || "Self") : "Self";
 
         if(activeEditingVoucherId) {
-            // --- 🛠️ ১. আমরা এখন ওভাররাইট মোডে আছি ---
             originalEditingItemsBackup.forEach(orig => { let stkItem = stockDb.find(s => s.id === orig.id); if(stkItem) stkItem.stock += (parseFloat(orig.qty) || 0); });
             activeCart.forEach(cartItm => { let stkItem = stockDb.find(s => s.id === cartItm.id); if(stkItem) stkItem.stock -= (parseFloat(cartItm.qty) || 0); });
 
             let existingIdx = salesDb.findIndex(s => s.invoice === activeEditingVoucherId);
-            if(existingIdx !== -1) {
-                salesDb[existingIdx].patient = pNameValSaved;
-                salesDb[existingIdx].contact = contactValSaved;
-                salesDb[existingIdx].doctor = docValSaved;
-                salesDb[existingIdx].value = netVal;
-                salesDb[existingIdx].items = JSON.parse(JSON.stringify(activeCart));
-            }
+            if(existingIdx !== -1) { salesDb[existingIdx].patient = pNameValSaved; salesDb[existingIdx].contact = contactValSaved; salesDb[existingIdx].doctor = docValSaved; salesDb[existingIdx].value = netVal; salesDb[existingIdx].items = JSON.parse(JSON.stringify(activeCart)); }
             alert(`✔ Audit Overwrite Complete: Voucher [${activeEditingVoucherId}] successfully updated to ₹${netVal}! Stock inventory perfectly reconciled.`);
             commitDb(stockDb, salesDb, null); resetTerminalToNormalNewSaleMode(); showView('saleHistoryView');
-
         } else {
-            // --- 🆕 ২. আমরা খাঁটি নতুন বিল মোডে আছি ---
             activeCart.forEach(cartItem => { let item = stockDb.find(s => s.id === cartItem.id); if(item) item.stock -= cartItem.qty; });
-            salesDb.push({ invoice: `PV-2026-00${Math.floor(Math.random()*900)+100}`, date: getStandardTodayDate(), time: getLiveCurrentTime(), patient: pNameValSaved, contact: contactValSaved, doctor: docValSaved, value: netVal, items: JSON.parse(JSON.stringify(activeCart)) });
-            commitDb(stockDb, salesDb, null);
+            salesDb.push({ invoice: `PV-2026-00${Math.floor(Math.random()*900)+100}`, date: getStandardTodayDate(), time: getLiveCurrentTime(), patient: pNameValSaved, contact: contactValSaved, doctor: docValSaved, value: netVal, items: JSON.parse(JSON.stringify(activeCart)) }); commitDb(stockDb, salesDb, null);
             setTimeout(() => { window.print(); if(inputPName) inputPName.value = ''; if(inputPContact) inputPContact.value = ''; if(inputDoc) inputDoc.value = ''; activeCart = []; renderActiveCartTableManifest(); renderInventoryTable(); renderSalesBookTable(); }, 250);
         }
     }
