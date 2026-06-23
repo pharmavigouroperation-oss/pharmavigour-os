@@ -243,7 +243,7 @@
                         <div class="form-group"><label>Patient Full Name</label><input type="text" id="patientName" placeholder="Enter Full Name"><span class="print-text-val" id="lbl_patientName"></span></div>
                         <div class="form-group"><label>Contact Number</label><input type="text" id="patientContact" placeholder="10-Digit Mobile"><span class="print-text-val" id="lbl_patientContact"></span></div>
                         <div class="form-group"><label>Consulting Doctor</label><input type="text" id="docName" placeholder="Clinician Name"><span class="print-text-val" id="lbl_docName"></span></div>
-                        <div class="form-group"><label>Invoice Date</label><input type="text" id="billDateInput" readonly><span class="print-text-val" id="lbl_billDate"></span></div>
+                        <div class="form-group"><label>Invoice Timestamp</label><input type="text" id="billDateInput" readonly style="background:#f1f5f9; font-size:13px; text-align:center;"><span class="print-text-val" id="lbl_billDate"></span></div>
                     </div>
 
                     <div class="search-section" style="position:relative; margin-bottom: 20px;">
@@ -279,7 +279,7 @@
                 </div>
             </div>
 
-            <!-- VIEW: 1.2 SALE HISTORY (WITH CALENDAR FILTER) -->
+            <!-- VIEW: 1.2 SALE HISTORY (WITH DUAL TIMESTAMP) -->
             <div id="saleHistoryView" class="view-panel">
                 <div class="card-box">
                     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:20px; border-bottom:2px solid #f1f5f9; padding-bottom:10px;">
@@ -292,7 +292,7 @@
                     </div>
                     <table>
                         <thead>
-                            <tr><th>Invoice Reference</th><th>Billing Date</th><th>Patient Demographics</th><th>Consulting Clinician</th><th>Net Settlement Value</th></tr>
+                            <tr><th>Invoice Reference</th><th>Timestamp (Date & Time)</th><th>Patient Demographics</th><th>Consulting Clinician</th><th>Net Settlement Value</th></tr>
                         </thead>
                         <tbody id="salesBookTableBody"></tbody>
                     </table>
@@ -399,15 +399,20 @@
         }
     } catch (err) { console.warn("Running in local ERP mode."); }
 
+    // ⚡ টাইমস্ট্যাম্প জেনারেটর ইঞ্জিন
     function getStandardTodayDate() {
         let d = new Date();
         let dd = String(d.getDate()).padStart(2, '0');
         let mm = String(d.getMonth() + 1).padStart(2, '0');
-        let yyyy = d.getFullYear();
-        return `${dd}/${mm}/${yyyy}`;
+        return `${dd}/${mm}/${d.getFullYear()}`;
+    }
+    function getLiveCurrentTime() {
+        let d = new Date(); let hrs = d.getHours(); let mins = String(d.getMinutes()).padStart(2, '0');
+        let ampm = hrs >= 12 ? 'PM' : 'AM'; hrs = hrs % 12 || 12;
+        return `${String(hrs).padStart(2, '0')}:${mins} ${ampm}`;
     }
    
-    // DATA SEEDS WITH PERMANENT DATES
+    // DATA SEEDS
     const IMMUTABLE_STOCK_SEED = [
         { id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: 76.60, gst: 12, stock: 140 },
         { id: 102, product_name: "REXIPRA LS TAB 10'S", rack: "B-12", batch: "KX3099", expiry: "11/27", rate: 78.57, gst: 12, stock: 90 },
@@ -415,8 +420,8 @@
         { id: 104, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1250 }
     ];
     const IMMUTABLE_SALES_SEED = [
-        { invoice: "PV-2025-00102", date: "12/05/2025", patient: "Old 2025 Client", doctor: "Dr. A. Sen", value: 450.00 },
-        { invoice: "PV-2026-00481", date: getStandardTodayDate(), patient: "Amul Basak", doctor: "Dr. S.S Jalan", value: 1688.10 }
+        { invoice: "PV-2025-00102", date: "12/05/2025", time: "02:30 PM", patient: "Old 2025 Client", doctor: "Dr. A. Sen", value: 450.00 },
+        { invoice: "PV-2026-00481", date: getStandardTodayDate(), time: getLiveCurrentTime(), patient: "Amul Basak", doctor: "Dr. S.S Jalan", value: 1688.10 }
     ];
     const IMMUTABLE_PURCHASE_SEED = [
         { voucher: "PV-PUR-00101", supplier: "PharmaOperational Wholesalers Ltd.", date: "15/06/2026", value: 24500.00 }
@@ -436,27 +441,29 @@
         triggerMargWatchdogAudit();
     }
 
+    // ⚡ SELF-HEALING DATABASE MIGRATION (ব্রাউজারের পুরোনো ডাটাবেজ স্বয়ংক্রিয় মেরামত)
+    let autoRepairSales = pullSales(); let isRepaired = false;
+    autoRepairSales.forEach(s => {
+        if(!s.date) { s.date = getStandardTodayDate(); isRepaired = true; }
+        if(!s.time) { s.time = "12:00 PM"; isRepaired = true; }
+    });
+    if(isRepaired) localStorage.setItem('PV_OS_SALES', JSON.stringify(autoRepairSales));
+
     const usersRegistry = { '7029719074': { name: 'Rahul Chakraborty', role: 'superadmin', outlet: 'All Outlets Hub', permissions: ['sale'] } };
     let activeCart = []; let temporaryPurchaseCart = []; let generatedOTPCode = ""; let activeLoggedUser = null;
 
-    // ⚡ ৩. BULLETPROOF AGGRESSIVE SHORTCUT MATRIX
+    // KEYBOARD SHORTCUTS MATRIX
     window.addEventListener('keydown', function(event) {
         if (['F2', 'F3', 'F4'].includes(event.key)) {
-            event.preventDefault(); // ব্রাউজারের নিজস্ব উইন্ডো খোলা বা Find box ব্লক করো
-            
+            event.preventDefault(); 
             let dash = document.getElementById('dashboardScreen');
             if (dash && dash.style.display !== 'none') {
                 if (event.key === 'F2' || event.key === 'F3') {
                     showSubView('newSaleView', document.querySelector('#saleSub .submenu-item'));
                     let searchInputEl = document.getElementById('searchBox');
-                    if(searchInputEl) {
-                        searchInputEl.focus();
-                        searchInputEl.select(); // বক্সে আগে কিছু লেখা থাকলে সিলেক্ট করে নেবে
-                    }
+                    if(searchInputEl) { searchInputEl.focus(); searchInputEl.select(); }
                 }
-                else if (event.key === 'F4') {
-                    showSubView('stockInventoryView', null);
-                }
+                else if (event.key === 'F4') { showSubView('stockInventoryView', null); }
             }
         }
     });
@@ -491,17 +498,16 @@
             document.getElementById('dashboardScreen').style.display = 'flex';
             
             let branchVal = document.getElementById('loginOutlet').value;
-            let liveDateStr = getStandardTodayDate();
+            let liveStampStr = `${getStandardTodayDate()} - ${getLiveCurrentTime()}`;
             
             document.getElementById('print_outlet_name').innerText = `Outlet: ${branchVal}`;
             document.getElementById('activeRoleBadge').innerText = "Super Admin ";
             document.getElementById('activeOutletBadge').innerText = branchVal;
             
-            // ডাইনামিক লাইভ ডেট ইনজেকশন
             let billDateBox = document.getElementById('billDateInput');
             let printDateBox = document.getElementById('lbl_billDate');
-            if(billDateBox) billDateBox.value = liveDateStr;
-            if(printDateBox) printDateBox.innerText = liveDateStr;
+            if(billDateBox) billDateBox.value = liveStampStr;
+            if(printDateBox) printDateBox.innerText = liveStampStr;
             
             renderInventoryTable(); renderSalesBookTable(); renderPurchaseHistoryTable();
             triggerMargWatchdogAudit();
@@ -515,8 +521,7 @@
         const tbody = document.getElementById('inventoryTableBody'); if(!tbody) return; tbody.innerHTML = '';
         pullStock().forEach(item => {
             const tr = document.createElement('tr');
-            let expParts = item.expiry.split('/');
-            let expMonth = parseInt(expParts[0]); let expYear = parseInt("20" + expParts[1]);
+            let expParts = item.expiry.split('/'); let expMonth = parseInt(expParts[0]); let expYear = parseInt("20" + expParts[1]);
             let isExpired = (expYear < 2026 || (expYear === 2026 && expMonth <= 6));
             let expiryCell = isExpired ? `<span class="expiry-alert-badge"> ${item.expiry} (EXPIRED)</span>` : item.expiry;
 
@@ -528,19 +533,15 @@
         });
     }
 
-    // ⚡ ২. FOREVER REPORT RENDERER (WITH DATE CHECK)
+    // ⚡ লেডজার রেন্ডারার (তারিখ ও সময়ের ডুয়াল হলুদ ব্যাজসহ)
     function renderSalesBookTable() {
         const tbody = document.getElementById('salesBookTableBody'); if(!tbody) return; tbody.innerHTML = '';
         let totalSum = 0;
         
         let filterBox = document.getElementById('saleDateFilterInput');
-        let rawFilterDate = filterBox ? filterBox.value : ""; // Format returns "YYYY-MM-DD"
+        let rawFilterDate = filterBox ? filterBox.value : ""; 
         let targetFormattedDate = "";
-        
-        if(rawFilterDate) {
-            let p = rawFilterDate.split('-');
-            targetFormattedDate = `${p[2]}/${p[1]}/${p[0]}`; // Convert "2025-05-12" to "12/05/2025"
-        }
+        if(rawFilterDate) { let p = rawFilterDate.split('-'); targetFormattedDate = `${p[2]}/${p[1]}/${p[0]}`; }
 
         let allSales = pullSales();
         let salesToShow = targetFormattedDate ? allSales.filter(b => b.date === targetFormattedDate) : allSales;
@@ -550,22 +551,19 @@
         } else {
             salesToShow.forEach(bill => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td><strong>${bill.invoice}</strong></td><td><span style="background:#fffbeb; padding:2px 6px; border-radius:4px; font-weight:bold; color:#b45309;">${bill.date || 'N/A'}</span></td><td>${bill.patient}</td><td>${bill.doctor}</td><td><strong>₹${bill.value.toFixed(2)}</strong></td>`;
-                tbody.appendChild(tr);
-                totalSum += bill.value;
+                let stampBadge = `<span style="background:#fef3c7; color:#92400e; padding:4px 10px; border-radius:6px; font-weight:bold; font-size:12px; border:1px solid #fde68a; display:inline-block;">📅 ${bill.date || 'N/A'} &nbsp;|&nbsp; ⏰ ${bill.time || '12:00 PM'}</span>`;
+
+                tr.innerHTML = `<td><strong>${bill.invoice}</strong></td><td>${stampBadge}</td><td>${bill.patient}</td><td>${bill.doctor}</td><td><strong>₹${bill.value.toFixed(2)}</strong></td>`;
+                tbody.appendChild(tr); totalSum += bill.value;
             });
         }
-        const chartLabel = document.getElementById('chart_live_val');
-        if(chartLabel) chartLabel.innerText = '₹ ' + totalSum.toFixed(2);
+        const chartLabel = document.getElementById('chart_live_val'); if(chartLabel) chartLabel.innerText = '₹ ' + totalSum.toFixed(2);
     }
 
     function renderPurchaseHistoryTable() {
         const tbody = document.getElementById('purchaseHistoryBody'); if(!tbody) return; tbody.innerHTML = '';
         let purchases = pullPurchases();
-        if(purchases.length === 0) { 
-            let emp = document.getElementById('purHistEmptyRow'); if(emp) emp.style.display = 'table-row'; 
-            return; 
-        }
+        if(purchases.length === 0) { let emp = document.getElementById('purHistEmptyRow'); if(emp) emp.style.display = 'table-row'; return; }
         purchases.forEach(item => {
             const tr = document.createElement('tr');
             tr.innerHTML = `<td><strong>${item.voucher}</strong></td><td>${item.supplier}</td><td>${item.date}</td><td><strong>₹${item.value.toFixed(2)}</strong></td>`;
@@ -574,15 +572,12 @@
     }
 
     // INVOICE CONSOLE ROUTINES
-    const searchBox = document.getElementById('searchBox');
-    const suggestionsBox = document.getElementById('suggestions');
-    const billingBody = document.getElementById('billingBody');
-    const emptyRow = document.getElementById('emptyRow');
+    const searchBox = document.getElementById('searchBox'); const suggestionsBox = document.getElementById('suggestions');
+    const billingBody = document.getElementById('billingBody'); const emptyRow = document.getElementById('emptyRow');
 
     if(searchBox) {
         searchBox.addEventListener('input', function() {
-            const query = this.value.toLowerCase().trim(); 
-            if(suggestionsBox) suggestionsBox.innerHTML = '';
+            const query = this.value.toLowerCase().trim(); if(suggestionsBox) suggestionsBox.innerHTML = '';
             if (query.length < 1) { if(suggestionsBox) suggestionsBox.style.display = 'none'; return; }
             let matches = pullStock().filter(p => p.product_name.toLowerCase().includes(query));
             if (matches.length > 0) {
@@ -598,8 +593,7 @@
     }
 
     function addProductToActiveBillingCart(product) {
-        if(searchBox) searchBox.value = ''; 
-        if(suggestionsBox) suggestionsBox.style.display = 'none';
+        if(searchBox) searchBox.value = ''; if(suggestionsBox) suggestionsBox.style.display = 'none';
         if (!activeCart.find(item => item.id === product.id)) { activeCart.push({...product, qty: 1, discount: 0}); }
         renderActiveCartTableManifest();
     }
@@ -641,18 +635,13 @@
         let lblNet = document.getElementById('lbl_net'); if(lblNet) lblNet.innerHTML = '₹ ' + netPayable.toFixed(2);
     }
 
-    // ⚡ ১. COMPLETE BILL & AUTO-RESET FIELDS
+    // ⚡ ডুয়াল টাইমস্ট্যাম্প এন্ট্রি সেভার
     function processSaleInvoiceDeductStockCentral() {
         if(activeCart.length === 0) return;
         let stock = pullStock(); let sales = pullSales();
         
-        let inputPName = document.getElementById('patientName');
-        let inputPContact = document.getElementById('patientContact');
-        let inputDoc = document.getElementById('docName');
-        
-        let pNameEl = document.getElementById('lbl_patientName');
-        let pContactEl = document.getElementById('lbl_patientContact');
-        let docEl = document.getElementById('lbl_docName');
+        let inputPName = document.getElementById('patientName'); let inputPContact = document.getElementById('patientContact'); let inputDoc = document.getElementById('docName');
+        let pNameEl = document.getElementById('lbl_patientName'); let pContactEl = document.getElementById('lbl_patientContact'); let docEl = document.getElementById('lbl_docName');
         
         if(pNameEl && inputPName) pNameEl.innerText = inputPName.value || "Cash Client";
         if(pContactEl && inputPContact) pContactEl.innerText = inputPContact.value || "---";
@@ -661,16 +650,14 @@
         calculateBillFinancialTotals();
         activeCart.forEach(cartItem => { let item = stock.find(s => s.id === cartItem.id); if(item) item.stock -= cartItem.qty; });
         
-        let netEl = document.getElementById('lbl_net');
-        let netVal = netEl ? parseFloat(netEl.innerText.replace('₹ ', '')) : 0;
+        let netEl = document.getElementById('lbl_net'); let netVal = netEl ? parseFloat(netEl.innerText.replace('₹ ', '')) : 0;
         let clientNameSaved = inputPName ? (inputPName.value || "Cash Walk-in") : "Cash Walk-in";
         let docSaved = inputDoc ? (inputDoc.value || "Self") : "Self";
-        let billDateSaved = getStandardTodayDate();
         
-        // ফরেভার লেডজারে পুশ হচ্ছে
         sales.push({ 
             invoice: `PV-2026-00${Math.floor(Math.random()*900)+100}`, 
-            date: billDateSaved,
+            date: getStandardTodayDate(),
+            time: getLiveCurrentTime(),
             patient: clientNameSaved, 
             doctor: docSaved, 
             value: netVal 
@@ -679,16 +666,8 @@
         
         setTimeout(() => { 
             window.print(); 
-            
-            // ⚡ প্রিন্টের পর কাস্টমার কাউন্টার পুরো ক্লিন!
-            if(inputPName) inputPName.value = '';
-            if(inputPContact) inputPContact.value = '';
-            if(inputDoc) inputDoc.value = '';
-            
-            activeCart = []; 
-            renderActiveCartTableManifest(); 
-            renderInventoryTable(); 
-            renderSalesBookTable(); 
+            if(inputPName) inputPName.value = ''; if(inputPContact) inputPContact.value = ''; if(inputDoc) inputDoc.value = '';
+            activeCart = []; renderActiveCartTableManifest(); renderInventoryTable(); renderSalesBookTable(); 
         }, 250);
     }
 
@@ -697,16 +676,12 @@
         const file = event.target.files[0]; if (!file) return;
         const reader = new FileReader();
         reader.onload = function(e) {
-            const text = e.target.result; const lines = text.split('\n');
-            temporaryPurchaseCart = [];
+            const text = e.target.result; const lines = text.split('\n'); temporaryPurchaseCart = [];
             for (let i = 1; i < lines.length; i++) {
-                if (!lines[i].trim()) continue;
-                const cols = lines[i].split(',');
+                if (!lines[i].trim()) continue; const cols = lines[i].split(',');
                 if (cols.length >= 7) {
                     const name = cols[1].trim().replace(/"/g, ''); const qty = parseInt(cols[4]) || 0; const rate = parseFloat(cols[5]) || 0;
-                    if (name && name.toLowerCase() !== 'product name') {
-                        temporaryPurchaseCart.push({ product_name: name, rack: cols[2] || "A-01", batch: cols[3] || "BAT-NEW", expiry: cols[6] || "12/28", rate: rate, gst: parseInt(cols[7]) || 12, qty: qty });
-                    }
+                    if (name && name.toLowerCase() !== 'product name') { temporaryPurchaseCart.push({ product_name: name, rack: cols[2] || "A-01", batch: cols[3] || "BAT-NEW", expiry: cols[6] || "12/28", rate: rate, gst: parseInt(cols[7]) || 12, qty: qty }); }
                 }
             }
             renderPurchaseCartTable();
@@ -715,8 +690,7 @@
 
     function renderPurchaseCartTable() {
         const tbody = document.getElementById('purchaseCartBody'); const emptyRow = document.getElementById('purEmptyRow'); if(!tbody) return;
-        tbody.querySelectorAll('tr:not(#purEmptyRow)').forEach(r => r.remove());
-        let delBtn = document.getElementById('deleteCsvBtn');
+        tbody.querySelectorAll('tr:not(#purEmptyRow)').forEach(r => r.remove()); let delBtn = document.getElementById('deleteCsvBtn');
         if(temporaryPurchaseCart.length === 0) { if(emptyRow) emptyRow.style.display = 'table-row'; if(delBtn) delBtn.style.display='none'; return; }
         if(emptyRow) emptyRow.style.display = 'none'; if(delBtn) delBtn.style.display='inline-block';
         temporaryPurchaseCart.forEach(item => {
