@@ -5,124 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PharmaVigour OS - Corporate Cloud ERP</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
-        body { background-color: #f8fafc; color: #0f172a; min-height: 100vh; overflow-x: hidden; padding: 20px 0; }
-        
-        #loginScreen { display: block; width: 100%; max-width: 420px; margin: 40px auto; padding: 0 15px; }
-        .login-card { background: #ffffff; width: 100%; padding: 40px 30px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); text-align: center; border-top: 5px solid #d97706; border-bottom: 1px solid #e2e8f0; }
-        .login-logo { width: 140px; height: auto; margin-bottom: 15px; }
-        .login-card h2 { color: #064e3b; margin-bottom: 6px; font-size: 24px; font-weight: 700; }
-        
-        .field-label { display: block; text-align: left; font-size: 11px; font-weight: bold; color: #064e3b; margin-bottom: 6px; letter-spacing: 0.5px; }
-        .login-field { width: 100%; padding: 12px; margin-bottom: 18px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 16px; font-weight: bold; letter-spacing: 1px; outline: none; background: #ffffff; color: #000000; text-align: center; }
-        .login-btn { width: 100%; padding: 14px; background: #064e3b; color: #fef08a; border: 1px solid #d97706; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; }
-
-        #dashboardScreen { display: none; min-height: 100vh; flex-direction: column; background-color: #f8fafc; }
-        .top-navbar { background: #064e3b; color: white; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #d97706; }
-        .navbar-brand { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .sidebar { background: #0f172a; color: #cbd5e1; width: 60px; padding: 20px 0; display: flex; flex-direction: column; gap: 4px; position: absolute; top: 0; left: 0; bottom: 0; z-index: 1500; transition: width 0.25s; overflow: hidden; white-space: nowrap; }
-        .sidebar:hover { width: 260px; }
-        
-        .menu-item { padding: 14px 20px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; transition: background 0.2s; }
-        .menu-item:hover { background: #1e293b; color: #ffffff; border-left: 4px solid #d97706; }
-        .menu-icon { font-size: 16px; display: inline-block; width: 20px; text-align: center; }
-        .menu-text { margin-left: 15px; }
-        .submenu-list { background: #020617; display: none; padding: 4px 0; }
-        .submenu-list.open { display: block; }
-        .submenu-item { padding: 11px 20px 11px 55px; font-size: 13px; color: #94a3b8; cursor: pointer; }
-        .submenu-item:hover { color: #fef08a; background: #0f172a; }
-
-        .main-content { flex: 1; padding: 30px; margin-left: 60px; overflow-y: auto; background-color: #f8fafc; }
-        .view-panel { display: none; }
-        .view-panel.active { display: block; }
-
-        .card-box { background: #ffffff; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px; }
-        .panel-title { font-size: 18px; color: #064e3b; margin-bottom: 20px; font-weight: bold; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
-
-        .search-container { position: relative; width: 100%; margin-bottom: 20px; }
+        /* [পূর্বের CSS সব বজায় থাকবে, নতুনটুকু নিচে যোগ করুন] */
+        .search-container { position: relative; width: 100%; }
         .search-box { width: 100%; padding: 12px; border: 2px solid #064e3b; border-radius: 6px; font-size: 14px; outline: none; }
         .suggestions-box { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #cbd5e1; border-radius: 0 0 6px 6px; max-height: 250px; overflow-y: auto; z-index: 9999; display: none; box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
-        .suggestion-item { padding: 12px 15px; cursor: pointer; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; }
+        .suggestion-item { padding: 12px 15px; cursor: pointer; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
         .suggestion-item:hover { background-color: #f0fdf4; color: #064e3b; font-weight: bold; }
-        
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th { background-color: #064e3b; color: white; padding: 12px; text-align: left; }
-        td { padding: 12px; border-bottom: 1px solid #e2e8f0; }
-        
-        .btn { padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-        .btn-primary { background: #064e3b; color: #fef08a; }
-        
-        @media print {
-            .sidebar, .top-navbar, .no-print, .search-container, .btn-container { display: none !important; }
-            .view-panel { display: none !important; }
-            .view-panel.active { display: block !important; }
-        }
+        .suggestion-item span.stock-pill { font-size: 10px; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; }
     </style>
 </head>
 <body>
 
-<div id="loginScreen">
-    <div class="login-card">
-        <img class="login-logo" src="logo.jpg" alt="PharmaVigour Logo">
-        <h2>PharmaVigour OS</h2>
-        <p>Enterprise Network Security Gateway</p>
-        <div id="phoneSection">
-            <label class="field-label">MOBILE ID</label>
-            <input type="tel" id="userPhone" class="login-field" placeholder="Enter Mobile" maxlength="10">
-            <button class="login-btn" onclick="generateAndSendSecureOTP()">Generate OTP</button>
-        </div>
-        <div id="otpBoxSection" style="display: none;">
-            <label class="field-label">SECURITY TOKEN</label>
-            <input type="password" id="inputOtp" class="login-field" placeholder="••••" maxlength="4">
-            <button class="login-btn" style="background:#d97706;" onclick="verifyReceivedOTPCode()">Authorize Session</button>
-        </div>
-    </div>
-</div>
+<!-- [লগইন এবং সাইডবার অংশ অপরিবর্তিত থাকবে] -->
 
-<div id="dashboardScreen">
-    <div class="top-navbar">
-        <div class="navbar-brand" onclick="showView('homeView')"><h1>PharmaVigour OS</h1></div>
+<!-- 🧮 VIEW: 1.1 POINT OF SALE TERMINAL (WITH SMART SEARCH) -->
+<div id="newSaleView" class="view-panel active">
+    <!-- ... (অন্যান্য ফিল্ড অপরিবর্তিত) ... -->
+    <div class="search-container">
+        <input type="text" id="searchBox" class="search-box" placeholder="Start typing drug name (e.g. PA for PAN-D)..." oninput="handleSmartSearch(this.value)">
+        <div id="suggestions" class="suggestions-box"></div>
     </div>
-    <div class="workspace">
-        <div class="sidebar">
-            <div class="menu-item" onclick="toggleSubmenu('saleSub')"><span class="menu-icon">🧮</span><span class="menu-text">1. Sale</span></div>
-            <div id="saleSub" class="submenu-list">
-                <div class="submenu-item" onclick="showSubView('newSaleView', this)">New Sale Bill</div>
-                <div class="submenu-item" onclick="showSubView('saleHistoryView', this)">Sale History</div>
-            </div>
-            <!-- More menu items... -->
-        </div>
-        <div class="main-content">
-            <div id="homeView" class="view-panel active">
-                <div style="text-align:center; padding:50px;"><h2>Welcome to PVO Enterprise ERP</h2></div>
-            </div>
-            
-            <div id="newSaleView" class="view-panel">
-                <div class="card-box">
-                    <div class="search-container">
-                        <input type="text" id="searchBox" class="search-box" placeholder="Search drug name (Dictionary Style)..." oninput="handleSmartSearch(this.value)">
-                        <div id="suggestions" class="suggestions-box"></div>
-                    </div>
-                    <table id="billingTable"><thead><tr><th>Product Name</th><th>Stock</th><th>Rate</th></tr></thead><tbody id="billingBody"></tbody></table>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- ... (বাকি টেবিল ও বাটন অপরিবর্তিত) ... -->
 </div>
 
 <script>
-    // System Data Initialization
-    const stockData = [
-        { id: 101, product_name: "CLAVIX 75MG TAB", stock: 140, rate: 76.60 },
-        { id: 103, product_name: "PAN D CAPSULE", stock: 35, rate: 145.00 }
-    ];
-
+    // ⚡ 1. SMART PREDICTIVE SEARCH ENGINE
     function handleSmartSearch(query) {
         const suggestionsBox = document.getElementById('suggestions');
         if (query.length < 1) { suggestionsBox.style.display = 'none'; return; }
         
-        // Dictionary-style startsWith filtering
-        let matches = stockData.filter(p => 
+        let inventory = pullStock();
+        // ডিকশনারি স্টাইল এবং জিরো স্টক হাইড লজিক
+        let matches = inventory.filter(p => 
             p.product_name.toLowerCase().startsWith(query.toLowerCase()) && p.stock > 0
         );
 
@@ -131,28 +45,25 @@
             matches.forEach(product => {
                 const div = document.createElement('div');
                 div.className = 'suggestion-item';
-                div.innerHTML = `<strong>${product.product_name}</strong> <span>Stock: ${product.stock}</span>`;
-                div.onclick = () => selectProduct(product);
+                div.innerHTML = `<strong>${product.product_name}</strong> <span class="stock-pill">Stock: ${product.stock}</span>`;
+                div.onclick = () => addProductToActiveBillingCart(product);
                 suggestionsBox.appendChild(div);
             });
             suggestionsBox.style.display = 'block';
         } else {
-            suggestionsBox.innerHTML = '<div class="suggestion-item">No records found.</div>';
+            suggestionsBox.innerHTML = '<div class="suggestion-item">No active stock found...</div>';
             suggestionsBox.style.display = 'block';
         }
     }
 
-    function selectProduct(product) {
-        document.getElementById('searchBox').value = '';
+    function addProductToActiveBillingCart(product) {
+        document.getElementById('searchBox').value = ''; 
         document.getElementById('suggestions').style.display = 'none';
-        alert(`Selected: ${product.product_name}`);
+        if (!activeCart.find(item => item.id === product.id)) activeCart.push({...product, qty: 1, discount: 0});
+        renderActiveCartTableManifest();
     }
-
-    function showView(vId) { document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); document.getElementById(vId).classList.add('active'); }
-    function showSubView(vId, el) { showView(vId); }
-    function toggleSubmenu(id) { document.getElementById(id).classList.toggle('open'); }
-    function generateAndSendSecureOTP() { document.getElementById('phoneSection').style.display = 'none'; document.getElementById('otpBoxSection').style.display = 'block'; }
-    function verifyReceivedOTPCode() { document.getElementById('loginScreen').style.display = 'none'; document.getElementById('dashboardScreen').style.display = 'flex'; }
+    
+    // [বাকি জাভাস্ক্রিপ্ট আগের মতোই থাকবে]
 </script>
 </body>
 </html>
