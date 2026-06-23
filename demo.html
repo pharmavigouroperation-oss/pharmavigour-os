@@ -110,9 +110,13 @@
         .print-text-val { display: none; font-weight: bold; }
 
         @media print {
+            /* ⚡ জাদুকরী প্রিন্ট হাইজ্যাক: স্ক্রিনে যাই থাকুক, প্রিন্টারে শুধু ক্যাশ মেমো যাবে */
+            .view-panel { display: none !important; }
+            #newSaleView { display: block !important; width: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; }
+            
             .sidebar, .top-navbar, #terminalTitleLabel, .search-section, .btn-container, .btn-danger, th:last-child, td:last-child, .meta-grid input, .qty-input, .disc-input, .hotkey-banner-strip { display: none !important; }
             .print-text-val { display: inline-block !important; }
-            body, .main-content, .card-box { background: white !important; padding: 0; margin: 0; box-shadow: none; border: none; }
+            body, .main-content, .card-box { background: white !important; padding: 0 !important; margin: 0 !important; box-shadow: none !important; border: none !important; }
             .bill-header-print { display: flex !important; align-items: center; justify-content: space-between; border-bottom: 2px solid #064e3b; padding-bottom: 15px; margin-bottom: 25px; }
             th { background-color: #f1f5f9 !important; color: black !important; border: 1px solid #94a3b8 !important; }
             td { border: 1px solid #cbd5e1 !important; background: transparent !important; color: #000000 !important; }
@@ -555,7 +559,6 @@
         });
     }
 
-    // ⚡ 5. THE DUAL-ACTION LEDGER (✏️ Load POS & 🖨️ Print)
     function renderSalesBookTable() {
         const tbody = document.getElementById('salesBookTableBody'); if(!tbody) return; tbody.innerHTML = ''; let totalSum = 0;
         let filterBox = document.getElementById('saleDateFilterInput'); let rawFilterDate = filterBox ? filterBox.value : ""; let targetFormattedDate = "";
@@ -567,8 +570,6 @@
         else {
             salesToShow.forEach(bill => {
                 let stampBadge = `<span style="background:#fef3c7; color:#92400e; padding:4px 10px; border-radius:6px; font-weight:bold; font-size:12px; border:1px solid #fde68a;">📅 ${bill.date || 'N/A'} &nbsp;|&nbsp; ⏰ ${bill.time || '12:00 PM'}</span>`;
-                
-                // ⚡ সুপার এডমিনের জন্য পাশাপাশি দুই বাটন!
                 let actionBtnHtml = (activeLoggedUser && activeLoggedUser.role === 'superadmin') 
                     ? `<div style="display:flex; gap:6px; justify-content:center;">`+
                       `<button onclick="loadHistoricBillIntoMainPosCounter('${bill.invoice}')" style="background:#d97706; color:white; border:none; padding:5px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">✏️ Load POS</button>`+
@@ -583,15 +584,12 @@
         const chartLabel = document.getElementById('chart_live_val'); if(chartLabel) chartLabel.innerText = '₹ ' + totalSum.toFixed(2);
     }
 
-    // ⚡ 6. GHOST PRINT ENGINE (সাইলেন্ট রি-প্রিন্টার)
     function reprintHistoricInvoiceVoucher(invRef) {
         let targetBill = pullSales().find(s => s.invoice === invRef);
         if(!targetBill) { alert("Voucher missing from database!"); return; }
 
-        // ১. রানিং কাউন্টারে কিছু থাকলে তার স্ন্যাপশট ব্যাকআপ নাও
         let runningCartSnapshot = JSON.parse(JSON.stringify(activeCart));
 
-        // ২. প্রিন্ট টেবিলে দেখানোর জন্য টার্গেট বিলের আইটেমগুলো কার্টে ঢোকাও
         let itemsToPrint = targetBill.items ? JSON.parse(JSON.stringify(targetBill.items)) : [];
         if(itemsToPrint.length === 0) {
             itemsToPrint = [{ id: 999, product_name: "Consolidated Invoiced Catalog", rack: "---", batch: "LEGACY", expiry: "---", qty: 1, rate: targetBill.value, discount: 0, gst: 0 }];
@@ -612,8 +610,6 @@
 
         setTimeout(() => {
             window.print();
-            
-            // ৩. প্রিন্ট শেষ হওয়ামাত্র আগের কার্ট সাইলেন্টলি রিস্টোর করে দাও!
             activeCart = runningCartSnapshot;
             renderActiveCartTableManifest();
         }, 350);
