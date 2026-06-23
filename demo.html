@@ -28,30 +28,6 @@
         .hamburger-icon { font-size: 24px; color: #fef08a; cursor: pointer; padding-right: 5px; font-weight: bold; }
         .navbar-logo { height: 35px; width: auto; background: white; border-radius: 4px; padding: 2px; }
         .navbar-brand h1 { font-size: 18px; font-weight: 700; color: #fef08a; letter-spacing: 0.5px; }
-        
-        /* ⚡ CORPORATE TOP DROPDOWN NAVBAR (GENERIC AADHAAR STYLE) */
-        .center-top-nav { display: flex; align-items: center; gap: 20px; font-size: 13px; font-weight: 700; margin-left: 20px; }
-        .top-nav-link { color: #ffffff; text-decoration: none; cursor: pointer; letter-spacing: 0.5px; transition: color 0.2s; padding: 5px 10px; border-radius: 4px; }
-        .top-nav-link:hover { background: rgba(255,255,255,0.1); color: #fef08a; }
-
-        .top-dropdown { position: relative; display: inline-block; }
-        .top-dropbtn { color: #fef08a; background: rgba(255,255,255,0.15); border: 1px solid #fef08a; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 6px; letter-spacing: 0.5px; }
-        .top-dropdown:hover .top-dropbtn { background: #022c22; color: #ffffff; border-color: #ffffff; }
-
-        .top-drop-content {
-            display: none; position: absolute; background-color: #ffffff; min-width: 230px;
-            box-shadow: 0px 15px 30px 0px rgba(0,0,0,0.25); z-index: 3000; border-radius: 6px;
-            overflow: hidden; top: 100%; left: 0; margin-top: 4px; border: 1px solid #cbd5e1;
-        }
-        .top-dropdown:hover .top-drop-content { display: block; animation: dropFade 0.2s ease-out; }
-        @keyframes dropFade { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-
-        .top-drop-content a {
-            color: #0f172a; padding: 12px 18px; text-decoration: none; display: block;
-            text-align: left; font-size: 12px; font-weight: 700; border-bottom: 1px solid #f1f5f9;
-            transition: all 0.2s; cursor: pointer; text-transform: uppercase;
-        }
-        .top-drop-content a:hover { background-color: #064e3b; color: #fef08a; padding-left: 24px; }
 
         .navbar-right-controls { display: flex; align-items: center; gap: 20px; }
         .notification-bell-box { position: relative; cursor: pointer; font-size: 20px; }
@@ -196,24 +172,9 @@
             <h1>PharmaVigour OS</h1>
         </div>
 
-        <!-- ⚡ THE CORPORATE TOP DROPDOWN MENU (MAPPED TO PROMPT IMAGE) -->
-        <div class="center-top-nav">
-            <span class="top-nav-link" onclick="showSubView('grossChartView', null)">DASHBOARD</span>
-            
-            <div class="top-dropdown">
-                <button class="top-dropbtn">MEDICINES &nbsp;▾</button>
-                <div class="top-drop-content">
-                    <a onclick="executeTopMedicineNavigation('stock')">STOCK</a>
-                    <a onclick="executeTopMedicineNavigation('alert')">EXPIRY ALERT</a>
-                    <a onclick="executeTopMedicineNavigation('expired')">EXPIRED STOCK</a>
-                    <a onclick="executeTopMedicineNavigation('sale_rep')">SALE REPORT</a>
-                    <a onclick="executeTopMedicineNavigation('company_list')">COMPANY MEDICINE LIST</a>
-                </div>
-            </div>
-        </div>
-
+        <!-- ⚡ CLEANED TOP BAR: Corporate dropdown completely removed -->
         <div class="navbar-right-controls">
-            <div class="notification-bell-box" onclick="executeTopMedicineNavigation('stock')">
+            <div class="notification-bell-box" onclick="executeSidebarReportNavigation('alert', null)">
                 <span>🔔</span><span id="navAlertBadge" class="bell-badge">0</span>
             </div>
             <div class="navbar-user">
@@ -226,7 +187,9 @@
     </div>
 
     <div class="workspace">
+        <!-- ☰ ULTIMATE 7-PILLAR ENTERPRISE SIDEBAR -->
         <div class="sidebar">
+            
             <div class="menu-item active" id="side_sale" onclick="toggleSubmenu('saleSub')">
                 <div><span class="menu-icon">🧮</span><span class="menu-text">1. Sale</span></div><span class="menu-arrow">▼</span>
             </div>
@@ -242,7 +205,7 @@
             <div id="purchaseSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('newPurchaseView', this)">New Stock Inward</div>
                 <div class="submenu-item" onclick="showSubView('purchaseHistoryView', this)">Purchase History</div>
-                <div class="submenu-item" onclick="executeTopMedicineNavigation('stock')">Current Inventory</div>
+                <div class="submenu-item" onclick="executeSidebarReportNavigation('stock', this)">Current Inventory</div>
             </div>
 
             <div class="menu-item" id="side_admin" onclick="toggleSubmenu('adminSub')" style="display:none; border-left-color:#fef08a;">
@@ -272,6 +235,19 @@
             <div id="nrxSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('nrxRegisterView', this)">🚨 Schedule H1 Log</div>
             </div>
+
+            <!-- 📊 PILLAR 7: THE ROYAL REPORT MASTER PILLAR -->
+            <div class="menu-item" id="side_report" onclick="toggleSubmenu('reportSub')" style="border-left-color:#0ea5e9;">
+                <div><span class="menu-icon">📊</span><span class="menu-text">7. Report</span></div><span class="menu-arrow">▼</span>
+            </div>
+            <div id="reportSub" class="submenu-list">
+                <div class="submenu-item" onclick="executeSidebarReportNavigation('stock', this)">📦 All Stock Balance</div>
+                <div class="submenu-item" onclick="executeSidebarReportNavigation('alert', this)">⚠️ Expiry Alert (≤6M)</div>
+                <div class="submenu-item" onclick="executeSidebarReportNavigation('expired', this)">🚨 Strictly Expired</div>
+                <div class="submenu-item" onclick="executeSidebarReportNavigation('sale_rep', this)">🧾 Sale Audit Ledger</div>
+                <div class="submenu-item" onclick="executeSidebarReportNavigation('company_list', this)">🏢 Master Catalog List</div>
+            </div>
+
         </div>
 
         <div class="main-content">
@@ -411,7 +387,7 @@
                 </div>
             </div>
 
-            <!-- 🏢 VIEW: 2.4 COMPANY MEDICINE CATALOG LIST (MAPPED TO DROPDOWN) -->
+            <!-- 🏢 VIEW: 2.4 COMPANY MEDICINE CATALOG LIST -->
             <div id="companyCatalogView" class="view-panel">
                 <div class="card-box" style="border-top:4px solid #022c22;">
                     <div class="panel-title" style="color:#022c22;">🏢 Corporate Standard Medicine Catalog Index</div>
@@ -480,10 +456,11 @@
     };
     if (!localStorage.getItem('PV_OS_USERS')) { localStorage.setItem('PV_OS_USERS', JSON.stringify(IMMUTABLE_USERS_SEED)); }
 
+    // ⚡ DEFAULT SEED UPGRADE: Inserted item 103 expiring in Sept 2026 so Expiry Alert filter triggers instantly!
     const IMMUTABLE_STOCK_SEED = [
         { id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: 76.60, gst: 12, stock: 140 },
-        { id: 102, product_name: "REXIPRA LS TAB 10'S", rack: "B-12", batch: "KX3099", expiry: "11/27", rate: 78.57, gst: 12, stock: 45 },
-        { id: 103, product_name: "PAN D CAPSULE 10'S", rack: "C-05", batch: "PAN9942A", expiry: "05/26", rate: 145.00, gst: 12, stock: 35 }, 
+        { id: 102, product_name: "REXIPRA LS TAB 10'S", rack: "B-12", batch: "KX3099", expiry: "04/26", rate: 78.57, gst: 12, stock: 45 }, // Strictly expired!
+        { id: 103, product_name: "PAN D CAPSULE 10'S", rack: "C-05", batch: "PAN9942A", expiry: "09/26", rate: 145.00, gst: 12, stock: 35 }, // Expiry alert (≤ 6M)!
         { id: 104, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1250 }
     ];
     
@@ -527,7 +504,7 @@
             event.preventDefault(); let dash = document.getElementById('dashboardScreen');
             if (dash && dash.style.display !== 'none') {
                 if (event.key === 'F2' || event.key === 'F3') { showSubView('newSaleView', document.querySelector('#saleSub .submenu-item')); let sEl = document.getElementById('searchBox'); if(sEl) { sEl.focus(); sEl.select(); } }
-                else if (event.key === 'F4') { showSubView('stockInventoryView', null); renderInventoryLedgerTable('ALL'); }
+                else if (event.key === 'F4') { executeSidebarReportNavigation('stock', document.querySelector('#reportSub .submenu-item')); }
             }
         }
     });
@@ -567,7 +544,15 @@
     }
     function handleLogoutSystemSession() { location.reload(); }
 
-    // --- ⚡ 2. DYNAMIC FILTER RENDERER FOR INVENTORY (ALL vs ALERT vs EXPIRED) ---
+    // --- ⚡ 3. SIDEBAR REPORT PILLAR 7 ROUTER ---
+    function executeSidebarReportNavigation(action, clickedElement) {
+        if(action === 'stock') { showSubView('stockInventoryView', clickedElement); renderInventoryLedgerTable('ALL'); }
+        else if(action === 'alert') { showSubView('stockInventoryView', clickedElement); renderInventoryLedgerTable('ALERT'); }
+        else if(action === 'expired') { showSubView('stockInventoryView', clickedElement); renderInventoryLedgerTable('EXPIRED'); }
+        else if(action === 'sale_rep') { showSubView('saleHistoryView', clickedElement); renderSalesBookTable(); }
+        else if(action === 'company_list') { showSubView('companyCatalogView', clickedElement); renderCompanyCatalogList(); }
+    }
+
     function renderInventoryLedgerTable(mode = 'ALL') {
         const tbody = document.getElementById('inventoryTableBody'); if(!tbody) return; tbody.innerHTML = '';
         let titleEl = document.getElementById('invLedgerTitle');
@@ -596,15 +581,6 @@
     function renderCompanyCatalogList() {
         let tbody = document.getElementById('companyCatalogBody'); if(!tbody) return; tbody.innerHTML = '';
         pullStock().forEach(item => { tbody.innerHTML += `<tr><td><strong>#CAT-0${item.id}</strong></td><td style="color:#022c22; font-weight:bold;">${item.product_name}</td><td>${item.rack}</td><td>${item.batch}</td><td>₹${item.rate.toFixed(2)}</td><td>${item.gst}%</td></tr>`; });
-    }
-
-    // --- ⚡ 3. TOP NAVBAR MEDICINE DROPDOWN ROUTER ---
-    function executeTopMedicineNavigation(action) {
-        if(action === 'stock') { showView('stockInventoryView'); renderInventoryLedgerTable('ALL'); }
-        else if(action === 'alert') { showView('stockInventoryView'); renderInventoryLedgerTable('ALERT'); }
-        else if(action === 'expired') { showView('stockInventoryView'); renderInventoryLedgerTable('EXPIRED'); }
-        else if(action === 'sale_rep') { showView('saleHistoryView'); renderSalesBookTable(); }
-        else if(action === 'company_list') { showView('companyCatalogView'); renderCompanyCatalogList(); }
     }
 
     function calculateAndRenderExecutiveKPIs() {
@@ -744,7 +720,7 @@
         } else {
             activeCart.forEach(cartItem => { let item = stockDb.find(s => s.id === cartItem.id); if(item) item.stock -= cartItem.qty; });
             salesDb.push({ invoice: `PV-2026-00${Math.floor(Math.random()*900)+100}`, date: getStandardTodayDate(), time: getLiveCurrentTime(), patient: pNameValSaved, contact: contactValSaved, doctor: docValSaved, value: netVal, items: JSON.parse(JSON.stringify(activeCart)) }); commitDb(stockDb, salesDb, null);
-            setTimeout(() => { window.print(); if(inputPName) inputPName.value = ''; if(inputPContact) inputPContact.value = ''; if(inputDoc) inputDoc.value = ''; activeCart = []; renderActiveCartTableManifest(); renderInventoryTable(); renderSalesBookTable(); }, 250);
+            setTimeout(() => { window.print(); if(inputPName) inputPName.value = ''; if(inputPContact) inputPContact.value = ''; if(inputDoc) inputDoc.value = ''; activeCart = []; renderActiveCartTableManifest(); renderInventoryLedgerTable('ALL'); renderSalesBookTable(); }, 250);
         }
     }
 
@@ -761,7 +737,7 @@
     function saveEntirePurchaseCartToStock() {
         if(temporaryPurchaseCart.length === 0) { alert("Please parse a CSV file first!"); return; } let stockDb = pullStock(); let purchasesDb = pullPurchases(); let currentInvoiceTotal = 0; let supInput = document.getElementById('supplierName'); let supName = supInput ? supInput.value : "Wholesaler";
         temporaryPurchaseCart.forEach(item => { currentInvoiceTotal += (item.rate * item.qty); let match = stockDb.find(s => s.product_name.toLowerCase() === item.product_name.toLowerCase() && s.batch === item.batch); if(match) match.stock += item.qty; else stockDb.push({ id: stockDb.length + 101, product_name: item.product_name, rack: item.rack, batch: item.batch, expiry: item.expiry, rate: item.rate, gst: item.gst, stock: item.qty }); });
-        purchasesDb.push({ voucher: `PV-PUR-00${Math.floor(Math.random()*900)+100}`, supplier: supName, date: getStandardTodayDate(), value: currentInvoiceTotal }); commitDb(stockDb, null, purchasesDb); alert(" Success: Invoice stock successfully recorded and saved to Purchase History!"); temporaryPurchaseCart = []; renderPurchaseCartTable(); renderInventoryTable(); renderPurchaseHistoryTable(); showView('purchaseHistoryView');
+        purchasesDb.push({ voucher: `PV-PUR-00${Math.floor(Math.random()*900)+100}`, supplier: supName, date: getStandardTodayDate(), value: currentInvoiceTotal }); commitDb(stockDb, null, purchasesDb); alert(" Success: Invoice stock successfully recorded and saved to Purchase History!"); temporaryPurchaseCart = []; renderPurchaseCartTable(); renderInventoryLedgerTable('ALL'); renderPurchaseHistoryTable(); showView('purchaseHistoryView');
     }
     function deleteUploadedCSVProcess() { temporaryPurchaseCart = []; renderPurchaseCartTable(); }
 
