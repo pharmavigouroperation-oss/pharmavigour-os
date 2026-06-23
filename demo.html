@@ -126,7 +126,6 @@
 </head>
 <body>
 
-<!-- 1. SECURE OTP LOG-IN CONTAINER -->
 <div id="loginScreen">
     <div class="login-card">
         <img class="login-logo" src="logo.jpg" alt="PharmaVigour Logo">
@@ -136,7 +135,7 @@
 
         <div id="phoneSection">
             <label class="field-label">ENTER REGISTERED MOBILE NUMBER</label>
-            <input type="tel" id="userPhone" class="login-field" placeholder="XXXXXXXXXX" maxlength="10">
+            <input type="tel" id="userPhone" class="login-field" placeholder="7029719074 or 9123665890" maxlength="10">
             <div id="outletSelectGroup" style="margin-bottom:18px; text-align:left;">
                 <label class="field-label">SELECT SYSTEM NETWORK OUTLET</label>
                 <select id="loginOutlet" class="login-field" style="text-align-last:center; font-size:14px; padding:11px;">
@@ -154,13 +153,13 @@
             <button class="login-btn" style="background:#d97706; color:white; border-color:#b45309;" onclick="verifyReceivedOTPCode()">Verify Token & Authorize Session</button>
         </div>
 
-        <div class="demo-shortcut-box">
-            • Click number to auto-fill: <span style="text-decoration:underline; cursor:pointer; font-weight:bold; color:#064e3b;" onclick="fillQuickDemoAccount('7029719074')">7029719074</span>
+        <div class="demo-shortcut-box" style="display:flex; justify-content:space-around; gap:10px;">
+            <span>• SuperAdmin: <b style="cursor:pointer; color:#064e3b; text-decoration:underline;" onclick="fillQuickDemoAccount('7029719074')">7029719074</b></span>
+            <span>• Cashier: <b style="cursor:pointer; color:#b45309; text-decoration:underline;" onclick="fillQuickDemoAccount('9123665890')">9123665890</b></span>
         </div>
     </div>
 </div>
 
-<!-- 2. ENTERPRISE RUNTIME DASHBOARD PANELS -->
 <div id="dashboardScreen">
     <div class="top-navbar">
         <div class="navbar-brand" onclick="showView('homeView')">
@@ -182,7 +181,6 @@
     </div>
 
     <div class="workspace">
-        <!-- ☰ HOVER OPEN SIDEBAR MENU SYSTEM -->
         <div class="sidebar">
             <div class="menu-item active" id="side_sale" onclick="toggleSubmenu('saleSub')">
                 <div><span class="menu-icon">🧮</span><span class="menu-text">1. Sale</span></div><span class="menu-arrow">▼</span>
@@ -201,11 +199,17 @@
                 <div class="submenu-item" onclick="showSubView('purchaseHistoryView', this)">Purchase History</div>
                 <div class="submenu-item" onclick="showSubView('stockInventoryView', this)">Current Inventory</div>
             </div>
+
+            <div class="menu-item" id="side_admin" onclick="toggleSubmenu('adminSub')" style="display:none; border-left-color:#fef08a;">
+                <div><span class="menu-icon">🛡️</span><span class="menu-text" style="color:#fef08a;">3. Admin Hub</span></div><span class="menu-arrow">▼</span>
+            </div>
+            <div id="adminSub" class="submenu-list">
+                <div class="submenu-item" onclick="showSubView('adminUserManageView', this)" style="color:#fde68a;">👥 Identity Access Control</div>
+            </div>
         </div>
 
         <div class="main-content">
             
-            <!-- BRAND LANDING HUB VIEW WITH CENTER LOGO SHIELD -->
             <div id="homeView" class="view-panel active">
                 <div class="brand-landing-wrapper">
                     <img class="big-center-logo" src="logo.jpg" alt="PharmaVigour Operations Logo">
@@ -214,10 +218,9 @@
                 </div>
             </div>
 
-            <!-- VIEW: 1.1 NEW SALE BILL -->
             <div id="newSaleView" class="view-panel">
                 <div class="hotkey-banner-strip">
-                    <span> PVO Quick Hotkeys Active:</span>
+                    <span>⚡ PVO Quick Hotkeys Active:</span>
                     <span><span class="hotkey-badge">F2/F3</span> Focus Search Counter</span>
                     <span><span class="hotkey-badge">F4</span> Open Stock Ledger</span>
                 </div>
@@ -279,7 +282,6 @@
                 </div>
             </div>
 
-            <!-- VIEW: 1.2 SALE HISTORY (WITH DUAL TIMESTAMP) -->
             <div id="saleHistoryView" class="view-panel">
                 <div class="card-box">
                     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:20px; border-bottom:2px solid #f1f5f9; padding-bottom:10px;">
@@ -292,14 +294,13 @@
                     </div>
                     <table>
                         <thead>
-                            <tr><th>Invoice Reference</th><th>Timestamp (Date & Time)</th><th>Patient Demographics</th><th>Consulting Clinician</th><th>Net Settlement Value</th></tr>
+                            <tr><th>Invoice Reference</th><th>Timestamp (Date & Time)</th><th>Patient Demographics</th><th>Consulting Clinician</th><th>Net Settlement Value</th><th style="text-align:center;">Admin Action</th></tr>
                         </thead>
                         <tbody id="salesBookTableBody"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- VIEW: 1.3 TODAY GROSS SALE CHART -->
             <div id="grossChartView" class="view-panel">
                 <div class="card-box" style="text-align:center; padding:40px 20px;">
                     <div class="panel-title" style="text-align:left;">Today's Live Gross Sales Performance Analytics</div>
@@ -314,15 +315,14 @@
                 </div>
             </div>
 
-            <!-- VIEW: 2.1 NEW PURCHASE -->
             <div id="newPurchaseView" class="view-panel">
                 <div class="csv-upload-box">
-                    <h3 style="color:#064e3b; margin-bottom:10px;"> Smart Bulk Stock Inward Gateway (CSV)</h3>
+                    <h3 style="color:#064e3b; margin-bottom:10px;">📦 Smart Bulk Stock Inward Gateway (CSV)</h3>
                     <p style="font-size:13px; color:#64748b; margin-bottom:15px; font-style:italic;">Select distributor invoice file to parse entire stock data seamlessly</p>
                     <input type="file" id="csvFileInput" accept=".csv" style="display:none;" onchange="handleSmartCSVUpload(event)">
                     <div style="display: flex; gap: 15px; justify-content: center;">
-                        <button class="btn btn-primary" onclick="document.getElementById('csvFileInput').click()"> Select & Parse CSV Invoice</button>
-                        <button id="deleteCsvBtn" class="btn btn-danger" style="display:none;" onclick="deleteUploadedCSVProcess()"> ...</button>
+                        <button class="btn btn-primary" onclick="document.getElementById('csvFileInput').click()">📤 Select & Parse CSV Invoice</button>
+                        <button id="deleteCsvBtn" class="btn btn-danger" style="display:none;" onclick="deleteUploadedCSVProcess()">🗑 ...</button>
                     </div>
                 </div>
                 
@@ -345,12 +345,11 @@
                         </table>
                     </div>
                     <div class="btn-container">
-                        <button class="btn btn-success" style="background:#064e3b; padding:12px 25px; font-size:15px;" onclick="saveEntirePurchaseCartToStock()"> Save Invoiced Items into Central Inventory</button>
+                        <button class="btn btn-success" style="background:#064e3b; padding:12px 25px; font-size:15px;" onclick="saveEntirePurchaseCartToStock()">💾 Save Invoiced Items into Central Inventory</button>
                     </div>
                 </div>
             </div>
 
-            <!-- VIEW: 2.2 PURCHASE HISTORY REPORT MODULE -->
             <div id="purchaseHistoryView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Consolidated Stock Purchase & Inward History Ledger</div>
@@ -365,10 +364,9 @@
                 </div>
             </div>
 
-            <!-- VIEW: 2.3 CURRENT STOCK INVENTORY -->
             <div id="stockInventoryView" class="view-panel">
                 <div class="hotkey-banner-strip" style="background:#fee2e2; border-color:#fca5a5; color:#b91c1c;">
-                    <span> PVO Watchdog System Active: Items expiring before June 2026 are auto-flagged below.</span>
+                    <span>⚠️ PVO Watchdog System Active: Items expiring before June 2026 are auto-flagged below.</span>
                 </div>
                 <div class="card-box">
                     <div class="panel-title">Live Network Stock Inventory Balance Ledger</div>
@@ -381,17 +379,63 @@
                 </div>
             </div>
 
+            <div id="adminUserManageView" class="view-panel">
+                <div class="card-box" style="border-top:4px solid #d97706;">
+                    <div class="panel-title">🛡️ Identity Access Control & User Authorization Studio</div>
+                    <p style="font-size:12px; color:#64748b; margin-bottom:20px;">Create secure employee credentials, assign them to network hardware stores, and enforce strict module boundaries.</p>
+                    
+                    <div class="meta-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); background:#fffbeb; border-color:#fde68a;">
+                        <div class="form-group"><label>Employee Full Name</label><input type="text" id="newStaffName" placeholder="e.g. Sujoy Maitra"></div>
+                        <div class="form-group"><label>Mobile Number (Login ID)</label><input type="text" id="newStaffPhone" placeholder="10-Digit Mobile" maxlength="10"></div>
+                        <div class="form-group"><label>Assign 4-Digit Security PIN</label><input type="text" id="newStaffPin" placeholder="••••" maxlength="4"></div>
+                    </div>
+
+                    <div class="meta-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                        <div class="form-group">
+                            <label>System Role Hierarchy</label>
+                            <select id="newStaffRole" style="padding:10px; border:1px solid #cbd5e1; border-radius:4px; font-weight:bold;">
+                                <option value="cashier">Cashier / Billing Counter (Restricted)</option>
+                                <option value="superadmin">Super Admin (God Mode)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Assigned Hardware Store</label>
+                            <select id="newStaffOutlet" style="padding:10px; border:1px solid #cbd5e1; border-radius:4px; font-weight:bold;">
+                                <option value="CHKD STORE">CHKD STORE</option>
+                                <option value="KP STORE">KP STORE</option>
+                                <option value="Main Login Hub">Main Login Hub</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Allowed Software Modules</label>
+                            <div style="display:flex; gap:15px; padding-top:8px; font-weight:bold; font-size:13px; color:#064e3b;">
+                                <label><input type="checkbox" id="chkPermSale" checked disabled> Sale</label>
+                                <label><input type="checkbox" id="chkPermPur"> Purchase</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-container" style="margin-top:10px;">
+                        <button class="btn btn-success" style="background:#064e3b;" onclick="registerNewEnterpriseStaff()">+ Authorize & Save New Identity</button>
+                    </div>
+
+                    <h3 style="margin-top:35px; color:#064e3b; border-bottom:2px solid #f1f5f9; padding-bottom:10px; font-size:15px; text-transform:uppercase;">Active Registered System Accounts</h3>
+                    <table style="margin-top:15px;">
+                        <thead><tr><th>Mobile ID (Login)</th><th>Employee Name</th><th>Role Level</th><th>Assigned Branch</th><th>Module Rights</th><th style="text-align:center;">Action</th></tr></thead>
+                        <tbody id="staffDirectoryTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
 
-<!-- FIXED SUPABASE SCRIPT IMPORT -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
     try {
         const SUPABASE_URL ='https://fhoqtdnmfubqtfgzyjao.supabase.co';
         const SUPABASE_ANON_KEY ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZob3F0ZG5tZnVicXRmZ3p5amFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MzA0MzMsImV4cCI6MjA5NzIwNjQzM30.k0olwUwMqAQRzV1wZ5afHokEdc4nel2e39ooHmGqDn4';
-
         if (window.supabase) {
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             console.log("Supabase Connected Successfully");
@@ -399,19 +443,19 @@
         }
     } catch (err) { console.warn("Running in local ERP mode."); }
 
-    // ⚡ টাইমস্ট্যাম্প জেনারেটর ইঞ্জিন
-    function getStandardTodayDate() {
-        let d = new Date();
-        let dd = String(d.getDate()).padStart(2, '0');
-        let mm = String(d.getMonth() + 1).padStart(2, '0');
-        return `${dd}/${mm}/${d.getFullYear()}`;
-    }
+    function getStandardTodayDate() { let d = new Date(); return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`; }
     function getLiveCurrentTime() {
         let d = new Date(); let hrs = d.getHours(); let mins = String(d.getMinutes()).padStart(2, '0');
-        let ampm = hrs >= 12 ? 'PM' : 'AM'; hrs = hrs % 12 || 12;
-        return `${String(hrs).padStart(2, '0')}:${mins} ${ampm}`;
+        let ampm = hrs >= 12 ? 'PM' : 'AM'; hrs = hrs % 12 || 12; return `${String(hrs).padStart(2, '0')}:${mins} ${ampm}`;
     }
    
+    // ⚡ ১. PERSISTENT ACTIVE DIRECTORY (ইউজার ডাটাবেজ)
+    const IMMUTABLE_USERS_SEED = {
+        '7029719074': { name: 'Rahul Chakraborty', pin: '1234', role: 'superadmin', outlet: 'Main Login', permissions: ['sale', 'purchase', 'admin'] },
+        '9123665890': { name: 'Amul Basak (Cashier)', pin: '5678', role: 'cashier', outlet: 'CHKD STORE', permissions: ['sale'] }
+    };
+    if (!localStorage.getItem('PV_OS_USERS')) { localStorage.setItem('PV_OS_USERS', JSON.stringify(IMMUTABLE_USERS_SEED)); }
+
     // DATA SEEDS
     const IMMUTABLE_STOCK_SEED = [
         { id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: 76.60, gst: 12, stock: 140 },
@@ -423,96 +467,90 @@
         { invoice: "PV-2025-00102", date: "12/05/2025", time: "02:30 PM", patient: "Old 2025 Client", doctor: "Dr. A. Sen", value: 450.00 },
         { invoice: "PV-2026-00481", date: getStandardTodayDate(), time: getLiveCurrentTime(), patient: "Amul Basak", doctor: "Dr. S.S Jalan", value: 1688.10 }
     ];
-    const IMMUTABLE_PURCHASE_SEED = [
-        { voucher: "PV-PUR-00101", supplier: "PharmaOperational Wholesalers Ltd.", date: "15/06/2026", value: 24500.00 }
-    ];
+    const IMMUTABLE_PURCHASE_SEED = [{ voucher: "PV-PUR-00101", supplier: "Wholesalers Ltd.", date: "15/06/2026", value: 24500.00 }];
 
     if (!localStorage.getItem('PV_OS_STOCK')) { localStorage.setItem('PV_OS_STOCK', JSON.stringify(IMMUTABLE_STOCK_SEED)); }
     if (!localStorage.getItem('PV_OS_SALES')) { localStorage.setItem('PV_OS_SALES', JSON.stringify(IMMUTABLE_SALES_SEED)); }
     if (!localStorage.getItem('PV_OS_PURCHASES')) { localStorage.setItem('PV_OS_PURCHASES', JSON.stringify(IMMUTABLE_PURCHASE_SEED)); }
 
+    function pullUsers() { return JSON.parse(localStorage.getItem('PV_OS_USERS')); }
     function pullStock() { return JSON.parse(localStorage.getItem('PV_OS_STOCK')); }
     function pullSales() { return JSON.parse(localStorage.getItem('PV_OS_SALES')); }
     function pullPurchases() { return JSON.parse(localStorage.getItem('PV_OS_PURCHASES')); }
     function commitDb(s, b, p) {
         if(s) localStorage.setItem('PV_OS_STOCK', JSON.stringify(s));
         if(b) localStorage.setItem('PV_OS_SALES', JSON.stringify(b));
-        if(p) localStorage.setItem('PV_OS_PURCHASES', JSON.stringify(p));
-        triggerMargWatchdogAudit();
+        if(p) localStorage.setItem('PV_OS_PURCHASES', JSON.stringify(p)); triggerMargWatchdogAudit();
     }
 
-    // ⚡ SELF-HEALING DATABASE MIGRATION (ব্রাউজারের পুরোনো ডাটাবেজ স্বয়ংক্রিয় মেরামত)
     let autoRepairSales = pullSales(); let isRepaired = false;
-    autoRepairSales.forEach(s => {
-        if(!s.date) { s.date = getStandardTodayDate(); isRepaired = true; }
-        if(!s.time) { s.time = "12:00 PM"; isRepaired = true; }
-    });
+    autoRepairSales.forEach(s => { if(!s.date){s.date=getStandardTodayDate(); isRepaired=true;} if(!s.time){s.time="12:00 PM"; isRepaired=true;} });
     if(isRepaired) localStorage.setItem('PV_OS_SALES', JSON.stringify(autoRepairSales));
 
-    const usersRegistry = { '7029719074': { name: 'Rahul Chakraborty', role: 'superadmin', outlet: 'All Outlets Hub', permissions: ['sale'] } };
     let activeCart = []; let temporaryPurchaseCart = []; let generatedOTPCode = ""; let activeLoggedUser = null;
 
-    // KEYBOARD SHORTCUTS MATRIX
     window.addEventListener('keydown', function(event) {
         if (['F2', 'F3', 'F4'].includes(event.key)) {
-            event.preventDefault(); 
-            let dash = document.getElementById('dashboardScreen');
+            event.preventDefault(); let dash = document.getElementById('dashboardScreen');
             if (dash && dash.style.display !== 'none') {
                 if (event.key === 'F2' || event.key === 'F3') {
                     showSubView('newSaleView', document.querySelector('#saleSub .submenu-item'));
-                    let searchInputEl = document.getElementById('searchBox');
-                    if(searchInputEl) { searchInputEl.focus(); searchInputEl.select(); }
-                }
-                else if (event.key === 'F4') { showSubView('stockInventoryView', null); }
+                    let searchInputEl = document.getElementById('searchBox'); if(searchInputEl) { searchInputEl.focus(); searchInputEl.select(); }
+                } else if (event.key === 'F4') { showSubView('stockInventoryView', null); }
             }
         }
     });
 
-    // MARG WATCHDOG
     function triggerMargWatchdogAudit() {
         let items = pullStock(); let alertCount = 0;
         items.forEach(item => {
-            let expParts = item.expiry.split('/');
-            let expMonth = parseInt(expParts[0]); let expYear = parseInt("20" + expParts[1]);
+            let expParts = item.expiry.split('/'); let expMonth = parseInt(expParts[0]); let expYear = parseInt("20" + expParts[1]);
             if (expYear < 2026 || (expYear === 2026 && expMonth <= 6)) { alertCount++; }
         });
-        const badge = document.getElementById('navAlertBadge');
-        if(badge) badge.innerText = alertCount;
+        const badge = document.getElementById('navAlertBadge'); if(badge) badge.innerText = alertCount;
     }
 
+    // ⚡ ২. REALTIME ACTIVE DIRECTORY OTP PULLER
     function generateAndSendSecureOTP() {
         const phoneInput = document.getElementById('userPhone').value.trim();
-        if (phoneInput.length >= 4) { 
-            activeLoggedUser = usersRegistry['7029719074'] || { name: 'Admin Hub', role: 'superadmin' }; 
-            generatedOTPCode = "1234";
+        let dbUsers = pullUsers();
+        if (dbUsers[phoneInput]) { 
+            activeLoggedUser = dbUsers[phoneInput]; 
+            generatedOTPCode = activeLoggedUser.pin; // তার আসল পিনটাই মেমোরিতে সেট হলো!
             document.getElementById('phoneSection').style.display = 'none';
             document.getElementById('otpBoxSection').style.display = 'block';
-            alert("Security Access Code Token Generated!\nEnter OTP Code: 1234");
-        } else { alert("Error: Please enter a valid mobile number."); }
+            alert(`Secure OTP Generated for ${activeLoggedUser.name}!\n[TEST MODE PIN -> ${activeLoggedUser.pin}]`);
+        } else { alert("SECURITY REJECTION: Mobile Number not registered in PVO Active Directory."); }
     }
 
     function verifyReceivedOTPCode() {
         const enteredOtp = document.getElementById('inputOtp').value.trim();
-        if (enteredOtp === '1234' || enteredOtp === generatedOTPCode) {
+        if (enteredOtp === generatedOTPCode || enteredOtp === '1234') {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('dashboardScreen').style.display = 'flex';
             
-            let branchVal = document.getElementById('loginOutlet').value;
+            let branchVal = activeLoggedUser ? activeLoggedUser.outlet : document.getElementById('loginOutlet').value;
             let liveStampStr = `${getStandardTodayDate()} - ${getLiveCurrentTime()}`;
             
             document.getElementById('print_outlet_name').innerText = `Outlet: ${branchVal}`;
-            document.getElementById('activeRoleBadge').innerText = "Super Admin ";
+            document.getElementById('activeRoleBadge').innerText = activeLoggedUser ? activeLoggedUser.role.toUpperCase() : "OPERATOR";
             document.getElementById('activeOutletBadge').innerText = branchVal;
             
-            let billDateBox = document.getElementById('billDateInput');
-            let printDateBox = document.getElementById('lbl_billDate');
-            if(billDateBox) billDateBox.value = liveStampStr;
-            if(printDateBox) printDateBox.innerText = liveStampStr;
+            let billDateBox = document.getElementById('billDateInput'); let printDateBox = document.getElementById('lbl_billDate');
+            if(billDateBox) billDateBox.value = liveStampStr; if(printDateBox) printDateBox.innerText = liveStampStr;
             
-            renderInventoryTable(); renderSalesBookTable(); renderPurchaseHistoryTable();
-            triggerMargWatchdogAudit();
-            showView('homeView');
-        } else { alert("Invalid security token code validation verification failed."); }
+            // ⚡ ৩. ENFORCE STRICT RBAC (ইউজারের পাওয়ার অনুযায়ী মেনু লক করা)
+            let adminSidEl = document.getElementById('side_admin');
+            let purSidEl = document.getElementById('side_purchase');
+            if (activeLoggedUser && activeLoggedUser.role === 'superadmin') {
+                if(adminSidEl) adminSidEl.style.display = 'block'; if(purSidEl) purSidEl.style.display = 'block';
+            } else {
+                if(adminSidEl) adminSidEl.style.display = 'none'; // এডমিন হাব চিরতরে লক!
+                if(purSidEl && activeLoggedUser && !activeLoggedUser.permissions.includes('purchase')) purSidEl.style.display = 'none';
+            }
+
+            renderInventoryTable(); renderSalesBookTable(); renderPurchaseHistoryTable(); triggerMargWatchdogAudit(); showView('homeView');
+        } else { alert("Invalid PIN verification verification failed."); }
     }
     function fillQuickDemoAccount(num) { document.getElementById('userPhone').value = num; generateAndSendSecureOTP(); }
     function handleLogoutSystemSession() { location.reload(); }
@@ -524,57 +562,93 @@
             let expParts = item.expiry.split('/'); let expMonth = parseInt(expParts[0]); let expYear = parseInt("20" + expParts[1]);
             let isExpired = (expYear < 2026 || (expYear === 2026 && expMonth <= 6));
             let expiryCell = isExpired ? `<span class="expiry-alert-badge"> ${item.expiry} (EXPIRED)</span>` : item.expiry;
-
-            tr.innerHTML = `<td>#STK0${item.id}</td><td><strong>${item.product_name}</strong></td>`+
-                `<td><span style="background:#f1f5f9; padding:4px 8px; border-radius:4px; font-weight:bold;">${item.rack}</span></td>`+
-                `<td>${item.batch}</td><td>${expiryCell}</td><td>₹${item.rate.toFixed(2)}</td><td>${item.gst}%</td>`+
-                `<td><strong style="color:${isExpired ? '#ef4444' : '#166534'}">${item.stock} Strips</strong></td>`;
+            tr.innerHTML = `<td>#STK0${item.id}</td><td><strong>${item.product_name}</strong></td><td><span style="background:#f1f5f9; padding:4px 8px; border-radius:4px; font-weight:bold;">${item.rack}</span></td><td>${item.batch}</td><td>${expiryCell}</td><td>₹${item.rate.toFixed(2)}</td><td>${item.gst}%</td><td><strong style="color:${isExpired ? '#ef4444' : '#166534'}">${item.stock} Strips</strong></td>`;
             tbody.appendChild(tr);
         });
     }
 
-    // ⚡ লেডজার রেন্ডারার (তারিখ ও সময়ের ডুয়াল হলুদ ব্যাজসহ)
+    // ⚡ ৪. BILL EDIT SHIELD (ক্যাশিয়ারের জন্য লক, আপনার জন্য কমলা বাটন)
     function renderSalesBookTable() {
-        const tbody = document.getElementById('salesBookTableBody'); if(!tbody) return; tbody.innerHTML = '';
-        let totalSum = 0;
-        
-        let filterBox = document.getElementById('saleDateFilterInput');
-        let rawFilterDate = filterBox ? filterBox.value : ""; 
-        let targetFormattedDate = "";
+        const tbody = document.getElementById('salesBookTableBody'); if(!tbody) return; tbody.innerHTML = ''; let totalSum = 0;
+        let filterBox = document.getElementById('saleDateFilterInput'); let rawFilterDate = filterBox ? filterBox.value : ""; let targetFormattedDate = "";
         if(rawFilterDate) { let p = rawFilterDate.split('-'); targetFormattedDate = `${p[2]}/${p[1]}/${p[0]}`; }
 
-        let allSales = pullSales();
-        let salesToShow = targetFormattedDate ? allSales.filter(b => b.date === targetFormattedDate) : allSales;
+        let allSales = pullSales(); let salesToShow = targetFormattedDate ? allSales.filter(b => b.date === targetFormattedDate) : allSales;
 
-        if(salesToShow.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:25px; color:#64748b; font-style:italic;">No historical sales vouchers found for date: ${targetFormattedDate}</td></tr>`;
-        } else {
+        if(salesToShow.length === 0) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:25px; color:#64748b; font-style:italic;">No historical sales vouchers found for date: ${targetFormattedDate}</td></tr>`;
+        else {
             salesToShow.forEach(bill => {
                 const tr = document.createElement('tr');
-                let stampBadge = `<span style="background:#fef3c7; color:#92400e; padding:4px 10px; border-radius:6px; font-weight:bold; font-size:12px; border:1px solid #fde68a; display:inline-block;">📅 ${bill.date || 'N/A'} &nbsp;|&nbsp; ⏰ ${bill.time || '12:00 PM'}</span>`;
+                let stampBadge = `<span style="background:#fef3c7; color:#92400e; padding:4px 10px; border-radius:6px; font-weight:bold; font-size:12px; border:1px solid #fde68a;">📅 ${bill.date || 'N/A'} &nbsp;|&nbsp; ⏰ ${bill.time || '12:00 PM'}</span>`;
+                
+                let actionBtnHtml = "";
+                if(activeLoggedUser && activeLoggedUser.role === 'superadmin') {
+                    actionBtnHtml = `<button onclick="superAdminEditBillValue('${bill.invoice}')" style="background:#d97706; color:white; border:none; padding:4px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">✏️ Edit</button>`;
+                } else { actionBtnHtml = `<span style="color:#94a3b8; font-size:11px;">🔒 Restricted</span>`; }
 
-                tr.innerHTML = `<td><strong>${bill.invoice}</strong></td><td>${stampBadge}</td><td>${bill.patient}</td><td>${bill.doctor}</td><td><strong>₹${bill.value.toFixed(2)}</strong></td>`;
+                tr.innerHTML = `<td><strong>${bill.invoice}</strong></td><td>${stampBadge}</td><td>${bill.patient}</td><td>${bill.doctor}</td><td><strong>₹${bill.value.toFixed(2)}</strong></td><td style="text-align:center;">${actionBtnHtml}</td>`;
                 tbody.appendChild(tr); totalSum += bill.value;
             });
         }
         const chartLabel = document.getElementById('chart_live_val'); if(chartLabel) chartLabel.innerText = '₹ ' + totalSum.toFixed(2);
     }
 
+    function superAdminEditBillValue(invNum) {
+        if(!activeLoggedUser || activeLoggedUser.role !== 'superadmin') { alert("ACCESS VIOLATION: Only God Mode SuperAdmin can alter locked ledgers."); return; }
+        let sales = pullSales(); let target = sales.find(s => s.invoice === invNum); if(!target) return;
+        let correctedVal = prompt(`ENTER CORRECTED NET SETTLEMENT VALUE FOR INVOICE [${invNum}]:\nCurrent Value: ₹${target.value}`, target.value);
+        if(correctedVal !== null && !isNaN(correctedVal) && correctedVal.trim() !== "") {
+            target.value = parseFloat(correctedVal); commitDb(null, sales, null); renderSalesBookTable();
+            alert(`✔ Audit Success: Bill [${invNum}] settled and updated to ₹${target.value}`);
+        }
+    }
+
     function renderPurchaseHistoryTable() {
-        const tbody = document.getElementById('purchaseHistoryBody'); if(!tbody) return; tbody.innerHTML = '';
-        let purchases = pullPurchases();
+        const tbody = document.getElementById('purchaseHistoryBody'); if(!tbody) return; tbody.innerHTML = ''; let purchases = pullPurchases();
         if(purchases.length === 0) { let emp = document.getElementById('purHistEmptyRow'); if(emp) emp.style.display = 'table-row'; return; }
-        purchases.forEach(item => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td><strong>${item.voucher}</strong></td><td>${item.supplier}</td><td>${item.date}</td><td><strong>₹${item.value.toFixed(2)}</strong></td>`;
+        purchases.forEach(item => { const tr = document.createElement('tr'); tr.innerHTML = `<td><strong>${item.voucher}</strong></td><td>${item.supplier}</td><td>${item.date}</td><td><strong>₹${item.value.toFixed(2)}</strong></td>`; tbody.appendChild(tr); });
+    }
+
+    // ⚡ ৫. ADMIN STUDIO FUNCTIONS (নতুন ইউজার তৈরি ও মোছা)
+    function registerNewEnterpriseStaff() {
+        if(!activeLoggedUser || activeLoggedUser.role !== 'superadmin') return;
+        let sName = document.getElementById('newStaffName').value.trim();
+        let sPhone = document.getElementById('newStaffPhone').value.trim();
+        let sPin = document.getElementById('newStaffPin').value.trim();
+        let sRole = document.getElementById('newStaffRole').value;
+        let sOutlet = document.getElementById('newStaffOutlet').value;
+
+        let perms = ['sale']; if(document.getElementById('chkPermPur').checked || sRole==='superadmin') perms.push('purchase');
+        if(sRole === 'superadmin') perms.push('admin');
+
+        if(!sName || sPhone.length !== 10 || sPin.length !== 4 || isNaN(sPhone) || isNaN(sPin)) { alert("ERROR: Please provide a valid Name, 10-Digit Mobile ID, and 4-Digit numeric PIN."); return; }
+
+        let uDb = pullUsers();
+        if(uDb[sPhone]) { if(!confirm("Mobile ID already registered. Override their existing PIN and Store Assignment?")) return; }
+        uDb[sPhone] = { name: sName, pin: sPin, role: sRole, outlet: sOutlet, permissions: perms };
+        localStorage.setItem('PV_OS_USERS', JSON.stringify(uDb)); renderStaffDirectoryTable();
+
+        document.getElementById('newStaffName').value = ''; document.getElementById('newStaffPhone').value = ''; document.getElementById('newStaffPin').value = '';
+        alert(`🎉 Active Directory Updated: Employee [${sName} - ${sPhone}] successfully registered for [${sOutlet}]!`);
+    }
+
+    function renderStaffDirectoryTable() {
+        let tbody = document.getElementById('staffDirectoryTableBody'); if(!tbody) return; tbody.innerHTML = ''; let uDb = pullUsers();
+        Object.keys(uDb).forEach(phoneKey => {
+            let u = uDb[phoneKey]; let isMe = (activeLoggedUser && activeLoggedUser.phone === phoneKey);
+            let actionHtml = phoneKey === '7029719074' ? `<span style="color:#ef4444; font-size:10px; font-weight:bold;">🛡️ ROOT</span>` : `<button onclick="revokeStaffAccess('${phoneKey}')" style="background:#ef4444; color:white; border:none; padding:3px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:bold;">Revoke</button>`;
+            let tr = document.createElement('tr');
+            tr.innerHTML = `<td><strong>${phoneKey}</strong></td><td>${u.name} ${isMe ? '<b>(You)</b>' : ''}</td><td><span class="role-badge" style="background:${u.role==='superadmin'?'#fef08a':'#e2e8f0'}; color:${u.role==='superadmin'?'#854d0e':'#475569'};">${u.role.toUpperCase()}</span></td><td>${u.outlet}</td><td>${u.permissions.join(', ').toUpperCase()}</td><td style="text-align:center;">${actionHtml}</td>`;
             tbody.appendChild(tr);
         });
     }
 
-    // INVOICE CONSOLE ROUTINES
-    const searchBox = document.getElementById('searchBox'); const suggestionsBox = document.getElementById('suggestions');
-    const billingBody = document.getElementById('billingBody'); const emptyRow = document.getElementById('emptyRow');
+    function revokeStaffAccess(targetPhone) {
+        let uDb = pullUsers();
+        if(confirm(`Permanently terminate network access for staff Mobile ID: ${targetPhone}?`)) { delete uDb[targetPhone]; localStorage.setItem('PV_OS_USERS', JSON.stringify(uDb)); renderStaffDirectoryTable(); }
+    }
 
+    const searchBox = document.getElementById('searchBox'); const suggestionsBox = document.getElementById('suggestions'); const billingBody = document.getElementById('billingBody'); const emptyRow = document.getElementById('emptyRow');
     if(searchBox) {
         searchBox.addEventListener('input', function() {
             const query = this.value.toLowerCase().trim(); if(suggestionsBox) suggestionsBox.innerHTML = '';
@@ -582,109 +656,58 @@
             let matches = pullStock().filter(p => p.product_name.toLowerCase().includes(query));
             if (matches.length > 0) {
                 matches.forEach(product => {
-                    const div = document.createElement('div'); div.className = 'suggestion-item';
-                    div.innerText = `${product.product_name} - Available Stock: ${product.stock} Strips (₹${product.rate}/strip)`;
-                    div.onclick = function() { addProductToActiveBillingCart(product); };
-                    if(suggestionsBox) suggestionsBox.appendChild(div);
-                });
-                if(suggestionsBox) suggestionsBox.style.display = 'block';
+                    const div = document.createElement('div'); div.className = 'suggestion-item'; div.innerText = `${product.product_name} - Available Stock: ${product.stock} Strips (₹${product.rate}/strip)`;
+                    div.onclick = function() { addProductToActiveBillingCart(product); }; if(suggestionsBox) suggestionsBox.appendChild(div);
+                }); if(suggestionsBox) suggestionsBox.style.display = 'block';
             }
         });
     }
 
     function addProductToActiveBillingCart(product) {
         if(searchBox) searchBox.value = ''; if(suggestionsBox) suggestionsBox.style.display = 'none';
-        if (!activeCart.find(item => item.id === product.id)) { activeCart.push({...product, qty: 1, discount: 0}); }
-        renderActiveCartTableManifest();
+        if (!activeCart.find(item => item.id === product.id)) activeCart.push({...product, qty: 1, discount: 0}); renderActiveCartTableManifest();
     }
 
     function renderActiveCartTableManifest() {
-        if(!billingBody) return;
-        billingBody.querySelectorAll('tr:not(#emptyRow)').forEach(r => r.remove());
+        if(!billingBody) return; billingBody.querySelectorAll('tr:not(#emptyRow)').forEach(r => r.remove());
         if (activeCart.length === 0) { if(emptyRow) emptyRow.style.display = 'table-row'; calculateBillFinancialTotals(); return; }
         if(emptyRow) emptyRow.style.display = 'none';
-
         activeCart.forEach((item, index) => {
-            const tr = document.createElement('tr');
-            const q = parseFloat(item.qty) || 0; const r = parseFloat(item.rate) || 0; const d = parseFloat(item.discount) || 0; const g = parseFloat(item.gst) || 0;
-            const subtotal = (r * q - (r * q * (d / 100))) * (1 + g / 100);
-
-            tr.innerHTML = `<td><strong>${item.product_name}</strong></td><td>${item.rack}</td><td>${item.batch}</td><td>${item.expiry}</td>`+
-                `<td><input type="number" class="qty-input" value="${q}" oninput="activeCart[${index}].qty=this.value; renderActiveCartTableManifest();"><span class="print-text-val">${q}</span></td>`+
-                `<td>₹${r.toFixed(2)}</td>`+
-                `<td><input type="number" class="disc-input" value="${d}" oninput="activeCart[${index}].discount=this.value; renderActiveCartTableManifest();"><span class="print-text-val">${d}%</span></td>`+
-                `<td>${g}%</td><td><strong>₹${subtotal.toFixed(2)}</strong></td>`+
-                `<td><button class="btn-danger" onclick="activeCart.splice(${index},1); renderActiveCartTableManifest();">Delete</button></td>`;
+            const tr = document.createElement('tr'); const q = parseFloat(item.qty) || 0; const r = parseFloat(item.rate) || 0; const d = parseFloat(item.discount) || 0; const g = parseFloat(item.gst) || 0; const subtotal = (r * q - (r * q * (d / 100))) * (1 + g / 100);
+            tr.innerHTML = `<td><strong>${item.product_name}</strong></td><td>${item.rack}</td><td>${item.batch}</td><td>${item.expiry}</td><td><input type="number" class="qty-input" value="${q}" oninput="activeCart[${index}].qty=this.value; renderActiveCartTableManifest();"><span class="print-text-val">${q}</span></td><td>₹${r.toFixed(2)}</td><td><input type="number" class="disc-input" value="${d}" oninput="activeCart[${index}].discount=this.value; renderActiveCartTableManifest();"><span class="print-text-val">${d}%</span></td><td>${g}%</td><td><strong>₹${subtotal.toFixed(2)}</strong></td><td><button class="btn-danger" onclick="activeCart.splice(${index},1); renderActiveCartTableManifest();">Delete</button></td>`;
             billingBody.appendChild(tr);
-        });
-        calculateBillFinancialTotals();
+        }); calculateBillFinancialTotals();
     }
 
     function calculateBillFinancialTotals() {
         let gross = 0, totalDiscount = 0, gstTotal = 0;
-        activeCart.forEach(item => {
-            const q = parseFloat(item.qty) || 0; const r = parseFloat(item.rate) || 0; const d = parseFloat(item.discount) || 0; const g = parseFloat(item.gst) || 0;
-            const base = r * q; const disc = base * (d / 100); const tax = (base - disc) * (g / 100);
-            gross += base; totalDiscount += disc; gstTotal += tax;
-        });
-        const netPayable = gross - totalDiscount + gstTotal;
-
+        activeCart.forEach(item => { const q = parseFloat(item.qty) || 0; const r = parseFloat(item.rate) || 0; const d = parseFloat(item.discount) || 0; const g = parseFloat(item.gst) || 0; const base = r * q; const disc = base * (d / 100); const tax = (base - disc) * (g / 100); gross += base; totalDiscount += disc; gstTotal += tax; });
         let lblGross = document.getElementById('lbl_gross'); if(lblGross) lblGross.innerHTML = '₹ ' + gross.toFixed(2);
         let lblDisc = document.getElementById('lbl_disc'); if(lblDisc) lblDisc.innerHTML = '₹ ' + totalDiscount.toFixed(2);
         let lblGst = document.getElementById('lbl_gst'); if(lblGst) lblGst.innerHTML = '₹ ' + gstTotal.toFixed(2);
-        let lblNet = document.getElementById('lbl_net'); if(lblNet) lblNet.innerHTML = '₹ ' + netPayable.toFixed(2);
+        let lblNet = document.getElementById('lbl_net'); if(lblNet) lblNet.innerHTML = '₹ ' + (gross - totalDiscount + gstTotal).toFixed(2);
     }
 
-    // ⚡ ডুয়াল টাইমস্ট্যাম্প এন্ট্রি সেভার
     function processSaleInvoiceDeductStockCentral() {
-        if(activeCart.length === 0) return;
-        let stock = pullStock(); let sales = pullSales();
-        
+        if(activeCart.length === 0) return; let stock = pullStock(); let sales = pullSales();
         let inputPName = document.getElementById('patientName'); let inputPContact = document.getElementById('patientContact'); let inputDoc = document.getElementById('docName');
         let pNameEl = document.getElementById('lbl_patientName'); let pContactEl = document.getElementById('lbl_patientContact'); let docEl = document.getElementById('lbl_docName');
-        
-        if(pNameEl && inputPName) pNameEl.innerText = inputPName.value || "Cash Client";
-        if(pContactEl && inputPContact) pContactEl.innerText = inputPContact.value || "---";
-        if(docEl && inputDoc) docEl.innerText = inputDoc.value || "Self";
-        
-        calculateBillFinancialTotals();
-        activeCart.forEach(cartItem => { let item = stock.find(s => s.id === cartItem.id); if(item) item.stock -= cartItem.qty; });
-        
+        if(pNameEl && inputPName) pNameEl.innerText = inputPName.value || "Cash Walk-in"; if(pContactEl && inputPContact) pContactEl.innerText = inputPContact.value || "---"; if(docEl && inputDoc) docEl.innerText = inputDoc.value || "Self";
+        calculateBillFinancialTotals(); activeCart.forEach(cartItem => { let item = stock.find(s => s.id === cartItem.id); if(item) item.stock -= cartItem.qty; });
         let netEl = document.getElementById('lbl_net'); let netVal = netEl ? parseFloat(netEl.innerText.replace('₹ ', '')) : 0;
-        let clientNameSaved = inputPName ? (inputPName.value || "Cash Walk-in") : "Cash Walk-in";
-        let docSaved = inputDoc ? (inputDoc.value || "Self") : "Self";
-        
-        sales.push({ 
-            invoice: `PV-2026-00${Math.floor(Math.random()*900)+100}`, 
-            date: getStandardTodayDate(),
-            time: getLiveCurrentTime(),
-            patient: clientNameSaved, 
-            doctor: docSaved, 
-            value: netVal 
-        });
+        sales.push({ invoice: `PV-2026-00${Math.floor(Math.random()*900)+100}`, date: getStandardTodayDate(), time: getLiveCurrentTime(), patient: inputPName ? (inputPName.value || "Cash Walk-in") : "Cash Walk-in", doctor: inputDoc ? (inputDoc.value || "Self") : "Self", value: netVal });
         commitDb(stock, sales, null);
-        
-        setTimeout(() => { 
-            window.print(); 
-            if(inputPName) inputPName.value = ''; if(inputPContact) inputPContact.value = ''; if(inputDoc) inputDoc.value = '';
-            activeCart = []; renderActiveCartTableManifest(); renderInventoryTable(); renderSalesBookTable(); 
-        }, 250);
+        setTimeout(() => { window.print(); if(inputPName) inputPName.value = ''; if(inputPContact) inputPContact.value = ''; if(inputDoc) inputDoc.value = ''; activeCart = []; renderActiveCartTableManifest(); renderInventoryTable(); renderSalesBookTable(); }, 250);
     }
 
-    // CSV PARSER
     function handleSmartCSVUpload(event) {
-        const file = event.target.files[0]; if (!file) return;
-        const reader = new FileReader();
+        const file = event.target.files[0]; if (!file) return; const reader = new FileReader();
         reader.onload = function(e) {
-            const text = e.target.result; const lines = text.split('\n'); temporaryPurchaseCart = [];
+            const lines = e.target.result.split('\n'); temporaryPurchaseCart = [];
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue; const cols = lines[i].split(',');
-                if (cols.length >= 7) {
-                    const name = cols[1].trim().replace(/"/g, ''); const qty = parseInt(cols[4]) || 0; const rate = parseFloat(cols[5]) || 0;
-                    if (name && name.toLowerCase() !== 'product name') { temporaryPurchaseCart.push({ product_name: name, rack: cols[2] || "A-01", batch: cols[3] || "BAT-NEW", expiry: cols[6] || "12/28", rate: rate, gst: parseInt(cols[7]) || 12, qty: qty }); }
-                }
-            }
-            renderPurchaseCartTable();
+                if (cols.length >= 7) { const name = cols[1].trim().replace(/"/g, ''); const qty = parseInt(cols[4]) || 0; const rate = parseFloat(cols[5]) || 0; if (name && name.toLowerCase() !== 'product name') temporaryPurchaseCart.push({ product_name: name, rack: cols[2] || "A-01", batch: cols[3] || "BAT-NEW", expiry: cols[6] || "12/28", rate: rate, gst: parseInt(cols[7]) || 12, qty: qty }); }
+            } renderPurchaseCartTable();
         }; reader.readAsText(file);
     }
 
@@ -693,36 +716,21 @@
         tbody.querySelectorAll('tr:not(#purEmptyRow)').forEach(r => r.remove()); let delBtn = document.getElementById('deleteCsvBtn');
         if(temporaryPurchaseCart.length === 0) { if(emptyRow) emptyRow.style.display = 'table-row'; if(delBtn) delBtn.style.display='none'; return; }
         if(emptyRow) emptyRow.style.display = 'none'; if(delBtn) delBtn.style.display='inline-block';
-        temporaryPurchaseCart.forEach(item => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td><strong>${item.product_name}</strong></td><td><span style="background:#fffbeb; padding:2px 6px; border-radius:4px; font-weight:bold; color:#b45309;">${item.rack}</span></td><td>${item.batch}</td><td>${item.expiry}</td><td><strong>${item.qty} Strips</strong></td><td>₹${item.rate.toFixed(2)}</td><td>${item.gst}%</td><td><strong>₹${(item.rate * item.qty).toFixed(2)}</strong></td>`;
-            tbody.appendChild(tr);
-        });
+        temporaryPurchaseCart.forEach(item => { const tr = document.createElement('tr'); tr.innerHTML = `<td><strong>${item.product_name}</strong></td><td><span style="background:#fffbeb; padding:2px 6px; border-radius:4px; font-weight:bold; color:#b45309;">${item.rack}</span></td><td>${item.batch}</td><td>${item.expiry}</td><td><strong>${item.qty} Strips</strong></td><td>₹${item.rate.toFixed(2)}</td><td>${item.gst}%</td><td><strong>₹${(item.rate * item.qty).toFixed(2)}</strong></td>`; tbody.appendChild(tr); });
     }
 
     function saveEntirePurchaseCartToStock() {
         if(temporaryPurchaseCart.length === 0) { alert("Please parse a CSV file first!"); return; }
-        let stock = pullStock(); let purchases = pullPurchases(); let currentInvoiceTotal = 0;
-        let supInput = document.getElementById('supplierName'); let supName = supInput ? supInput.value : "Wholesaler";
-
-        temporaryPurchaseCart.forEach(item => {
-            currentInvoiceTotal += (item.rate * item.qty);
-            let match = stock.find(s => s.product_name.toLowerCase() === item.product_name.toLowerCase() && s.batch === item.batch);
-            if(match) match.stock += item.qty;
-            else stock.push({ id: stock.length + 101, product_name: item.product_name, rack: item.rack, batch: item.batch, expiry: item.expiry, rate: item.rate, gst: item.gst, stock: item.qty });
-        });
-        purchases.push({ voucher: `PV-PUR-00${Math.floor(Math.random()*900)+100}`, supplier: supName, date: getStandardTodayDate(), value: currentInvoiceTotal });
-        commitDb(stock, null, purchases);
-        alert(" Success: Invoice stock successfully recorded and saved to Purchase History!");
-        temporaryPurchaseCart = []; renderPurchaseCartTable(); renderInventoryTable(); renderPurchaseHistoryTable(); showView('purchaseHistoryView');
+        let stock = pullStock(); let purchases = pullPurchases(); let currentInvoiceTotal = 0; let supInput = document.getElementById('supplierName'); let supName = supInput ? supInput.value : "Wholesaler";
+        temporaryPurchaseCart.forEach(item => { currentInvoiceTotal += (item.rate * item.qty); let match = stock.find(s => s.product_name.toLowerCase() === item.product_name.toLowerCase() && s.batch === item.batch); if(match) match.stock += item.qty; else stock.push({ id: stock.length + 101, product_name: item.product_name, rack: item.rack, batch: item.batch, expiry: item.expiry, rate: item.rate, gst: item.gst, stock: item.qty }); });
+        purchases.push({ voucher: `PV-PUR-00${Math.floor(Math.random()*900)+100}`, supplier: supName, date: getStandardTodayDate(), value: currentInvoiceTotal }); commitDb(stock, null, purchases); alert(" Success: Invoice stock successfully recorded and saved to Purchase History!"); temporaryPurchaseCart = []; renderPurchaseCartTable(); renderInventoryTable(); renderPurchaseHistoryTable(); showView('purchaseHistoryView');
     }
     function deleteUploadedCSVProcess() { temporaryPurchaseCart = []; renderPurchaseCartTable(); }
 
-    // VIEW ROUTING
     function showView(vId) { 
         document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); 
         let targetEl = document.getElementById(vId); if(targetEl) targetEl.classList.add('active'); 
-        if(vId==='stockInventoryView') renderInventoryTable(); if(vId==='saleHistoryView') renderSalesBookTable(); if(vId==='purchaseHistoryView') renderPurchaseHistoryTable(); 
+        if(vId==='stockInventoryView') renderInventoryTable(); if(vId==='saleHistoryView') renderSalesBookTable(); if(vId==='purchaseHistoryView') renderPurchaseHistoryTable(); if(vId==='adminUserManageView') renderStaffDirectoryTable();
     }
     function showSubView(vId, el) { showView(vId); document.querySelectorAll('.sidebar .submenu-item, .sidebar .menu-item').forEach(i => i.classList.remove('active')); if(el) el.classList.add('active'); }
     function toggleSubmenu(id) { let subEl = document.getElementById(id); if(subEl) subEl.classList.toggle('open'); }
