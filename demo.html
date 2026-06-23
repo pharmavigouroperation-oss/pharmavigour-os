@@ -2,68 +2,95 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PharmaVigour OS - Corporate Cloud ERP</title>
     <style>
-        /* [পূর্বের CSS সব বজায় থাকবে, নতুনটুকু নিচে যোগ করুন] */
-        .search-container { position: relative; width: 100%; }
-        .search-box { width: 100%; padding: 12px; border: 2px solid #064e3b; border-radius: 6px; font-size: 14px; outline: none; }
-        .suggestions-box { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #cbd5e1; border-radius: 0 0 6px 6px; max-height: 250px; overflow-y: auto; z-index: 9999; display: none; box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
-        .suggestion-item { padding: 12px 15px; cursor: pointer; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
-        .suggestion-item:hover { background-color: #f0fdf4; color: #064e3b; font-weight: bold; }
-        .suggestion-item span.stock-pill { font-size: 10px; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: #f8fafc; color: #0f172a; min-height: 100vh; display: flex; }
+        
+        /* SIDEBAR */
+        .sidebar { background: #0f172a; color: #cbd5e1; width: 60px; height: 100vh; position: fixed; z-index: 1000; transition: width 0.25s; overflow: hidden; }
+        .sidebar:hover { width: 260px; }
+        .menu-item { padding: 15px 20px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; border-left: 4px solid transparent; }
+        .menu-item:hover { background: #1e293b; border-left-color: #d97706; }
+        .menu-text { margin-left: 15px; opacity: 0; }
+        .sidebar:hover .menu-text { opacity: 1; }
+        
+        /* MAIN CONTENT */
+        .main-content { flex: 1; margin-left: 60px; padding: 20px; }
+        .view-panel { display: none; }
+        .view-panel.active { display: block; }
+
+        /* BILLING TABLE STYLES */
+        .bill-container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .bill-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
+        .bill-table th { background: #e2e8f0; padding: 10px; text-align: left; border: 1px solid #cbd5e1; }
+        .bill-table td { padding: 8px; border: 1px solid #cbd5e1; }
+        .input-cell { width: 100%; border: 1px solid #cbd5e1; padding: 5px; }
+
+        /* PREDICTIVE SEARCH */
+        .search-wrapper { position: relative; width: 100%; margin-bottom: 20px; }
+        .search-box { width: 100%; padding: 12px; border: 2px solid #064e3b; border-radius: 6px; }
+        .suggestions { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ccc; z-index: 100; max-height: 200px; overflow-y: auto; display: none; }
+        .s-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; }
+        .s-item:hover { background: #f0fdf4; }
     </style>
 </head>
 <body>
 
-<!-- [লগইন এবং সাইডবার অংশ অপরিবর্তিত থাকবে] -->
+<div class="sidebar">
+    <div class="menu-item" onclick="showSubView('newSaleView')"><span class="menu-icon">🧮</span><span class="menu-text">1. Sale</span></div>
+    <div class="menu-item" onclick="showSubView('purchaseView')"><span class="menu-icon">📦</span><span class="menu-text">2. Purchase</span></div>
+    <div class="menu-item" onclick="showSubView('adminView')"><span class="menu-icon">🛡️</span><span class="menu-text">3. Admin Hub</span></div>
+    <div class="menu-item" onclick="showSubView('creditView')"><span class="menu-icon">📇</span><span class="menu-text">4. Credit Book</span></div>
+    <div class="menu-item" onclick="showSubView('shortfallView')"><span class="menu-icon">🛒</span><span class="menu-text">5. Shortfall Book</span></div>
+    <div class="menu-item" onclick="showSubView('nrxView')"><span class="menu-icon">🩺</span><span class="menu-text">6. NRX Register</span></div>
+    <div class="menu-item" onclick="showSubView('reportView')"><span class="menu-icon">📊</span><span class="menu-text">7. Report</span></div>
+</div>
 
-<!-- 🧮 VIEW: 1.1 POINT OF SALE TERMINAL (WITH SMART SEARCH) -->
-<div id="newSaleView" class="view-panel active">
-    <!-- ... (অন্যান্য ফিল্ড অপরিবর্তিত) ... -->
-    <div class="search-container">
-        <input type="text" id="searchBox" class="search-box" placeholder="Start typing drug name (e.g. PA for PAN-D)..." oninput="handleSmartSearch(this.value)">
-        <div id="suggestions" class="suggestions-box"></div>
+<div class="main-content">
+    <div id="newSaleView" class="view-panel active">
+        <div class="card-box">
+            <div class="search-wrapper">
+                <input type="text" id="searchBox" class="search-box" placeholder="Start typing for dictionary-style search..." oninput="smartSearch(this.value)">
+                <div id="suggestions" class="suggestions"></div>
+            </div>
+            
+            <table class="bill-table">
+                <thead>
+                    <tr><th>#</th><th>Product</th><th>Pack</th><th>Batch</th><th>Expiry</th><th>Qty</th><th>Disc%</th><th>S.Price</th><th>MRP</th><th>Stock</th><th>Total</th></tr>
+                </thead>
+                <tbody id="billBody">
+                    <tr><td>1</td><td><input type="text" class="input-cell" placeholder="Search..."></td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>0.00</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-    <!-- ... (বাকি টেবিল ও বাটন অপরিবর্তিত) ... -->
 </div>
 
 <script>
-    // ⚡ 1. SMART PREDICTIVE SEARCH ENGINE
-    function handleSmartSearch(query) {
-        const suggestionsBox = document.getElementById('suggestions');
-        if (query.length < 1) { suggestionsBox.style.display = 'none'; return; }
-        
-        let inventory = pullStock();
-        // ডিকশনারি স্টাইল এবং জিরো স্টক হাইড লজিক
-        let matches = inventory.filter(p => 
-            p.product_name.toLowerCase().startsWith(query.toLowerCase()) && p.stock > 0
-        );
+    // Demo Stock Data
+    const stock = [
+        { name: "Amoxyclav 625mg Tablet", stock: 150, mrp: 123.00, batch: "AB123" },
+        { name: "PAN D Capsule", stock: 200, mrp: 145.00, batch: "PD445" }
+    ];
 
-        suggestionsBox.innerHTML = '';
-        if (matches.length > 0) {
-            matches.forEach(product => {
-                const div = document.createElement('div');
-                div.className = 'suggestion-item';
-                div.innerHTML = `<strong>${product.product_name}</strong> <span class="stock-pill">Stock: ${product.stock}</span>`;
-                div.onclick = () => addProductToActiveBillingCart(product);
-                suggestionsBox.appendChild(div);
-            });
-            suggestionsBox.style.display = 'block';
-        } else {
-            suggestionsBox.innerHTML = '<div class="suggestion-item">No active stock found...</div>';
-            suggestionsBox.style.display = 'block';
-        }
+    function smartSearch(val) {
+        const list = document.getElementById('suggestions');
+        if(val.length < 1) { list.style.display = 'none'; return; }
+        let filtered = stock.filter(item => item.name.toLowerCase().startsWith(val.toLowerCase()));
+        list.innerHTML = filtered.map(item => `<div class="s-item" onclick="selectProduct('${item.name}')">${item.name}</div>`).join('');
+        list.style.display = filtered.length ? 'block' : 'none';
     }
 
-    function addProductToActiveBillingCart(product) {
-        document.getElementById('searchBox').value = ''; 
+    function selectProduct(name) {
+        document.getElementById('searchBox').value = name;
         document.getElementById('suggestions').style.display = 'none';
-        if (!activeCart.find(item => item.id === product.id)) activeCart.push({...product, qty: 1, discount: 0});
-        renderActiveCartTableManifest();
     }
-    
-    // [বাকি জাভাস্ক্রিপ্ট আগের মতোই থাকবে]
+
+    function showSubView(id) {
+        document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
 </script>
 </body>
 </html>
