@@ -21,6 +21,7 @@
         .login-btn { width: 100%; padding: 14px; background: #064e3b; color: #fef08a; border: 1px solid #d97706; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; margin-bottom: 10px; display: block; transition: background 0.2s; }
         .login-btn:hover { background: #022c22; }
 
+        /* TOP NAVIGATION BAR PANELS */
         #dashboardScreen { display: none; min-height: 100vh; flex-direction: column; background-color: #f8fafc; }
         .top-navbar { background: #064e3b; color: white; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #d97706; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: relative; z-index: 2000; }
         .navbar-brand { display: flex; align-items: center; gap: 12px; cursor: pointer; }
@@ -28,6 +29,30 @@
         .navbar-logo { height: 35px; width: auto; background: white; border-radius: 4px; padding: 2px; }
         .navbar-brand h1 { font-size: 18px; font-weight: 700; color: #fef08a; letter-spacing: 0.5px; }
         
+        /* ⚡ CORPORATE TOP DROPDOWN NAVBAR (GENERIC AADHAAR STYLE) */
+        .center-top-nav { display: flex; align-items: center; gap: 20px; font-size: 13px; font-weight: 700; margin-left: 20px; }
+        .top-nav-link { color: #ffffff; text-decoration: none; cursor: pointer; letter-spacing: 0.5px; transition: color 0.2s; padding: 5px 10px; border-radius: 4px; }
+        .top-nav-link:hover { background: rgba(255,255,255,0.1); color: #fef08a; }
+
+        .top-dropdown { position: relative; display: inline-block; }
+        .top-dropbtn { color: #fef08a; background: rgba(255,255,255,0.15); border: 1px solid #fef08a; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 6px; letter-spacing: 0.5px; }
+        .top-dropdown:hover .top-dropbtn { background: #022c22; color: #ffffff; border-color: #ffffff; }
+
+        .top-drop-content {
+            display: none; position: absolute; background-color: #ffffff; min-width: 230px;
+            box-shadow: 0px 15px 30px 0px rgba(0,0,0,0.25); z-index: 3000; border-radius: 6px;
+            overflow: hidden; top: 100%; left: 0; margin-top: 4px; border: 1px solid #cbd5e1;
+        }
+        .top-dropdown:hover .top-drop-content { display: block; animation: dropFade 0.2s ease-out; }
+        @keyframes dropFade { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .top-drop-content a {
+            color: #0f172a; padding: 12px 18px; text-decoration: none; display: block;
+            text-align: left; font-size: 12px; font-weight: 700; border-bottom: 1px solid #f1f5f9;
+            transition: all 0.2s; cursor: pointer; text-transform: uppercase;
+        }
+        .top-drop-content a:hover { background-color: #064e3b; color: #fef08a; padding-left: 24px; }
+
         .navbar-right-controls { display: flex; align-items: center; gap: 20px; }
         .notification-bell-box { position: relative; cursor: pointer; font-size: 20px; }
         .bell-badge { position: absolute; top: -6px; right: -8px; background: #ef4444; color: white; font-size: 10px; font-weight: bold; border-radius: 50%; padding: 2px 6px; border: 1px solid #064e3b; }
@@ -36,6 +61,7 @@
         .role-badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; background: #fef08a; color: #854d0e; text-transform: uppercase; }
         .outlet-badge { padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; background: #2563eb; color: white; }
 
+        /* ☰ SIDEBAR */
         .workspace { display: flex; flex: 1; position: relative; min-height: calc(100vh - 62px); }
         .sidebar { background: #0f172a; color: #cbd5e1; width: 60px; padding: 20px 0; display: flex; flex-direction: column; gap: 4px; box-shadow: 4px 0 15px rgba(0,0,0,0.05); position: absolute; top: 0; left: 0; bottom: 0; z-index: 1500; transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; white-space: nowrap; }
         .sidebar:hover { width: 260px; }
@@ -101,7 +127,7 @@
         .bill-header-print { display: none; }
         .print-text-val { display: none; font-weight: bold; }
 
-        /* 🖨️ ANTI-FLEXBOX & PINPOINT PRINT ARCHITECTURE */
+        /* 🖨️ PRINT AI */
         @media print {
             .view-panel { display: none !important; }
             .view-panel.active { display: block !important; width:100% !important; position:absolute !important; top:0 !important; left:0 !important; }
@@ -169,8 +195,25 @@
             <img class="navbar-logo" src="logo.jpg" alt="Logo">
             <h1>PharmaVigour OS</h1>
         </div>
+
+        <!-- ⚡ THE CORPORATE TOP DROPDOWN MENU (MAPPED TO PROMPT IMAGE) -->
+        <div class="center-top-nav">
+            <span class="top-nav-link" onclick="showSubView('grossChartView', null)">DASHBOARD</span>
+            
+            <div class="top-dropdown">
+                <button class="top-dropbtn">MEDICINES &nbsp;▾</button>
+                <div class="top-drop-content">
+                    <a onclick="executeTopMedicineNavigation('stock')">STOCK</a>
+                    <a onclick="executeTopMedicineNavigation('alert')">EXPIRY ALERT</a>
+                    <a onclick="executeTopMedicineNavigation('expired')">EXPIRED STOCK</a>
+                    <a onclick="executeTopMedicineNavigation('sale_rep')">SALE REPORT</a>
+                    <a onclick="executeTopMedicineNavigation('company_list')">COMPANY MEDICINE LIST</a>
+                </div>
+            </div>
+        </div>
+
         <div class="navbar-right-controls">
-            <div class="notification-bell-box" onclick="showView('stockInventoryView')">
+            <div class="notification-bell-box" onclick="executeTopMedicineNavigation('stock')">
                 <span>🔔</span><span id="navAlertBadge" class="bell-badge">0</span>
             </div>
             <div class="navbar-user">
@@ -183,10 +226,7 @@
     </div>
 
     <div class="workspace">
-        <!-- ☰ FULLY EXPANDED ENTERPRISE SIDEBAR PILLARS -->
         <div class="sidebar">
-            
-            <!-- PILLAR 1: SALE -->
             <div class="menu-item active" id="side_sale" onclick="toggleSubmenu('saleSub')">
                 <div><span class="menu-icon">🧮</span><span class="menu-text">1. Sale</span></div><span class="menu-arrow">▼</span>
             </div>
@@ -196,17 +236,15 @@
                 <div class="submenu-item" onclick="showSubView('grossChartView', this)">📊 DASH Board</div>
             </div>
             
-            <!-- PILLAR 2: PURCHASE -->
             <div class="menu-item" id="side_purchase" onclick="toggleSubmenu('purchaseSub')">
                 <div><span class="menu-icon">📦</span><span class="menu-text">2. Purchase</span></div><span class="menu-arrow">▼</span>
             </div>
             <div id="purchaseSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('newPurchaseView', this)">New Stock Inward</div>
                 <div class="submenu-item" onclick="showSubView('purchaseHistoryView', this)">Purchase History</div>
-                <div class="submenu-item" onclick="showSubView('stockInventoryView', this)">Current Inventory</div>
+                <div class="submenu-item" onclick="executeTopMedicineNavigation('stock')">Current Inventory</div>
             </div>
 
-            <!-- PILLAR 3: ADMIN HUB -->
             <div class="menu-item" id="side_admin" onclick="toggleSubmenu('adminSub')" style="display:none; border-left-color:#fef08a;">
                 <div><span class="menu-icon">🛡️</span><span class="menu-text" style="color:#fef08a;">3. Admin Hub</span></div><span class="menu-arrow">▼</span>
             </div>
@@ -214,7 +252,6 @@
                 <div class="submenu-item" onclick="showSubView('adminUserManageView', this)" style="color:#fde68a;">👥 Identity Access Control</div>
             </div>
 
-            <!-- 📇 PILLAR 4: CREDIT BOOK (বাকি খাতা) -->
             <div class="menu-item" id="side_credit" onclick="toggleSubmenu('creditSub')">
                 <div><span class="menu-icon">📇</span><span class="menu-text">4. Credit Book</span></div><span class="menu-arrow">▼</span>
             </div>
@@ -222,7 +259,6 @@
                 <div class="submenu-item" onclick="showSubView('creditLedgerView', this)">📜 Customer Khata</div>
             </div>
 
-            <!-- 🛒 PILLAR 5: SHORTFALL (অটো-অর্ডার ইঞ্জিন) -->
             <div class="menu-item" id="side_shortfall" onclick="toggleSubmenu('shortfallSub')">
                 <div><span class="menu-icon">🛒</span><span class="menu-text">5. Shortfall Book</span></div><span class="menu-arrow">▼</span>
             </div>
@@ -230,19 +266,16 @@
                 <div class="submenu-item" onclick="showSubView('shortfallView', this)">⚠️ Re-Order PO Sheet</div>
             </div>
 
-            <!-- 🩺 PILLAR 6: NRX AUDIT (Schedule H1 লাইসেন্স লগ) -->
             <div class="menu-item" id="side_nrx" onclick="toggleSubmenu('nrxSub')">
                 <div><span class="menu-icon">🩺</span><span class="menu-text">6. NRX Register</span></div><span class="menu-arrow">▼</span>
             </div>
             <div id="nrxSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('nrxRegisterView', this)">🚨 Schedule H1 Log</div>
             </div>
-
         </div>
 
         <div class="main-content">
             
-            <!-- BRAND LANDING HUB VIEW -->
             <div id="homeView" class="view-panel active">
                 <div class="brand-landing-wrapper">
                     <img class="big-center-logo" src="logo.jpg" alt="PharmaVigour Operations Logo">
@@ -251,7 +284,7 @@
                 </div>
             </div>
 
-            <!-- 🧮 VIEW: 1.1 DUAL-MODE POINT OF SALE TERMINAL -->
+            <!-- 🧮 VIEW: 1.1 POINT OF SALE TERMINAL -->
             <div id="newSaleView" class="view-panel">
                 <div class="hotkey-banner-strip">
                     <span>⚡ PVO Quick Hotkeys Active:</span>
@@ -261,17 +294,8 @@
 
                 <div class="card-box billing-container">
                     <div class="bill-header-print">
-                        <div style="display:flex; align-items:center; gap:15px;">
-                            <img src="logo.jpg" style="width:75px; height:auto;">
-                            <div>
-                                <h2 style="color:#064e3b; font-size:20px;">PharmaVigour Operations</h2>
-                                <p style="font-size:11px; color:#475569;">Bridging Expertise with Expansion</p>
-                            </div>
-                        </div>
-                        <div style="text-align:right; font-size:12px; line-height:1.5;">
-                            <p><strong>RETAIL INVOICE / CASH MEMO</strong></p>
-                            <p id="print_outlet_name">Outlet Node Branch</p>
-                        </div>
+                        <div style="display:flex; align-items:center; gap:15px;"><img src="logo.jpg" style="width:75px; height:auto;"><div><h2 style="color:#064e3b; font-size:20px;">PharmaVigour Operations</h2><p style="font-size:11px; color:#475569;">Bridging Expertise with Expansion</p></div></div>
+                        <div style="text-align:right; font-size:12px; line-height:1.5;"><p><strong>RETAIL INVOICE / CASH MEMO</strong></p><p id="print_outlet_name">Outlet Node Branch</p></div>
                     </div>
 
                     <div id="terminalTitleLabel" class="panel-title search-section" style="transition:all 0.3s;">Retail Cash Memo Core Terminal (New Sale Bill)</div>
@@ -290,38 +314,18 @@
 
                     <div style="overflow-x: auto;">
                         <table>
-                            <thead>
-                                <tr><th>Product Description</th><th>Rack</th><th>Batch</th><th>Expiry</th><th style="width:80px;">Qty</th><th>Rate (₹)</th><th style="width:80px;">Disc %</th><th>GST %</th><th>Subtotal (₹)</th><th class="delete-btn-head">Action</th></tr>
-                            </thead>
-                            <tbody id="billingBody">
-                                <tr class="empty-row" id="emptyRow"><td colspan="10" style="text-align:center; padding:25px; color:#64748b; font-style:italic;">No active inventory products added to invoice grid. Initialize catalog search.</td></tr>
-                            </tbody>
+                            <thead><tr><th>Product Description</th><th>Rack</th><th>Batch</th><th>Expiry</th><th style="width:80px;">Qty</th><th>Rate (₹)</th><th style="width:80px;">Disc %</th><th>GST %</th><th>Subtotal (₹)</th><th class="delete-btn-head">Action</th></tr></thead>
+                            <tbody id="billingBody"><tr class="empty-row" id="emptyRow"><td colspan="10" style="text-align:center; padding:25px; color:#64748b; font-style:italic;">No active inventory products added to invoice grid. Initialize catalog search.</td></tr></tbody>
                         </table>
                     </div>
 
                     <div class="summary-box">
                         <table class="summary-table">
                             <tbody>
-                                <tr>
-                                    <td>Gross Total Base:</td>
-                                    <td style="text-align:right; font-weight:bold; color:#000 !important; visibility:visible !important; display:table-cell !important;" id="lbl_gross">₹ 0.00</td>
-                                    <td style="display:none !important; width:0; height:0; border:none !important;"></td>
-                                </tr>
-                                <tr>
-                                    <td>Total Discount Value:</td>
-                                    <td style="text-align:right; font-weight:bold; color:#dc2626 !important; visibility:visible !important; display:table-cell !important;" id="lbl_disc">₹ 0.00</td>
-                                    <td style="display:none !important; width:0; height:0; border:none !important;"></td>
-                                </tr>
-                                <tr>
-                                    <td>GST Tax Apportionment:</td>
-                                    <td style="text-align:right; font-weight:bold; color:#000 !important; visibility:visible !important; display:table-cell !important;" id="lbl_gst">₹ 0.00</td>
-                                    <td style="display:none !important; width:0; height:0; border:none !important;"></td>
-                                </tr>
-                                <tr class="total-row" style="background:#f8fafc !important;">
-                                    <td style="color:#064e3b !important; font-weight:bold;">Net Payable Value:</td>
-                                    <td style="text-align:right; font-weight:bold; color:#064e3b !important; font-size:16px !important; visibility:visible !important; display:table-cell !important;" id="lbl_net">₹ 0.00</td>
-                                    <td style="display:none !important; width:0; height:0; border:none !important;"></td>
-                                </tr>
+                                <tr><td>Gross Total Base:</td><td style="text-align:right; font-weight:bold; color:#000 !important;" id="lbl_gross">₹ 0.00</td><td style="display:none !important; width:0; height:0;"></td></tr>
+                                <tr><td>Total Discount Value:</td><td style="text-align:right; font-weight:bold; color:#dc2626 !important;" id="lbl_disc">₹ 0.00</td><td style="display:none !important; width:0; height:0;"></td></tr>
+                                <tr><td>GST Tax Apportionment:</td><td style="text-align:right; font-weight:bold; color:#000 !important;" id="lbl_gst">₹ 0.00</td><td style="display:none !important; width:0; height:0;"></td></tr>
+                                <tr class="total-row" style="background:#f8fafc !important;"><td style="color:#064e3b !important; font-weight:bold;">Net Payable Value:</td><td style="text-align:right; font-weight:bold; color:#064e3b !important; font-size:16px !important;" id="lbl_net">₹ 0.00</td><td style="display:none !important; width:0; height:0;"></td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -345,15 +349,13 @@
                         </div>
                     </div>
                     <table>
-                        <thead>
-                            <tr><th>Invoice Reference</th><th>Timestamp (Date & Time)</th><th>Patient Demographics</th><th>Consulting Clinician</th><th>Net Settlement Value</th><th style="text-align:center;">POS Action</th></tr>
-                        </thead>
+                        <thead><tr><th>Invoice Reference</th><th>Timestamp (Date & Time)</th><th>Patient Demographics</th><th>Consulting Clinician</th><th>Net Settlement Value</th><th style="text-align:center;">POS Action</th></tr></thead>
                         <tbody id="salesBookTableBody"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- 📊 VIEW: 1.3 THE EXECUTIVE KPI DASH BOARD -->
+            <!-- 📊 VIEW: 1.3 KPI DASH BOARD -->
             <div id="grossChartView" class="view-panel">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px; border-bottom:2px solid #e2e8f0; padding-bottom:15px; flex-wrap:wrap; gap:12px;">
                     <div><h2 style="color:#064e3b; font-size:24px; font-weight:800; margin-bottom:4px;">Executive Performance DASH BOARD</h2><p style="color:#64748b; font-size:13px;">Real-time ground retail network metrics & daily financial audit</p></div>
@@ -375,27 +377,13 @@
                     <h3 style="color:#064e3b; margin-bottom:10px;">📦 Smart Bulk Stock Inward Gateway (CSV)</h3>
                     <p style="font-size:13px; color:#64748b; margin-bottom:15px; font-style:italic;">Select distributor invoice file to parse entire stock data seamlessly</p>
                     <input type="file" id="csvFileInput" accept=".csv" style="display:none;" onchange="handleSmartCSVUpload(event)">
-                    <div style="display: flex; gap: 15px; justify-content: center;">
-                        <button class="btn btn-primary" onclick="document.getElementById('csvFileInput').click()">📤 Select & Parse CSV Invoice</button>
-                        <button id="deleteCsvBtn" class="btn btn-danger" style="display:none;" onclick="deleteUploadedCSVProcess()">🗑 ...</button>
-                    </div>
+                    <div style="display: flex; gap: 15px; justify-content: center;"><button class="btn btn-primary" onclick="document.getElementById('csvFileInput').click()">📤 Select & Parse CSV Invoice</button><button id="deleteCsvBtn" class="btn btn-danger" style="display:none;" onclick="deleteUploadedCSVProcess()">🗑 ...</button></div>
                 </div>
-                
                 <div class="card-box">
                     <div class="panel-title">Interactive Purchase Bill Cart Entry View</div>
-                    <div class="meta-grid" style="grid-template-columns: 1fr 1fr; margin-bottom:15px;">
-                        <div class="form-group"><label>Supplier / Distributor Name</label><input type="text" id="supplierName" value="PharmaOperational Wholesalers Ltd."></div>
-                        <div class="form-group"><label>Inward Date</label><input type="text" value="19/06/2026" readonly></div>
-                    </div>
-                    <div style="overflow-x: auto;">
-                        <table>
-                            <thead><tr style="background:#064e3b; color:white;"><th>Item Description</th><th>Rack Box</th><th>Batch Code</th><th>Expiry</th><th>Inward Qty</th><th>Trade Rate (₹)</th><th>GST %</th><th>Total Cost (₹)</th></tr></thead>
-                            <tbody id="purchaseCartBody"><tr class="empty-row" id="purEmptyRow"><td colspan="8" style="text-align:center; padding:20px; color:#64748b; font-style:italic;">No active invoice rows found. Please upload a distributor spreadsheet file.</td></tr></tbody>
-                        </table>
-                    </div>
-                    <div class="btn-container">
-                        <button class="btn btn-success" style="background:#064e3b; padding:12px 25px; font-size:15px;" onclick="saveEntirePurchaseCartToStock()">💾 Save Invoiced Items into Central Inventory</button>
-                    </div>
+                    <div class="meta-grid" style="grid-template-columns: 1fr 1fr; margin-bottom:15px;"><div class="form-group"><label>Supplier / Distributor Name</label><input type="text" id="supplierName" value="PharmaOperational Wholesalers Ltd."></div><div class="form-group"><label>Inward Date</label><input type="text" value="19/06/2026" readonly></div></div>
+                    <div style="overflow-x: auto;"><table><thead><tr style="background:#064e3b; color:white;"><th>Item Description</th><th>Rack Box</th><th>Batch Code</th><th>Expiry</th><th>Inward Qty</th><th>Trade Rate (₹)</th><th>GST %</th><th>Total Cost (₹)</th></tr></thead><tbody id="purchaseCartBody"><tr class="empty-row" id="purEmptyRow"><td colspan="8" style="text-align:center; padding:20px; color:#64748b; font-style:italic;">No active invoice rows found. Please upload a distributor spreadsheet file.</td></tr></tbody></table></div>
+                    <div class="btn-container"><button class="btn btn-success" style="background:#064e3b; padding:12px 25px; font-size:15px;" onclick="saveEntirePurchaseCartToStock()">💾 Save Invoiced Items into Central Inventory</button></div>
                 </div>
             </div>
 
@@ -403,20 +391,17 @@
             <div id="purchaseHistoryView" class="view-panel">
                 <div class="card-box">
                     <div class="panel-title">Consolidated Stock Purchase & Inward History Ledger</div>
-                    <table>
-                        <thead><tr><th>Purchase ID</th><th>Supplier / Distributor</th><th>Inward Date</th><th>Total Invoice Value (₹)</th></tr></thead>
-                        <tbody id="purchaseHistoryBody"><tr class="empty-row" id="purHistEmptyRow"><td colspan="4" style="text-align:center; padding:20px; color:#64748b; font-style:italic;">No historic purchase vouchers recorded yet.</td></tr></tbody>
-                    </table>
+                    <table><thead><tr><th>Purchase ID</th><th>Supplier / Distributor</th><th>Inward Date</th><th>Total Invoice Value (₹)</th></tr></thead><tbody id="purchaseHistoryBody"><tr class="empty-row" id="purHistEmptyRow"><td colspan="4" style="text-align:center; padding:20px; color:#64748b; font-style:italic;">No historic purchase vouchers recorded yet.</td></tr></tbody></table>
                 </div>
             </div>
 
-            <!-- VIEW: 2.3 CURRENT STOCK INVENTORY -->
+            <!-- 📦 VIEW: 2.3 CURRENT STOCK INVENTORY (WITH DYNAMIC FILTER TITLE) -->
             <div id="stockInventoryView" class="view-panel">
                 <div class="hotkey-banner-strip" style="background:#fee2e2; border-color:#fca5a5; color:#b91c1c;">
                     <span>⚠️ PVO Watchdog System Active: Items expiring before June 2026 are auto-flagged below.</span>
                 </div>
-                <div class="card-box">
-                    <div class="panel-title">Live Network Stock Inventory Balance Ledger</div>
+                <div class="card-box" style="border-top:4px solid #064e3b;">
+                    <div class="panel-title" id="invLedgerTitle" style="color:#064e3b;">📦 Live Network Stock Inventory Balance Ledger</div>
                     <div style="overflow-x: auto;">
                         <table>
                             <thead><tr><th>Product Index</th><th>Item Description Name</th><th>Rack Bin</th><th>Batch Code</th><th>Expiry</th><th>Unit Base Rate</th><th>GST Rate</th><th>Current Stock Level Balance</th></tr></thead>
@@ -426,82 +411,52 @@
                 </div>
             </div>
 
+            <!-- 🏢 VIEW: 2.4 COMPANY MEDICINE CATALOG LIST (MAPPED TO DROPDOWN) -->
+            <div id="companyCatalogView" class="view-panel">
+                <div class="card-box" style="border-top:4px solid #022c22;">
+                    <div class="panel-title" style="color:#022c22;">🏢 Corporate Standard Medicine Catalog Index</div>
+                    <p style="color:#64748b; font-size:13px; margin-bottom:18px;">Standardized formulations and billing reference metrics registered under PharmaVigour Franchise network.</p>
+                    <table>
+                        <thead><tr style="background:#022c22;"><th>Catalog ID</th><th>Formulation / Brand Name</th><th>Assigned Rack</th><th>Default Batch</th><th>Unit Base MRP (₹)</th><th>GST %</th></tr></thead>
+                        <tbody id="companyCatalogBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
             <!-- 👑 VIEW: 3.1 ADMIN USER MANAGEMENT -->
             <div id="adminUserManageView" class="view-panel">
                 <div class="card-box" style="border-top:4px solid #d97706;">
                     <div class="panel-title">🛡️ Identity Access Control & User Authorization Studio</div>
                     <p style="font-size:12px; color:#64748b; margin-bottom:20px;">Create secure employee credentials, assign them to network hardware stores, and enforce strict module boundaries.</p>
-                    
-                    <div class="meta-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); background:#fffbeb; border-color:#fde68a;">
-                        <div class="form-group"><label>Employee Full Name</label><input type="text" id="newStaffName" placeholder="e.g. Sujoy Maitra"></div>
-                        <div class="form-group"><label>Mobile Number (Login ID)</label><input type="text" id="newStaffPhone" placeholder="10-Digit Mobile" maxlength="10"></div>
-                        <div class="form-group"><label>Assign 4-Digit Security PIN</label><input type="text" id="newStaffPin" placeholder="••••" maxlength="4"></div>
-                    </div>
-
-                    <div class="meta-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-                        <div class="form-group">
-                            <label>System Role Hierarchy</label>
-                            <select id="newStaffRole" style="padding:10px; border:1px solid #cbd5e1; border-radius:4px; font-weight:bold;"><option value="cashier">Cashier / Billing Counter (Restricted)</option><option value="superadmin">Super Admin (God Mode)</option></select>
-                        </div>
-                        <div class="form-group">
-                            <label>Assigned Hardware Store</label>
-                            <select id="newStaffOutlet" style="padding:10px; border:1px solid #cbd5e1; border-radius:4px; font-weight:bold;"><option value="CHKD STORE">CHKD STORE</option><option value="KP STORE">KP STORE</option><option value="Main Login Hub">Main Login Hub</option></select>
-                        </div>
-                        <div class="form-group">
-                            <label>Allowed Software Modules</label>
-                            <div style="display:flex; gap:15px; padding-top:8px; font-weight:bold; font-size:13px; color:#064e3b;"><label><input type="checkbox" id="chkPermSale" checked disabled> Sale</label><label><input type="checkbox" id="chkPermPur"> Purchase</label></div>
-                        </div>
-                    </div>
-
+                    <div class="meta-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); background:#fffbeb; border-color:#fde68a;"><div class="form-group"><label>Employee Full Name</label><input type="text" id="newStaffName" placeholder="e.g. Sujoy Maitra"></div><div class="form-group"><label>Mobile Number (Login ID)</label><input type="text" id="newStaffPhone" placeholder="10-Digit Mobile" maxlength="10"></div><div class="form-group"><label>Assign 4-Digit Security PIN</label><input type="text" id="newStaffPin" placeholder="••••" maxlength="4"></div></div>
+                    <div class="meta-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));"><div class="form-group"><label>System Role Hierarchy</label><select id="newStaffRole" style="padding:10px; border:1px solid #cbd5e1; border-radius:4px; font-weight:bold;"><option value="cashier">Cashier / Billing Counter (Restricted)</option><option value="superadmin">Super Admin (God Mode)</option></select></div><div class="form-group"><label>Assigned Hardware Store</label><select id="newStaffOutlet" style="padding:10px; border:1px solid #cbd5e1; border-radius:4px; font-weight:bold;"><option value="CHKD STORE">CHKD STORE</option><option value="KP STORE">KP STORE</option><option value="Main Login Hub">Main Login Hub</option></select></div><div class="form-group"><label>Allowed Software Modules</label><div style="display:flex; gap:15px; padding-top:8px; font-weight:bold; font-size:13px; color:#064e3b;"><label><input type="checkbox" id="chkPermSale" checked disabled> Sale</label><label><input type="checkbox" id="chkPermPur"> Purchase</label></div></div></div>
                     <div class="btn-container" style="margin-top:10px;"><button class="btn btn-success" style="background:#064e3b;" onclick="registerNewEnterpriseStaff()">+ Authorize & Save New Identity</button></div>
-
                     <h3 style="margin-top:35px; color:#064e3b; border-bottom:2px solid #f1f5f9; padding-bottom:10px; font-size:15px; text-transform:uppercase;">Active Registered System Accounts</h3>
-                    <table style="margin-top:15px;">
-                        <thead><tr><th>Mobile ID (Login)</th><th>Employee Name</th><th>Role Level</th><th>Assigned Branch</th><th>Module Rights</th><th style="text-align:center;">Action</th></tr></thead>
-                        <tbody id="staffDirectoryTableBody"></tbody>
-                    </table>
+                    <table style="margin-top:15px;"><thead><tr><th>Mobile ID (Login)</th><th>Employee Name</th><th>Role Level</th><th>Assigned Branch</th><th>Module Rights</th><th style="text-align:center;">Action</th></tr></thead><tbody id="staffDirectoryTableBody"></tbody></table>
                 </div>
             </div>
 
             <!-- 📇 VIEW: 4.1 CUSTOMER CREDIT BOOK (বাকি খাতা) -->
             <div id="creditLedgerView" class="view-panel">
                 <div class="card-box" style="border-top:4px solid #2563eb;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:20px; border-bottom:2px solid #f1f5f9; padding-bottom:12px;">
-                        <div><h2 style="color:#1e3a8a; font-size:22px; font-weight:800;">📇 Customer Credit Khata (বাকি খাতা)</h2><p style="color:#64748b; font-size:13px;">Manage local monthly tab accounts & clear partial balances</p></div>
-                        <button class="btn btn-primary" style="background:#2563eb; border-color:#1d4ed8;" onclick="addNewCreditCustomer()">+ Add New Credit Khata</button>
-                    </div>
-                    <table>
-                        <thead><tr style="background:#1e3a8a;"><th>Khata ID</th><th>Customer Demographics</th><th>Registered Contact</th><th>Outstanding Due (₹)</th><th>Last Audit Date</th><th>Account Status</th><th style="text-align:center;">Payment Settle</th></tr></thead>
-                        <tbody id="creditTableBody"></tbody>
-                    </table>
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:20px; border-bottom:2px solid #f1f5f9; padding-bottom:12px;"><div><h2 style="color:#1e3a8a; font-size:22px; font-weight:800;">📇 Customer Credit Khata (বাকি খাতা)</h2><p style="color:#64748b; font-size:13px;">Manage local monthly tab accounts & clear partial balances</p></div><button class="btn btn-primary" style="background:#2563eb; border-color:#1d4ed8;" onclick="addNewCreditCustomer()">+ Add New Credit Khata</button></div>
+                    <table><thead><tr style="background:#1e3a8a;"><th>Khata ID</th><th>Customer Demographics</th><th>Registered Contact</th><th>Outstanding Due (₹)</th><th>Last Audit Date</th><th>Account Status</th><th style="text-align:center;">Payment Settle</th></tr></thead><tbody id="creditTableBody"></tbody></table>
                 </div>
             </div>
 
             <!-- 🛒 VIEW: 5.1 SHORTFALL RE-ORDER PO ENGINE -->
             <div id="shortfallView" class="view-panel">
                 <div class="card-box" style="border-top:4px solid #d97706;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:20px; border-bottom:2px solid #f1f5f9; padding-bottom:12px;">
-                        <div><h2 style="color:#b45309; font-size:22px; font-weight:800;">🛒 Auto Shortfall & PO Generator</h2><p style="color:#64748b; font-size:13px;">Items dropping below <b>50 Strips</b> threshold are instantly isolated below</p></div>
-                        <button class="btn btn-success" style="background:#d97706;" onclick="exportShortfallWhatsappPO()">📳 Copy WhatsApp PO Sheet</button>
-                    </div>
-                    <table>
-                        <thead><tr style="background:#b45309;"><th>Product Description Name</th><th>Current Balance</th><th>Danger Benchmark</th><th>Suggested Re-Order</th><th>Est. Wholesale Cost</th></tr></thead>
-                        <tbody id="shortfallTableBody"></tbody>
-                    </table>
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:20px; border-bottom:2px solid #f1f5f9; padding-bottom:12px;"><div><h2 style="color:#b45309; font-size:22px; font-weight:800;">🛒 Auto Shortfall & PO Generator</h2><p style="color:#64748b; font-size:13px;">Items dropping below <b>50 Strips</b> threshold are instantly isolated below</p></div><button class="btn btn-success" style="background:#d97706;" onclick="exportShortfallWhatsappPO()">📳 Copy WhatsApp PO Sheet</button></div>
+                    <table><thead><tr style="background:#b45309;"><th>Product Description Name</th><th>Current Balance</th><th>Danger Benchmark</th><th>Suggested Re-Order</th><th>Est. Wholesale Cost</th></tr></thead><tbody id="shortfallTableBody"></tbody></table>
                 </div>
             </div>
 
             <!-- 🩺 VIEW: 6.1 SCHEDULE H1 / NRX REGISTER -->
             <div id="nrxRegisterView" class="view-panel">
                 <div class="card-box" style="border-top:4px solid #ef4444;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:20px; border-bottom:2px solid #f1f5f9; padding-bottom:12px;">
-                        <div><h2 style="color:#b91c1c; font-size:22px; font-weight:800;">🩺 Mandatory Schedule H1 / NRX Register</h2><p style="color:#64748b; font-size:13px;">Legally bound narcotic & psychotropic retail log for Drug Inspector audits</p></div>
-                        <div style="background:#fee2e2; border:1px solid #fca5a5; color:#991b1b; padding:6px 12px; border-radius:6px; font-weight:bold; font-size:12px;">🚨 BOUND TO WB DRUG CONTROL ACT</div>
-                    </div>
-                    <table>
-                        <thead><tr style="background:#b91c1c;"><th>Audit Log ID</th><th>Dispense Date</th><th>Patient Demographics</th><th>Prescribing Doctor & Reg.</th><th>Narcotic Brand Dispensed</th><th>Strips Qty</th></tr></thead>
-                        <tbody id="nrxTableBody"></tbody>
-                    </table>
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:20px; border-bottom:2px solid #f1f5f9; padding-bottom:12px;"><div><h2 style="color:#b91c1c; font-size:22px; font-weight:800;">🩺 Mandatory Schedule H1 / NRX Register</h2><p style="color:#64748b; font-size:13px;">Legally bound narcotic & psychotropic retail log for Drug Inspector audits</p></div><div style="background:#fee2e2; border:1px solid #fca5a5; color:#991b1b; padding:6px 12px; border-radius:6px; font-weight:bold; font-size:12px;">🚨 BOUND TO WB DRUG CONTROL ACT</div></div>
+                    <table><thead><tr style="background:#b91c1c;"><th>Audit Log ID</th><th>Dispense Date</th><th>Patient Demographics</th><th>Prescribing Doctor & Reg.</th><th>Narcotic Brand Dispensed</th><th>Strips Qty</th></tr></thead><tbody id="nrxTableBody"></tbody></table>
                 </div>
             </div>
 
@@ -509,10 +464,10 @@
     </div>
 </div>
 
-<script src="[https://cdn.jsdelivr.net/npm/@supabase/supabase-js](https://cdn.jsdelivr.net/npm/@supabase/supabase-js)"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
     try {
-        const SUPABASE_URL ='[https://fhoqtdnmfubqtfgzyjao.supabase.co](https://fhoqtdnmfubqtfgzyjao.supabase.co)'; const SUPABASE_ANON_KEY ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZob3F0ZG5tZnVicXRmZ3p5amFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MzA0MzMsImV4cCI6MjA5NzIwNjQzM30.k0olwUwMqAQRzV1wZ5afHokEdc4nel2e39ooHmGqDn4';
+        const SUPABASE_URL ='https://fhoqtdnmfubqtfgzyjao.supabase.co'; const SUPABASE_ANON_KEY ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZob3F0ZG5tZnVicXRmZ3p5amFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MzA0MzMsImV4cCI6MjA5NzIwNjQzM30.k0olwUwMqAQRzV1wZ5afHokEdc4nel2e39ooHmGqDn4';
         if (window.supabase) { const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); console.log("Supabase Connected Successfully"); supabase.from('otp_logs').select('*').limit(1).then(({ data, error }) => {}); }
     } catch (err) { console.warn("Running in local ERP mode."); }
 
@@ -527,8 +482,8 @@
 
     const IMMUTABLE_STOCK_SEED = [
         { id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: 76.60, gst: 12, stock: 140 },
-        { id: 102, product_name: "REXIPRA LS TAB 10'S", rack: "B-12", batch: "KX3099", expiry: "11/27", rate: 78.57, gst: 12, stock: 45 }, // ⚡ Purposefully kept below 50 to trigger auto shortfall!
-        { id: 103, product_name: "PAN D CAPSULE 10'S", rack: "C-05", batch: "PAN9942A", expiry: "05/26", rate: 145.00, gst: 12, stock: 35 }, // ⚡ Another shortfall item
+        { id: 102, product_name: "REXIPRA LS TAB 10'S", rack: "B-12", batch: "KX3099", expiry: "11/27", rate: 78.57, gst: 12, stock: 45 },
+        { id: 103, product_name: "PAN D CAPSULE 10'S", rack: "C-05", batch: "PAN9942A", expiry: "05/26", rate: 145.00, gst: 12, stock: 35 }, 
         { id: 104, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1250 }
     ];
     
@@ -538,16 +493,8 @@
         { invoice: "PV-2026-00407", date: getStandardTodayDate(), time: "12:05 PM", patient: "Amul Basak", contact: "9123665890", doctor: "Dr. S.S Jalan", value: 68.63, items: [{ id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: 76.60, qty: 1, discount: 20, gst: 12 }] }
     ];
     const IMMUTABLE_PURCHASE_SEED = [{ voucher: "PV-PUR-00101", supplier: "Wholesalers Ltd.", date: "15/06/2026", value: 24500.00 }];
-
-    // ⚡ 1. NEW IMMUTABLE SEEDS FOR CREDIT & NRX REGISTERS
-    const IMMUTABLE_CREDIT_SEED = [
-        { id: "CR-101", customer: "Master Sujoy Mitra", phone: "9830111222", due: 450.00, last_date: "10/06/2026", status: "PENDING" },
-        { id: "CR-102", customer: "Mrs. Arati Ghosh", phone: "9123444555", due: 120.00, last_date: "18/06/2026", status: "PENDING" }
-    ];
-    const IMMUTABLE_NRX_SEED = [
-        { id: "NRX-881", date: "12/05/2025", patient: "Old 2025 Client", doctor: "Dr. A. Sen (WB-4412)", drug: "REXIPRA LS TAB 10'S", qty: 5 },
-        { id: "NRX-882", date: "23/06/2026", patient: "Rahul Chakraborty", doctor: "Dr. P. Maitra (WB-9901)", drug: "REXIPRA LS TAB 10'S", qty: 2 }
-    ];
+    const IMMUTABLE_CREDIT_SEED = [{ id: "CR-101", customer: "Master Sujoy Mitra", phone: "9830111222", due: 450.00, last_date: "10/06/2026", status: "PENDING" }, { id: "CR-102", customer: "Mrs. Arati Ghosh", phone: "9123444555", due: 120.00, last_date: "18/06/2026", status: "PENDING" }];
+    const IMMUTABLE_NRX_SEED = [{ id: "NRX-881", date: "12/05/2025", patient: "Old 2025 Client", doctor: "Dr. A. Sen (WB-4412)", drug: "REXIPRA LS TAB 10'S", qty: 5 }, { id: "NRX-882", date: "23/06/2026", patient: "Rahul Chakraborty", doctor: "Dr. P. Maitra (WB-9901)", drug: "REXIPRA LS TAB 10'S", qty: 2 }];
 
     if (!localStorage.getItem('PV_OS_STOCK')) { localStorage.setItem('PV_OS_STOCK', JSON.stringify(IMMUTABLE_STOCK_SEED)); }
     if (!localStorage.getItem('PV_OS_SALES')) { localStorage.setItem('PV_OS_SALES', JSON.stringify(IMMUTABLE_SALES_SEED)); }
@@ -580,7 +527,7 @@
             event.preventDefault(); let dash = document.getElementById('dashboardScreen');
             if (dash && dash.style.display !== 'none') {
                 if (event.key === 'F2' || event.key === 'F3') { showSubView('newSaleView', document.querySelector('#saleSub .submenu-item')); let sEl = document.getElementById('searchBox'); if(sEl) { sEl.focus(); sEl.select(); } }
-                else if (event.key === 'F4') { showSubView('stockInventoryView', null); }
+                else if (event.key === 'F4') { showSubView('stockInventoryView', null); renderInventoryLedgerTable('ALL'); }
             }
         }
     });
@@ -613,32 +560,60 @@
             if (activeLoggedUser && activeLoggedUser.role === 'superadmin') { if(adminSidEl) adminSidEl.style.display = 'block'; if(purSidEl) purSidEl.style.display = 'block'; }
             else { if(adminSidEl) adminSidEl.style.display = 'none'; if(purSidEl && activeLoggedUser && !activeLoggedUser.permissions.includes('purchase')) purSidEl.style.display = 'none'; }
 
-            renderInventoryTable(); renderSalesBookTable(); renderPurchaseHistoryTable(); 
-            renderCreditTable(); renderShortfallTable(); renderNrxTable(); 
+            renderInventoryLedgerTable('ALL'); renderSalesBookTable(); renderPurchaseHistoryTable(); 
+            renderCreditTable(); renderShortfallTable(); renderNrxTable(); renderCompanyCatalogList();
             triggerMargWatchdogAudit(); showView('homeView');
         } else { alert("Invalid PIN verification verification failed."); }
     }
     function handleLogoutSystemSession() { location.reload(); }
 
-    function renderInventoryTable() {
+    // --- ⚡ 2. DYNAMIC FILTER RENDERER FOR INVENTORY (ALL vs ALERT vs EXPIRED) ---
+    function renderInventoryLedgerTable(mode = 'ALL') {
         const tbody = document.getElementById('inventoryTableBody'); if(!tbody) return; tbody.innerHTML = '';
+        let titleEl = document.getElementById('invLedgerTitle');
+        if(titleEl) {
+            if(mode === 'ALERT') { titleEl.innerHTML = "⚠️ EXPIRY ALERT: Items reaching critical expiration threshold (≤ 6 Months)"; titleEl.style.color = "#b45309"; }
+            else if(mode === 'EXPIRED') { titleEl.innerHTML = "🚨 STRICTLY EXPIRED STOCK: Quarantined non-dispensable inventory"; titleEl.style.color = "#ef4444"; }
+            else { titleEl.innerHTML = "📦 Live Network Stock Inventory Balance Ledger"; titleEl.style.color = "#064e3b"; }
+        }
+
         pullStock().forEach(item => {
-            let expParts = item.expiry.split('/'); let expMonth = parseInt(expParts[0]); let expYear = parseInt("20" + expParts[1]); let isExpired = (expYear < 2026 || (expYear === 2026 && expMonth <= 6));
-            let expiryCell = isExpired ? `<span class="expiry-alert-badge"> ${item.expiry} (EXPIRED)</span>` : item.expiry;
-            let tr = document.createElement('tr'); tr.innerHTML = `<td>#STK0${item.id}</td><td><strong>${item.product_name}</strong></td><td><span style="background:#f1f5f9; padding:4px 8px; border-radius:4px; font-weight:bold;">${item.rack}</span></td><td>${item.batch}</td><td>${expiryCell}</td><td>₹${item.rate.toFixed(2)}</td><td>${item.gst}%</td><td><strong style="color:${isExpired ? '#ef4444' : '#166534'}">${item.stock} Strips</strong></td>`; tbody.appendChild(tr);
+            let expParts = item.expiry.split('/'); let expMonth = parseInt(expParts[0]); let expYear = parseInt("20" + expParts[1]); 
+            let isStrictlyExpired = (expYear < 2026 || (expYear === 2026 && expMonth <= 6));
+            let isExpiringSoon = !isStrictlyExpired && (expYear === 2026 && expMonth > 6 && expMonth <= 12);
+
+            if(mode === 'EXPIRED' && !isStrictlyExpired) return;
+            if(mode === 'ALERT' && !isExpiringSoon) return;
+
+            let expiryHtml = item.expiry;
+            if(isStrictlyExpired) expiryHtml = `<span style="background:#ef4444; color:white; padding:2px 6px; border-radius:3px; font-weight:bold;">${item.expiry} (EXPIRED)</span>`;
+            else if(isExpiringSoon) expiryHtml = `<span style="background:#f59e0b; color:white; padding:2px 6px; border-radius:3px; font-weight:bold;">${item.expiry} (EXP SOON)</span>`;
+
+            tbody.innerHTML += `<tr><td>#STK0${item.id}</td><td><strong>${item.product_name}</strong></td><td><span style="background:#f1f5f9; padding:4px 8px; border-radius:4px; font-weight:bold;">${item.rack}</span></td><td>${item.batch}</td><td>${expiryHtml}</td><td>₹${item.rate.toFixed(2)}</td><td>${item.gst}%</td><td><strong style="color:${isStrictlyExpired ? '#ef4444' : '#166534'}">${item.stock} Strips</strong></td></tr>`;
         });
+    }
+
+    function renderCompanyCatalogList() {
+        let tbody = document.getElementById('companyCatalogBody'); if(!tbody) return; tbody.innerHTML = '';
+        pullStock().forEach(item => { tbody.innerHTML += `<tr><td><strong>#CAT-0${item.id}</strong></td><td style="color:#022c22; font-weight:bold;">${item.product_name}</td><td>${item.rack}</td><td>${item.batch}</td><td>₹${item.rate.toFixed(2)}</td><td>${item.gst}%</td></tr>`; });
+    }
+
+    // --- ⚡ 3. TOP NAVBAR MEDICINE DROPDOWN ROUTER ---
+    function executeTopMedicineNavigation(action) {
+        if(action === 'stock') { showView('stockInventoryView'); renderInventoryLedgerTable('ALL'); }
+        else if(action === 'alert') { showView('stockInventoryView'); renderInventoryLedgerTable('ALERT'); }
+        else if(action === 'expired') { showView('stockInventoryView'); renderInventoryLedgerTable('EXPIRED'); }
+        else if(action === 'sale_rep') { showView('saleHistoryView'); renderSalesBookTable(); }
+        else if(action === 'company_list') { showView('companyCatalogView'); renderCompanyCatalogList(); }
     }
 
     function calculateAndRenderExecutiveKPIs() {
         let allSalesArr = pullSales(); let todayFormattedStr = getStandardTodayDate();
         let salesTodayArr = allSalesArr.filter(s => s.date === todayFormattedStr);
         let todayTurnoverVal = salesTodayArr.reduce((acc, curr) => acc + (parseFloat(curr.value) || 0), 0);
-        let todayOrdersCount = salesTodayArr.length;
-        let todayAvgBillVal = todayOrdersCount > 0 ? (todayTurnoverVal / todayOrdersCount) : 0;
-
+        let todayOrdersCount = salesTodayArr.length; let todayAvgBillVal = todayOrdersCount > 0 ? (todayTurnoverVal / todayOrdersCount) : 0;
         let weekTurnoverVal = allSalesArr.reduce((acc, curr) => acc + (parseFloat(curr.value) || 0), 0);
-        let weekOrdersCount = allSalesArr.length;
-        let weekAvgBillVal = weekOrdersCount > 0 ? (weekTurnoverVal / weekOrdersCount) : 0;
+        let weekOrdersCount = allSalesArr.length; let weekAvgBillVal = weekOrdersCount > 0 ? (weekTurnoverVal / weekOrdersCount) : 0;
 
         let elTodaySales = document.getElementById('kpi_today_sales'); let elTodayOrders = document.getElementById('kpi_today_orders'); let elTodayAvg = document.getElementById('kpi_today_avg'); let elWeekSales = document.getElementById('kpi_week_sales'); let elWeekOrders = document.getElementById('kpi_week_orders'); let elWeekAvg = document.getElementById('kpi_week_avg'); let elHeaderDate = document.getElementById('kpi_header_date');
         if(elTodaySales) elTodaySales.innerText = '₹ ' + todayTurnoverVal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2}); if(elTodayOrders) elTodayOrders.innerText = todayOrdersCount; if(elTodayAvg) elTodayAvg.innerText = '₹ ' + todayAvgBillVal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2}); if(elWeekSales) elWeekSales.innerText = '₹ ' + weekTurnoverVal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2}); if(elWeekOrders) elWeekOrders.innerText = weekOrdersCount; if(elWeekAvg) elWeekAvg.innerText = '₹ ' + weekAvgBillVal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2}); if(elHeaderDate) elHeaderDate.innerText = todayFormattedStr;
@@ -648,7 +623,6 @@
         const tbody = document.getElementById('salesBookTableBody'); if(!tbody) return; tbody.innerHTML = ''; let totalSum = 0;
         let filterBox = document.getElementById('saleDateFilterInput'); let rawFilterDate = filterBox ? filterBox.value : ""; let targetFormattedDate = "";
         if(rawFilterDate) { let p = rawFilterDate.split('-'); targetFormattedDate = `${p[2]}/${p[1]}/${p[0]}`; }
-
         let allSales = pullSales(); let salesToShow = targetFormattedDate ? allSales.filter(b => b.date === targetFormattedDate) : allSales;
 
         if(salesToShow.length === 0) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:25px; color:#64748b; font-style:italic;">No historical sales vouchers found for date: ${targetFormattedDate}</td></tr>`;
@@ -663,67 +637,35 @@
         } calculateAndRenderExecutiveKPIs();
     }
 
-    // --- ⚡ 2. THE 3 NEW OPERATION PILLAR RENDERING FUNCTIONS ---
     function renderCreditTable() {
         let tbody = document.getElementById('creditTableBody'); if(!tbody) return; tbody.innerHTML = ''; let crDb = pullCredit();
-        crDb.forEach(c => {
-            let statusBadge = c.due > 0 ? `<span style="background:#fef3c7; color:#b45309; padding:2px 8px; border-radius:4px; font-weight:bold;">PENDING</span>` : `<span style="background:#dcfce7; color:#059669; padding:2px 8px; border-radius:4px; font-weight:bold;">PAID</span>`;
-            tbody.innerHTML += `<tr><td><strong>${c.id}</strong></td><td>${c.customer}</td><td>${c.phone}</td><td><strong style="color:${c.due>0?'#dc2626':'#059669'}; font-size:14px;">₹${c.due.toFixed(2)}</strong></td><td>${c.last_date}</td><td>${statusBadge}</td><td style="text-align:center;"><button onclick="settleCreditAccount('${c.id}')" style="background:#2563eb; color:white; border:none; padding:4px 12px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;" ${c.due===0?'disabled opacity:0.5':''}>💳 Settle</button></td></tr>`;
-        });
+        crDb.forEach(c => { let statusBadge = c.due > 0 ? `<span style="background:#fef3c7; color:#b45309; padding:2px 8px; border-radius:4px; font-weight:bold;">PENDING</span>` : `<span style="background:#dcfce7; color:#059669; padding:2px 8px; border-radius:4px; font-weight:bold;">PAID</span>`; tbody.innerHTML += `<tr><td><strong>${c.id}</strong></td><td>${c.customer}</td><td>${c.phone}</td><td><strong style="color:${c.due>0?'#dc2626':'#059669'}; font-size:14px;">₹${c.due.toFixed(2)}</strong></td><td>${c.last_date}</td><td>${statusBadge}</td><td style="text-align:center;"><button onclick="settleCreditAccount('${c.id}')" style="background:#2563eb; color:white; border:none; padding:4px 12px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;" ${c.due===0?'disabled opacity:0.5':''}>💳 Settle</button></td></tr>`; });
     }
 
     function addNewCreditCustomer() {
-        let cName = prompt("Enter Local Credit Customer Name:"); if(!cName) return;
-        let cPhone = prompt("Enter 10-Digit Mobile No:"); if(!cPhone || cPhone.length!==10) return;
-        let cAmt = parseFloat(prompt("Enter Opening Credit Ledger Balance (₹):")); if(isNaN(cAmt)) return;
-        let crDb = pullCredit();
-        crDb.push({ id: `CR-${Math.floor(Math.random()*800)+200}`, customer: cName, phone: cPhone, due: cAmt, last_date: getStandardTodayDate(), status: cAmt > 0 ? "PENDING" : "PAID" });
-        localStorage.setItem('PV_OS_CREDIT', JSON.stringify(crDb)); renderCreditTable();
+        let cName = prompt("Enter Local Credit Customer Name:"); if(!cName) return; let cPhone = prompt("Enter 10-Digit Mobile No:"); if(!cPhone || cPhone.length!==10) return; let cAmt = parseFloat(prompt("Enter Opening Credit Ledger Balance (₹):")); if(isNaN(cAmt)) return; let crDb = pullCredit(); crDb.push({ id: `CR-${Math.floor(Math.random()*800)+200}`, customer: cName, phone: cPhone, due: cAmt, last_date: getStandardTodayDate(), status: cAmt > 0 ? "PENDING" : "PAID" }); localStorage.setItem('PV_OS_CREDIT', JSON.stringify(crDb)); renderCreditTable();
     }
 
     function settleCreditAccount(crId) {
-        let crDb = pullCredit(); let target = crDb.find(c => c.id === crId); if(!target) return;
-        let pay = parseFloat(prompt(`SETTLING TAB FOR [${target.customer} - ${target.phone}]\nCurrent Outstanding Due: ₹${target.due}\n\nEnter Cash/UPI Amount Received (₹):`, target.due));
-        if(!isNaN(pay) && pay > 0) {
-            target.due = Math.max(0, target.due - pay); target.last_date = getStandardTodayDate();
-            if(target.due === 0) target.status = "PAID";
-            localStorage.setItem('PV_OS_CREDIT', JSON.stringify(crDb)); renderCreditTable();
-            alert(`✔ Tab Settled: Received ₹${pay}. Remaining Outstanding: ₹${target.due}`);
-        }
+        let crDb = pullCredit(); let target = crDb.find(c => c.id === crId); if(!target) return; let pay = parseFloat(prompt(`SETTLING TAB FOR [${target.customer} - ${target.phone}]\nCurrent Outstanding Due: ₹${target.due}\n\nEnter Cash/UPI Amount Received (₹):`, target.due)); if(!isNaN(pay) && pay > 0) { target.due = Math.max(0, target.due - pay); target.last_date = getStandardTodayDate(); if(target.due === 0) target.status = "PAID"; localStorage.setItem('PV_OS_CREDIT', JSON.stringify(crDb)); renderCreditTable(); alert(`✔ Tab Settled: Received ₹${pay}. Remaining Outstanding: ₹${target.due}`); }
     }
 
     function renderShortfallTable() {
-        let tbody = document.getElementById('shortfallTableBody'); if(!tbody) return; tbody.innerHTML = '';
-        let lowItems = pullStock().filter(s => s.stock <= 50); // Threshold 50
-        if(lowItems.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:25px; color:#059669; font-weight:bold; font-size:14px;">🟢 Excellent! Zero shortfall isolated. All hardware shelf levels are perfectly above 50 strips.</td></tr>`;
-        } else {
-            lowItems.forEach(item => {
-                let orderQty = 100 - item.stock; let estCost = orderQty * item.rate;
-                tbody.innerHTML += `<tr><td><strong>${item.product_name}</strong></td><td><span style="color:#dc2626; font-weight:bold; font-size:14px;">${item.stock} Strips</span></td><td>50 Strips</td><td><strong style="color:#854d0e; background:#fef08a; padding:2px 8px; border-radius:4px; font-size:14px;">+${orderQty} Strips</strong></td><td>₹${estCost.toFixed(2)}</td></tr>`;
-            });
-        }
+        let tbody = document.getElementById('shortfallTableBody'); if(!tbody) return; tbody.innerHTML = ''; let lowItems = pullStock().filter(s => s.stock <= 50); if(lowItems.length === 0) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:25px; color:#059669; font-weight:bold; font-size:14px;">🟢 Excellent! Zero shortfall isolated. All hardware shelf levels are perfectly above 50 strips.</td></tr>`; } else { lowItems.forEach(item => { let orderQty = 100 - item.stock; let estCost = orderQty * item.rate; tbody.innerHTML += `<tr><td><strong>${item.product_name}</strong></td><td><span style="color:#dc2626; font-weight:bold; font-size:14px;">${item.stock} Strips</span></td><td>50 Strips</td><td><strong style="color:#854d0e; background:#fef08a; padding:2px 8px; border-radius:4px; font-size:14px;">+${orderQty} Strips</strong></td><td>₹${estCost.toFixed(2)}</td></tr>`; }); }
     }
 
     function exportShortfallWhatsappPO() {
-        let lowItems = pullStock().filter(s => s.stock <= 50); if(lowItems.length === 0) { alert("No empty stock to generate PO!"); return; }
-        let txt = `*PHARMAVIGOUR WHOLESALE PO SHEET*\nDate: ${getStandardTodayDate()}\nStore Node: ${document.getElementById('activeOutletBadge').innerText}\n-----------------------------\n`;
-        lowItems.forEach((i, idx) => { txt += `${idx+1}. ${i.product_name} ---> *${100 - i.stock} Strips*\n`; });
-        txt += `-----------------------------\n_Auto-parsed via PharmaVigour OS_`;
-        navigator.clipboard.writeText(txt).then(() => { alert("🛒 PO Sheet parsed & copied to clipboard! Paste it directly into your Wholesale Distributor's WhatsApp chat."); }).catch(() => { prompt("Copy the parsed PO Text below for WhatsApp:", txt); });
+        let lowItems = pullStock().filter(s => s.stock <= 50); if(lowItems.length === 0) { alert("No empty stock to generate PO!"); return; } let txt = `*PHARMAVIGOUR WHOLESALE PO SHEET*\nDate: ${getStandardTodayDate()}\nStore Node: ${document.getElementById('activeOutletBadge').innerText}\n-----------------------------\n`; lowItems.forEach((i, idx) => { txt += `${idx+1}. ${i.product_name} ---> *${100 - i.stock} Strips*\n`; }); txt += `-----------------------------\n_Auto-parsed via PharmaVigour OS_`; navigator.clipboard.writeText(txt).then(() => { alert("🛒 PO Sheet parsed & copied to clipboard! Paste it directly into your Wholesale Distributor's WhatsApp chat."); }).catch(() => { prompt("Copy the parsed PO Text below for WhatsApp:", txt); });
     }
 
     function renderNrxTable() {
-        let tbody = document.getElementById('nrxTableBody'); if(!tbody) return; tbody.innerHTML = ''; let nrxDb = pullNrx();
-        if(nrxDb.length === 0) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px; color:#64748b; font-style:italic;">No Schedule H1 Narcotic transactions logged inside this session.</td></tr>`; return; }
-        nrxDb.forEach(log => { tbody.innerHTML += `<tr><td><strong>${log.id}</strong></td><td>${log.date}</td><td>${log.patient}</td><td>${log.doctor}</td><td><span style="background:#fee2e2; color:#b91c1c; padding:2px 6px; border-radius:4px; font-weight:bold;">🚨 ${log.drug}</span></td><td><strong>${log.qty} Strips</strong></td></tr>`; });
+        let tbody = document.getElementById('nrxTableBody'); if(!tbody) return; tbody.innerHTML = ''; let nrxDb = pullNrx(); if(nrxDb.length === 0) return; nrxDb.forEach(log => { tbody.innerHTML += `<tr><td><strong>${log.id}</strong></td><td>${log.date}</td><td>${log.patient}</td><td>${log.doctor}</td><td><span style="background:#fee2e2; color:#b91c1c; padding:2px 6px; border-radius:4px; font-weight:bold;">🚨 ${log.drug}</span></td><td><strong>${log.qty} Strips</strong></td></tr>`; });
     }
 
     function reprintHistoricInvoiceVoucher(invRef) {
         let targetBill = pullSales().find(s => s.invoice === invRef); if(!targetBill) { alert("Voucher missing from database!"); return; }
         let runningCartSnapshot = JSON.parse(JSON.stringify(activeCart)); let snapPat = document.getElementById('patientName').value; let snapCon = document.getElementById('patientContact').value; let snapDoc = document.getElementById('docName').value; let snapDate = document.getElementById('billDateInput').value;
-        let itemsToPrint = targetBill.items ? JSON.parse(JSON.stringify(targetBill.items)) : []; if(itemsToPrint.length === 0) { itemsToPrint = [{ id: 999, product_name: "Consolidated Invoiced Catalog", rack: "---", batch: "LEGACY", expiry: "---", qty: 1, rate: targetBill.value, discount: 0, gst: 0 }]; } activeCart = itemsToPrint;
-        showView('newSaleView');
+        let itemsToPrint = targetBill.items ? JSON.parse(JSON.stringify(targetBill.items)) : []; if(itemsToPrint.length === 0) { itemsToPrint = [{ id: 999, product_name: "Consolidated Invoiced Catalog", rack: "---", batch: "LEGACY", expiry: "---", qty: 1, rate: targetBill.value, discount: 0, gst: 0 }]; } activeCart = itemsToPrint; showView('newSaleView');
         let pNameEl = document.getElementById('lbl_patientName'); let pContactEl = document.getElementById('lbl_patientContact'); let docEl = document.getElementById('lbl_docName'); let dateEl = document.getElementById('lbl_billDate');
         if(pNameEl) pNameEl.innerText = targetBill.patient || "Cash Walk-in"; if(pContactEl) pContactEl.innerText = targetBill.contact || "---"; if(docEl) docEl.innerText = targetBill.doctor || "Self"; if(dateEl) dateEl.innerText = `${targetBill.date || ''} - ${targetBill.time || ''} (DUPLICATE COPY)`; renderActiveCartTableManifest();
         setTimeout(() => { window.print(); activeCart = runningCartSnapshot; document.getElementById('patientName').value = snapPat; document.getElementById('patientContact').value = snapCon; document.getElementById('docName').value = snapDoc; document.getElementById('billDateInput').value = snapDate; renderActiveCartTableManifest(); showView('saleHistoryView'); }, 150);
@@ -731,8 +673,8 @@
 
     function loadHistoricBillIntoMainPosCounter(invRef) {
         if(!activeLoggedUser || activeLoggedUser.role !== 'superadmin') return; let target = pullSales().find(s => s.invoice === invRef); if(!target) return;
-        activeEditingVoucherId = target.invoice; let itemsToLoad = target.items ? JSON.parse(JSON.stringify(target.items)) : []; if(itemsToLoad.length === 0) { itemsToLoad = [{ id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: target.value, qty: 1, discount: 0, gst: 0 }]; } originalEditingItemsBackup = JSON.parse(JSON.stringify(itemsToLoad)); activeCart = itemsToLoad;
-        showSubView('newSaleView', document.querySelector('#side_sale .submenu-item')); document.getElementById('patientName').value = target.patient || ''; document.getElementById('patientContact').value = target.contact || '9829972091'; document.getElementById('docName').value = target.doctor || ''; document.getElementById('billDateInput').value = `${target.date || getStandardTodayDate()} - ${target.time || '12:00 PM'}`;
+        activeEditingVoucherId = target.invoice; let itemsToLoad = target.items ? JSON.parse(JSON.stringify(target.items)) : []; if(itemsToLoad.length === 0) { itemsToLoad = [{ id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: target.value, qty: 1, discount: 0, gst: 0 }]; } originalEditingItemsBackup = JSON.parse(JSON.stringify(itemsToLoad)); activeCart = itemsToLoad; showSubView('newSaleView', document.querySelector('#side_sale .submenu-item'));
+        document.getElementById('patientName').value = target.patient || ''; document.getElementById('patientContact').value = target.contact || '9829972091'; document.getElementById('docName').value = target.doctor || ''; document.getElementById('billDateInput').value = `${target.date || getStandardTodayDate()} - ${target.time || '12:00 PM'}`;
         let titleEl = document.getElementById('terminalTitleLabel'); let procBtn = document.getElementById('mainProcessBtn'); let cancelBtn = document.getElementById('cancelEditModeBtn');
         if(titleEl) { titleEl.innerText = `🛠️ ALTERING LIVE INVOICE VOUCHER: [ ${target.invoice} ]`; titleEl.style.background = "#d97706"; titleEl.style.color = "white"; } if(procBtn) { procBtn.innerText = `💾 Overwrite & Save Bill [ ${target.invoice} ]`; procBtn.style.background = "#d97706"; procBtn.style.borderColor = "#b45309"; } if(cancelBtn) { cancelBtn.style.display = 'inline-block'; } renderActiveCartTableManifest();
     }
@@ -778,7 +720,6 @@
         let lblNet = document.getElementById('lbl_net'); if(lblNet) { lblNet.innerHTML = '₹ ' + netPay.toFixed(2); lblNet.style.display='table-cell'; lblNet.style.visibility='visible'; lblNet.style.color='#064e3b'; }
     }
 
-    // --- ⚡ 3. UPGRADED PROCESS ENGINE (HOOKING AUTO-NRX LOGGING) ---
     function processSaleInvoiceDeductStockCentral() {
         if(activeCart.length === 0) return; let stockDb = pullStock(); let salesDb = pullSales(); let nrxDb = pullNrx();
         let inputPName = document.getElementById('patientName'); let inputPContact = document.getElementById('patientContact'); let inputDoc = document.getElementById('docName');
@@ -788,7 +729,6 @@
         calculateBillFinancialTotals(); let netEl = document.getElementById('lbl_net'); let netVal = netEl ? parseFloat(netEl.innerText.replace('₹ ', '')) : 0;
         let pNameValSaved = inputPName ? (inputPName.value || "Cash Walk-in") : "Cash Walk-in"; let contactValSaved = inputPContact ? (inputPContact.value || "9829972091") : "9829972091"; let docValSaved = inputDoc ? (inputDoc.value || "Self") : "Self";
 
-        // 🚨 CHECK PSYCHOTROPIC DRUGS TO LOCK IN NRX LOG
         let nrxItemsBilled = activeCart.filter(i => i.product_name.includes("REXIPRA") || i.product_name.includes("CLAVIX"));
         if(nrxItemsBilled.length > 0) {
             nrxItemsBilled.forEach(ni => { nrxDb.push({ id: `NRX-${Math.floor(Math.random()*800)+200}`, date: getStandardTodayDate(), patient: pNameValSaved, doctor: `${docValSaved} (Reg: WB-POS)`, drug: ni.product_name, qty: ni.qty }); });
@@ -828,8 +768,8 @@
     function showView(vId) { 
         document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); 
         let targetEl = document.getElementById(vId); if(targetEl) targetEl.classList.add('active'); 
-        if(vId==='stockInventoryView') renderInventoryTable(); if(vId==='saleHistoryView') renderSalesBookTable(); if(vId==='purchaseHistoryView') renderPurchaseHistoryTable(); if(vId==='adminUserManageView') renderStaffDirectoryTable();
-        if(vId==='creditLedgerView') renderCreditTable(); if(vId==='shortfallView') renderShortfallTable(); if(vId==='nrxRegisterView') renderNrxTable();
+        if(vId==='stockInventoryView') renderInventoryLedgerTable('ALL'); if(vId==='saleHistoryView') renderSalesBookTable(); if(vId==='purchaseHistoryView') renderPurchaseHistoryTable(); if(vId==='adminUserManageView') renderStaffDirectoryTable();
+        if(vId==='creditLedgerView') renderCreditTable(); if(vId==='shortfallView') renderShortfallTable(); if(vId==='nrxRegisterView') renderNrxTable(); if(vId==='companyCatalogView') renderCompanyCatalogList();
     }
     function showSubView(vId, el) { showView(vId); document.querySelectorAll('.sidebar .submenu-item, .sidebar .menu-item').forEach(i => i.classList.remove('active')); if(el) el.classList.add('active'); }
     function toggleSubmenu(id) { let subEl = document.getElementById(id); if(subEl) subEl.classList.toggle('open'); }
