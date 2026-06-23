@@ -112,7 +112,7 @@
         .print-text-val { display: none; font-weight: bold; }
 
         @media print {
-            .sidebar, .top-navbar, .search-section, .btn-container, .btn-danger, th:last-child, td:last-child, .meta-grid input, .qty-input, .disc-input, .hotkey-banner-strip { display: none !important; }
+            .sidebar, .top-navbar, #terminalTitleLabel, .search-section, .btn-container, .btn-danger, th:last-child, td:last-child, .meta-grid input, .qty-input, .disc-input, .hotkey-banner-strip { display: none !important; }
             .print-text-val { display: inline-block !important; }
             body, .main-content, .card-box { background: white !important; padding: 0; margin: 0; box-shadow: none; border: none; }
             .bill-header-print { display: flex !important; align-items: center; justify-content: space-between; border-bottom: 2px solid #064e3b; padding-bottom: 15px; margin-bottom: 25px; }
@@ -202,7 +202,7 @@
                 <div class="submenu-item" onclick="showSubView('stockInventoryView', this)">Current Inventory</div>
             </div>
 
-            <!-- 👑 3. ADMIN HUB (ONLY FOR SUPER ADMIN) -->
+            <!-- 👑 3. ADMIN HUB -->
             <div class="menu-item" id="side_admin" onclick="toggleSubmenu('adminSub')" style="display:none; border-left-color:#fef08a;">
                 <div><span class="menu-icon">🛡️</span><span class="menu-text" style="color:#fef08a;">3. Admin Hub</span></div><span class="menu-arrow">▼</span>
             </div>
@@ -222,7 +222,7 @@
                 </div>
             </div>
 
-            <!-- VIEW: 1.1 NEW SALE BILL -->
+            <!-- 🧮 VIEW: 1.1 DUAL-MODE POINT OF SALE TERMINAL (NEW BILL & EDIT BILL) -->
             <div id="newSaleView" class="view-panel">
                 <div class="hotkey-banner-strip">
                     <span>⚡ PVO Quick Hotkeys Active:</span>
@@ -245,7 +245,8 @@
                         </div>
                     </div>
 
-                    <div class="panel-title search-section">Retail Cash Memo Core Terminal (New Sale Bill)</div>
+                    <!-- 🟢/🟠 DYNAMIC COUNTER TITLE -->
+                    <div id="terminalTitleLabel" class="panel-title search-section" style="transition:all 0.3s;">Retail Cash Memo Core Terminal (New Sale Bill)</div>
                     
                     <div class="meta-grid">
                         <div class="form-group"><label>Patient Full Name</label><input type="text" id="patientName" placeholder="Enter Full Name"><span class="print-text-val" id="lbl_patientName"></span></div>
@@ -281,8 +282,10 @@
                         </table>
                     </div>
 
-                    <div class="btn-container">
-                        <button class="btn btn-primary" style="padding:12px 25px; font-size:15px;" onclick="processSaleInvoiceDeductStockCentral()">Complete Bill & Authorize Hardware Print </button>
+                    <!-- 🟢/🟠 DYNAMIC BUTTONS (WITH CANCEL EDIT OPTION) -->
+                    <div class="btn-container" style="align-items:center;">
+                        <button id="cancelEditModeBtn" class="btn btn-danger" style="display:none; padding:12px 20px; font-size:14px; background:#ef4444;" onclick="resetTerminalToNormalNewSaleMode()">❌ Cancel Editing</button>
+                        <button id="mainProcessBtn" class="btn btn-primary" style="padding:12px 25px; font-size:15px; transition:all 0.3s;" onclick="processSaleInvoiceDeductStockCentral()">Complete Bill & Authorize Hardware Print </button>
                     </div>
                 </div>
             </div>
@@ -300,7 +303,7 @@
                     </div>
                     <table>
                         <thead>
-                            <tr><th>Invoice Reference</th><th>Timestamp (Date & Time)</th><th>Patient Demographics</th><th>Consulting Clinician</th><th>Net Settlement Value</th><th style="text-align:center;">Admin Action</th></tr>
+                            <tr><th>Invoice Reference</th><th>Timestamp (Date & Time)</th><th>Patient Demographics</th><th>Consulting Clinician</th><th>Net Settlement Value</th><th style="text-align:center;">POS Action</th></tr>
                         </thead>
                         <tbody id="salesBookTableBody"></tbody>
                     </table>
@@ -442,48 +445,6 @@
     </div>
 </div>
 
-<!-- 👑 4. OVERLAY GOD MODE INVOICE ALTERATION STUDIO MODAL -->
-<div id="superAdminBillModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(15,23,42,0.85); z-index:9999; padding:20px; overflow-y:auto; align-items:center; justify-content:center;">
-    <div style="background:white; width:100%; max-width:850px; margin:auto; border-radius:12px; border:3px solid #d97706; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); overflow:hidden;">
-        <div style="background:#064e3b; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center;">
-            <h3 style="color:#fef08a; font-size:18px; margin:0;">👑 Deep Audit Studio: Altering Voucher <span id="modalInvRef" style="text-decoration:underline;"></span></h3>
-            <button onclick="closeSuperAdminModal()" style="background:transparent; border:none; color:white; font-size:22px; cursor:pointer; font-weight:bold;">✖</button>
-        </div>
-        <div style="padding:20px;">
-            <div class="meta-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr; background:#f1f5f9; margin-bottom:15px; border-color:#cbd5e1;">
-                <div class="form-group"><label>Customer Name</label><input type="text" id="modPatient"></div>
-                <div class="form-group"><label>Consulting Clinician</label><input type="text" id="modDoctor"></div>
-                <div class="form-group"><label>Voucher Date</label><input type="text" id="modDate"></div>
-                <div class="form-group"><label>Timestamp</label><input type="text" id="modTime"></div>
-            </div>
-
-            <h4 style="font-size:12px; color:#064e3b; text-transform:uppercase; margin-bottom:8px; border-bottom:2px solid #e2e8f0; padding-bottom:4px;">Invoiced Item Manifest (Live Stock Linked Engine)</h4>
-            <div style="max-height:220px; overflow-y:auto; border:1px solid #cbd5e1; margin-bottom:15px;">
-                <table>
-                    <thead><tr><th>Product Description</th><th>Batch</th><th>Rate</th><th style="width:75px;">Qty</th><th>Disc%</th><th>GST%</th><th>Row Net</th><th style="text-align:center;">Drop</th></tr></thead>
-                    <tbody id="modalItemsBody"></tbody>
-                </table>
-            </div>
-
-            <div style="display:flex; gap:10px; margin-bottom:20px;">
-                <select id="modalAddSelect" style="flex:1; padding:8px; border:2px solid #064e3b; border-radius:4px; font-size:13px; font-weight:bold;"><option value="">+ Inject additional catalog product to this invoice...</option></select>
-                <button onclick="injectCatalogItemToEditingBill()" style="background:#064e3b; color:white; border:none; padding:0 20px; border-radius:4px; font-weight:bold; cursor:pointer;">Inject Item</button>
-            </div>
-
-            <div style="display:flex; justify-content:space-between; align-items:center; background:#fffbeb; padding:15px 20px; border-radius:8px; border:2px solid #fde68a;">
-                <div>
-                    <span style="font-size:11px; color:#b45309; font-weight:bold; display:block;">LIVE RECALCULATED VOUCHER NET:</span>
-                    <h2 style="color:#064e3b; font-size:26px; margin:0;" id="modalNetVal">₹ 0.00</h2>
-                </div>
-                <div style="display:flex; gap:12px;">
-                    <button onclick="detonateEntireInvoiceFromModal()" style="background:#ef4444; color:white; border:none; padding:12px 20px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:13px;">🗑️ Delete Entire Invoice</button>
-                    <button onclick="commitAlteredInvoiceFromModal()" style="background:#064e3b; color:#fef08a; border:2px solid #d97706; padding:12px 25px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:14px;">💾 Commit Altered Bill</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- FIXED SUPABASE SCRIPT IMPORT -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
@@ -511,19 +472,19 @@
     // ⚡ DEEP SEEDED HISTORIC INVOICES (পেটের ভেতর আইটেমসহ)
     const IMMUTABLE_SALES_SEED = [
         { 
-            invoice: "PV-2025-00102", date: "12/05/2025", time: "02:30 PM", patient: "Old 2025 Client", doctor: "Dr. A. Sen", value: 450.00,
-            items: [{ id: 102, product_name: "REXIPRA LS TAB 10'S", rack: "B-12", batch: "KX3099", rate: 78.57, qty: 5, discount: 0, gst: 12 }]
+            invoice: "PV-2025-00102", date: "12/05/2025", time: "02:30 PM", patient: "Old 2025 Client", contact: "9830012345", doctor: "Dr. A. Sen", value: 450.00,
+            items: [{ id: 102, product_name: "REXIPRA LS TAB 10'S", rack: "B-12", batch: "KX3099", expiry: "11/27", rate: 78.57, qty: 5, discount: 0, gst: 12 }]
         },
         { 
-            invoice: "PV-2026-00481", date: getStandardTodayDate(), time: "12:00 PM", patient: "Rahul Chakraborty", doctor: "Dr. P. Maitra", value: 1688.10,
+            invoice: "PV-2026-00481", date: getStandardTodayDate(), time: "12:00 PM", patient: "Rahul Chakraborty", contact: "9829972091", doctor: "Dr. P. Maitra", value: 1688.10,
             items: [
-                { id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", rate: 76.60, qty: 10, discount: 0, gst: 12 },
-                { id: 103, product_name: "PAN D CAPSULE 10'S", rack: "C-05", batch: "PAN9942A", rate: 145.00, qty: 5, discount: 0, gst: 12 }
+                { id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: 76.60, qty: 10, discount: 0, gst: 12 },
+                { id: 103, product_name: "PAN D CAPSULE 10'S", rack: "C-05", batch: "PAN9942A", expiry: "05/26", rate: 145.00, qty: 5, discount: 0, gst: 12 }
             ]
         },
         { 
-            invoice: "PV-2026-00407", date: getStandardTodayDate(), time: "12:05 PM", patient: "Amul Basak", doctor: "Dr. S.S Jalan", value: 68.63,
-            items: [{ id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", rate: 76.60, qty: 1, discount: 20, gst: 12 }]
+            invoice: "PV-2026-00407", date: getStandardTodayDate(), time: "12:05 PM", patient: "Amul Basak", contact: "9123665890", doctor: "Dr. S.S Jalan", value: 68.63,
+            items: [{ id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: 76.60, qty: 1, discount: 20, gst: 12 }]
         }
     ];
     const IMMUTABLE_PURCHASE_SEED = [{ voucher: "PV-PUR-00101", supplier: "Wholesalers Ltd.", date: "15/06/2026", value: 24500.00 }];
@@ -547,6 +508,9 @@
     if(isRepaired) localStorage.setItem('PV_OS_SALES', JSON.stringify(autoRepairSales));
 
     let activeCart = []; let temporaryPurchaseCart = []; let generatedOTPCode = ""; let activeLoggedUser = null;
+
+    // ⚡ DUAL-MODE EDIT STATE TRACKER
+    let activeEditingVoucherId = null; let originalEditingItemsBackup = [];
 
     window.addEventListener('keydown', function(event) {
         if (['F2', 'F3', 'F4'].includes(event.key)) {
@@ -601,6 +565,7 @@
         });
     }
 
+    // ⚡ 5. THE GOD MODE POS COUNTER PULLER
     function renderSalesBookTable() {
         const tbody = document.getElementById('salesBookTableBody'); if(!tbody) return; tbody.innerHTML = ''; let totalSum = 0;
         let filterBox = document.getElementById('saleDateFilterInput'); let rawFilterDate = filterBox ? filterBox.value : ""; let targetFormattedDate = "";
@@ -612,7 +577,10 @@
         else {
             salesToShow.forEach(bill => {
                 let stampBadge = `<span style="background:#fef3c7; color:#92400e; padding:4px 10px; border-radius:6px; font-weight:bold; font-size:12px; border:1px solid #fde68a;">📅 ${bill.date || 'N/A'} &nbsp;|&nbsp; ⏰ ${bill.time || '12:00 PM'}</span>`;
-                let actionBtnHtml = (activeLoggedUser && activeLoggedUser.role === 'superadmin') ? `<button onclick="superAdminDeepEditStudio('${bill.invoice}')" style="background:#d97706; color:white; border:none; padding:5px 12px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">✏️ Deep Edit</button>` : `<span style="color:#94a3b8; font-size:11px;">🔒 Restricted</span>`;
+                
+                // ⚡ সুপার এডমিন চাপলেই সোজা মেইন কাউন্টারে বিল হাজির!
+                let actionBtnHtml = (activeLoggedUser && activeLoggedUser.role === 'superadmin') ? `<button onclick="loadHistoricBillIntoMainPosCounter('${bill.invoice}')" style="background:#d97706; color:white; border:none; padding:5px 12px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">✏️ Load to POS</button>` : `<span style="color:#94a3b8; font-size:11px;">🔒 Restricted</span>`;
+                
                 let tr = document.createElement('tr'); tr.innerHTML = `<td><strong>${bill.invoice}</strong></td><td>${stampBadge}</td><td>${bill.patient}</td><td>${bill.doctor}</td><td><strong>₹${bill.value.toFixed(2)}</strong></td><td style="text-align:center;">${actionBtnHtml}</td>`;
                 tbody.appendChild(tr); totalSum += bill.value;
             });
@@ -620,92 +588,54 @@
         const chartLabel = document.getElementById('chart_live_val'); if(chartLabel) chartLabel.innerText = '₹ ' + totalSum.toFixed(2);
     }
 
-    // 👑 5. THE GOD MODE DEEP ALTERATION STUDIO ENGINE
-    let activeEditingInvoiceObj = null; let originalItemsBackupForStockRollback = [];
-
-    function superAdminDeepEditStudio(invRef) {
+    function loadHistoricBillIntoMainPosCounter(invRef) {
         if(!activeLoggedUser || activeLoggedUser.role !== 'superadmin') return;
         let target = pullSales().find(s => s.invoice === invRef); if(!target) return;
 
-        activeEditingInvoiceObj = JSON.parse(JSON.stringify(target));
-        
-        // লিগ্যাসি বিলের জন্য ফলব্যাক (যেগুলোতে আইটেম ছিল না)
-        if(!activeEditingInvoiceObj.items || activeEditingInvoiceObj.items.length === 0) {
-            activeEditingInvoiceObj.items = [{ id: 999, product_name: "Consolidated Legacy Item", batch: "LEG-00", rate: target.value, qty: 1, discount: 0, gst: 0 }];
+        activeEditingVoucherId = target.invoice;
+        let itemsToLoad = target.items ? JSON.parse(JSON.stringify(target.items)) : [];
+        if(itemsToLoad.length === 0) {
+            itemsToLoad = [{ id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: target.value, qty: 1, discount: 0, gst: 0 }];
         }
-        originalItemsBackupForStockRollback = JSON.parse(JSON.stringify(activeEditingInvoiceObj.items));
+        originalEditingItemsBackup = JSON.parse(JSON.stringify(itemsToLoad));
+        activeCart = itemsToLoad;
 
-        document.getElementById('modalInvRef').innerText = target.invoice;
-        document.getElementById('modPatient').value = target.patient || '';
-        document.getElementById('modDoctor').value = target.doctor || '';
-        document.getElementById('modDate').value = target.date || '';
-        document.getElementById('modTime').value = target.time || '';
+        // কাউন্টারে জাম্প করাচ্ছে
+        showSubView('newSaleView', document.querySelector('#side_sale .submenu-item'));
 
-        let addSel = document.getElementById('modalAddSelect'); addSel.innerHTML = '<option value="">+ Inject additional catalog product to this invoice...</option>';
-        pullStock().forEach(stk => { addSel.innerHTML += `<option value="${stk.id}">${stk.product_name} (₹${stk.rate})</option>`; });
+        document.getElementById('patientName').value = target.patient || '';
+        document.getElementById('patientContact').value = target.contact || '9829972091';
+        document.getElementById('docName').value = target.doctor || '';
+        document.getElementById('billDateInput').value = `${target.date || getStandardTodayDate()} - ${target.time || '12:00 PM'}`;
 
-        renderModalManifestRows();
-        document.getElementById('superAdminBillModal').style.display = 'flex';
+        // 🟢 -> 🟠 কাউন্টারের রূপবদল
+        let titleEl = document.getElementById('terminalTitleLabel');
+        let procBtn = document.getElementById('mainProcessBtn');
+        let cancelBtn = document.getElementById('cancelEditModeBtn');
+
+        if(titleEl) { titleEl.innerText = `🛠️ ALTERING LIVE INVOICE VOUCHER: [ ${target.invoice} ]`; titleEl.style.background = "#d97706"; titleEl.style.color = "white"; }
+        if(procBtn) { procBtn.innerText = `💾 Overwrite & Save Bill [ ${target.invoice} ]`; procBtn.style.background = "#d97706"; procBtn.style.borderColor = "#b45309"; }
+        if(cancelBtn) { cancelBtn.style.display = 'inline-block'; }
+
+        renderActiveCartTableManifest();
     }
 
-    function renderModalManifestRows() {
-        let tbody = document.getElementById('modalItemsBody'); tbody.innerHTML = ''; let runGross = 0, runDisc = 0, runGst = 0;
-        if(activeEditingInvoiceObj.items.length === 0) { tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:red; padding:15px;">No inventory items inside invoice! Add products above or delete voucher entirely.</td></tr>`; }
-        else {
-            activeEditingInvoiceObj.items.forEach((itm, idx) => {
-                let q = parseFloat(itm.qty) || 0; let r = parseFloat(itm.rate) || 0; let d = parseFloat(itm.discount) || 0; let g = parseFloat(itm.gst) || 0;
-                let base = r * q; let discVal = base * (d/100); let rowNet = (base - discVal) * (1 + g/100);
-                runGross += base; runDisc += discVal; runGst += (base - discVal)*(g/100);
+    function resetTerminalToNormalNewSaleMode() {
+        activeEditingVoucherId = null; originalEditingItemsBackup = []; activeCart = [];
+        document.getElementById('patientName').value = ''; document.getElementById('patientContact').value = ''; document.getElementById('docName').value = '';
+        document.getElementById('billDateInput').value = `${getStandardTodayDate()} - ${getLiveCurrentTime()}`;
 
-                tbody.innerHTML += `<tr><td><strong>${itm.product_name}</strong></td><td>${itm.batch}</td><td>₹${r.toFixed(2)}</td>`+
-                    `<td><input type="number" style="width:65px; padding:4px; text-align:center; font-weight:bold; border:1px solid #064e3b; border-radius:3px;" value="${q}" oninput="activeEditingInvoiceObj.items[${idx}].qty=this.value; renderModalManifestRows();"></td>`+
-                    `<td><input type="number" style="width:55px; padding:4px; text-align:center;" value="${d}" oninput="activeEditingInvoiceObj.items[${idx}].discount=this.value; renderModalManifestRows();">%</td>`+
-                    `<td>${g}%</td><td><strong>₹${rowNet.toFixed(2)}</strong></td>`+
-                    `<td style="text-align:center;"><button onclick="activeEditingInvoiceObj.items.splice(${idx},1); renderModalManifestRows();" style="background:#ef4444; color:white; border:none; padding:2px 8px; border-radius:3px; cursor:pointer; font-weight:bold;">X</button></td></tr>`;
-            });
-        }
-        let recalculatedFinalNet = runGross - runDisc + runGst; activeEditingInvoiceObj.value = recalculatedFinalNet;
-        document.getElementById('modalNetVal').innerText = `₹ ${recalculatedFinalNet.toFixed(2)}`;
-    }
+        // 🟠 -> 🟢 কাউন্টার আবার সবুজ স্বাভাবিক!
+        let titleEl = document.getElementById('terminalTitleLabel');
+        let procBtn = document.getElementById('mainProcessBtn');
+        let cancelBtn = document.getElementById('cancelEditModeBtn');
 
-    function injectCatalogItemToEditingBill() {
-        let sel = document.getElementById('modalAddSelect'); let pId = parseInt(sel.value); if(!pId) return;
-        let matchedStockMatch = pullStock().find(s => s.id === pId); if(!matchedStockMatch) return;
-        let existing = activeEditingInvoiceObj.items.find(i => i.id === pId);
-        if(existing) existing.qty = (parseInt(existing.qty) || 0) + 1;
-        else activeEditingInvoiceObj.items.push({...matchedStockMatch, qty: 1, discount: 0});
-        sel.value = ""; renderModalManifestRows();
-    }
+        if(titleEl) { titleEl.innerText = "Retail Cash Memo Core Terminal (New Sale Bill)"; titleEl.style.background = "#f1f5f9"; titleEl.style.color = "#064e3b"; }
+        if(procBtn) { procBtn.innerText = "Complete Bill & Authorize Hardware Print "; procBtn.style.background = "#064e3b"; procBtn.style.borderColor = "#d97706"; }
+        if(cancelBtn) { cancelBtn.style.display = 'none'; }
 
-    function detonateEntireInvoiceFromModal() {
-        if(!confirm(`⚠️ CRITICAL COMMAND: Obliterate voucher [${activeEditingInvoiceObj.invoice}] completely and return its inner stock back to central shelves?`)) return;
-        let stockDb = pullStock(); let salesDb = pullSales();
-        originalItemsBackupForStockRollback.forEach(orig => { let sMatch = stockDb.find(stk => stk.id === orig.id); if(sMatch && orig.id !== 999) sMatch.stock += (parseInt(orig.qty) || 0); });
-        let survivingSales = salesDb.filter(s => s.invoice !== activeEditingInvoiceObj.invoice);
-        commitDb(stockDb, survivingSales, null); closeSuperAdminModal(); renderSalesBookTable(); renderInventoryTable();
-        alert(`💥 Voucher [${activeEditingInvoiceObj.invoice}] successfully obliterated. Shelf inventory balance restored!`);
+        renderActiveCartTableManifest();
     }
-
-    function commitAlteredInvoiceFromModal() {
-        let stockDb = pullStock(); let salesDb = pullSales();
-        // 1. Revert original backup stock to shelves
-        originalItemsBackupForStockRollback.forEach(orig => { let sMatch = stockDb.find(stk => stk.id === orig.id); if(sMatch && orig.id !== 999) sMatch.stock += (parseInt(orig.qty) || 0); });
-        // 2. Deduct newly altered items from shelves
-        activeEditingInvoiceObj.items.forEach(modItm => { let sMatch = stockDb.find(stk => stk.id === modItm.id); if(sMatch && modItm.id !== 999) sMatch.stock -= (parseInt(modItm.qty) || 0); });
-        // 3. Overwrite inside master sales record
-        let targetIdx = salesDb.findIndex(s => s.invoice === activeEditingInvoiceObj.invoice);
-        if(targetIdx !== -1) {
-            salesDb[targetIdx].patient = document.getElementById('modPatient').value.trim() || "Cash Walk-in";
-            salesDb[targetIdx].doctor = document.getElementById('modDoctor').value.trim() || "Self";
-            salesDb[targetIdx].date = document.getElementById('modDate').value.trim();
-            salesDb[targetIdx].time = document.getElementById('modTime').value.trim();
-            salesDb[targetIdx].value = activeEditingInvoiceObj.value;
-            salesDb[targetIdx].items = activeEditingInvoiceObj.items;
-        }
-        commitDb(stockDb, salesDb, null); closeSuperAdminModal(); renderSalesBookTable(); renderInventoryTable();
-        alert(`✔ Deep Audit Success: Voucher [${activeEditingInvoiceObj.invoice}] saved. Stock math perfectly balanced!`);
-    }
-    function closeSuperAdminModal() { document.getElementById('superAdminBillModal').style.display = 'none'; activeEditingInvoiceObj = null; originalItemsBackupForStockRollback = []; }
 
     function registerNewEnterpriseStaff() {
         if(!activeLoggedUser || activeLoggedUser.role !== 'superadmin') return;
@@ -745,14 +675,42 @@
         let lblGross = document.getElementById('lbl_gross'); if(lblGross) lblGross.innerHTML = '₹ ' + gross.toFixed(2); let lblDisc = document.getElementById('lbl_disc'); if(lblDisc) lblDisc.innerHTML = '₹ ' + totalDiscount.toFixed(2); let lblGst = document.getElementById('lbl_gst'); if(lblGst) lblGst.innerHTML = '₹ ' + gstTotal.toFixed(2); let lblNet = document.getElementById('lbl_net'); if(lblNet) lblNet.innerHTML = '₹ ' + (gross - totalDiscount + gstTotal).toFixed(2);
     }
 
+    // ⚡ DUAL-FORK PROCESS BUTTON (নতুন বিল vs ওভাররাইট বিল)
     function processSaleInvoiceDeductStockCentral() {
-        if(activeCart.length === 0) return; let stock = pullStock(); let sales = pullSales();
-        let inputPName = document.getElementById('patientName'); let inputPContact = document.getElementById('patientContact'); let inputDoc = document.getElementById('docName'); let pNameEl = document.getElementById('lbl_patientName'); let pContactEl = document.getElementById('lbl_patientContact'); let docEl = document.getElementById('lbl_docName');
-        if(pNameEl && inputPName) pNameEl.innerText = inputPName.value || "Cash Walk-in"; if(pContactEl && inputPContact) pContactEl.innerText = inputPContact.value || "---"; if(docEl && inputDoc) docEl.innerText = inputDoc.value || "Self"; calculateBillFinancialTotals(); activeCart.forEach(cartItem => { let item = stock.find(s => s.id === cartItem.id); if(item) item.stock -= cartItem.qty; }); let netEl = document.getElementById('lbl_net'); let netVal = netEl ? parseFloat(netEl.innerText.replace('₹ ', '')) : 0;
+        if(activeCart.length === 0) return; let stockDb = pullStock(); let salesDb = pullSales();
+        let inputPName = document.getElementById('patientName'); let inputPContact = document.getElementById('patientContact'); let inputDoc = document.getElementById('docName');
+        let pNameEl = document.getElementById('lbl_patientName'); let pContactEl = document.getElementById('lbl_patientContact'); let docEl = document.getElementById('lbl_docName');
+        if(pNameEl && inputPName) pNameEl.innerText = inputPName.value || "Cash Walk-in"; if(pContactEl && inputPContact) pContactEl.innerText = inputPContact.value || "---"; if(docEl && inputDoc) docEl.innerText = inputDoc.value || "Self";
         
-        // ⚡ ইনভয়েস সেভ হওয়ার সময় তার ভেতরের আইটেমগুলোও কার্ট থেকে সিরিয়ালাইজ হয়ে জমছে!
-        sales.push({ invoice: `PV-2026-00${Math.floor(Math.random()*900)+100}`, date: getStandardTodayDate(), time: getLiveCurrentTime(), patient: inputPName ? (inputPName.value || "Cash Walk-in") : "Cash Walk-in", doctor: inputDoc ? (inputDoc.value || "Self") : "Self", value: netVal, items: JSON.parse(JSON.stringify(activeCart)) });
-        commitDb(stock, sales, null); setTimeout(() => { window.print(); if(inputPName) inputPName.value = ''; if(inputPContact) inputPContact.value = ''; if(inputDoc) inputDoc.value = ''; activeCart = []; renderActiveCartTableManifest(); renderInventoryTable(); renderSalesBookTable(); }, 250);
+        calculateBillFinancialTotals();
+        let netEl = document.getElementById('lbl_net'); let netVal = netEl ? parseFloat(netEl.innerText.replace('₹ ', '')) : 0;
+        let pNameValSaved = inputPName ? (inputPName.value || "Cash Walk-in") : "Cash Walk-in";
+        let contactValSaved = inputPContact ? (inputPContact.value || "9829972091") : "9829972091";
+        let docValSaved = inputDoc ? (inputDoc.value || "Self") : "Self";
+
+        if(activeEditingVoucherId) {
+            // --- 🛠️ ১. আমরা এখন ওভাররাইট মোডে আছি ---
+            originalEditingItemsBackup.forEach(orig => { let stkItem = stockDb.find(s => s.id === orig.id); if(stkItem) stkItem.stock += (parseFloat(orig.qty) || 0); });
+            activeCart.forEach(cartItm => { let stkItem = stockDb.find(s => s.id === cartItm.id); if(stkItem) stkItem.stock -= (parseFloat(cartItm.qty) || 0); });
+
+            let existingIdx = salesDb.findIndex(s => s.invoice === activeEditingVoucherId);
+            if(existingIdx !== -1) {
+                salesDb[existingIdx].patient = pNameValSaved;
+                salesDb[existingIdx].contact = contactValSaved;
+                salesDb[existingIdx].doctor = docValSaved;
+                salesDb[existingIdx].value = netVal;
+                salesDb[existingIdx].items = JSON.parse(JSON.stringify(activeCart));
+            }
+            alert(`✔ Audit Overwrite Complete: Voucher [${activeEditingVoucherId}] successfully updated to ₹${netVal}! Stock inventory perfectly reconciled.`);
+            commitDb(stockDb, salesDb, null); resetTerminalToNormalNewSaleMode(); showView('saleHistoryView');
+
+        } else {
+            // --- 🆕 ২. আমরা খাঁটি নতুন বিল মোডে আছি ---
+            activeCart.forEach(cartItem => { let item = stockDb.find(s => s.id === cartItem.id); if(item) item.stock -= cartItem.qty; });
+            salesDb.push({ invoice: `PV-2026-00${Math.floor(Math.random()*900)+100}`, date: getStandardTodayDate(), time: getLiveCurrentTime(), patient: pNameValSaved, contact: contactValSaved, doctor: docValSaved, value: netVal, items: JSON.parse(JSON.stringify(activeCart)) });
+            commitDb(stockDb, salesDb, null);
+            setTimeout(() => { window.print(); if(inputPName) inputPName.value = ''; if(inputPContact) inputPContact.value = ''; if(inputDoc) inputDoc.value = ''; activeCart = []; renderActiveCartTableManifest(); renderInventoryTable(); renderSalesBookTable(); }, 250);
+        }
     }
 
     function handleSmartCSVUpload(event) {
