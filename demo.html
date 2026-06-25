@@ -13,12 +13,9 @@
         .login-card { background: #ffffff; width: 100%; padding: 40px 30px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); text-align: center; border-top: 5px solid #d97706; border-bottom: 1px solid #e2e8f0; }
         .login-logo { width: 140px; height: auto; margin-bottom: 15px; }
         .login-card h2 { color: #064e3b; margin-bottom: 6px; font-size: 24px; font-weight: 700; }
-        .login-card p { color: #64748b; font-size: 13px; margin-bottom: 25px; font-style: italic; }
         .field-label { display: block; text-align: left; font-size: 11px; font-weight: bold; color: #064e3b; margin-bottom: 6px; letter-spacing: 0.5px; }
-        .login-field { width: 100%; padding: 12px; margin-bottom: 18px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 16px; font-weight: bold; letter-spacing: 1px; outline: none; background: #ffffff; color: #000000; text-align: center; transition: border-color 0.2s; }
-        .login-field:focus { border-color: #d97706; }
-        .login-btn { width: 100%; padding: 14px; background: #064e3b; color: #fef08a; border: 1px solid #d97706; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; margin-bottom: 10px; display: block; transition: background 0.2s; }
-        .login-btn:hover { background: #022c22; }
+        .login-field { width: 100%; padding: 12px; margin-bottom: 18px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 16px; font-weight: bold; text-align: center; }
+        .login-btn { width: 100%; padding: 14px; background: #064e3b; color: #fef08a; border: 1px solid #d97706; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
         /* DASHBOARD & SIDEBAR */
         #dashboardScreen { display: none; min-height: 100vh; flex-direction: column; background-color: #f8fafc; }
@@ -80,8 +77,10 @@
         .btn { padding: 12px 24px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; }
         .btn-primary { background: #064e3b; color: #fef08a; border: 1px solid #d97706; }
         .btn-success { background: #059669; color: white; border: 1px solid #047857; }
+        .btn-orange { background: #d97706; color: white; border: 1px solid #b45309; }
         .btn-danger { background: #ef4444; color: white; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; }
-        
+        .csv-upload-box { background: #fffbeb; border: 2px dashed #d97706; padding: 25px; border-radius: 8px; text-align: center; margin-bottom: 25px; }
+
         /* DICTIONARY PREDICTIVE SEARCH */
         .search-box { width: 100%; padding: 12px; border: 2px solid #064e3b; border-radius: 6px; font-size: 14px; outline: none; }
         .suggestions-box { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #cbd5e1; border-radius: 0 0 6px 6px; max-height: 220px; overflow-y: auto; z-index: 9999; display: none; box-shadow: 0 8px 16px rgba(0,0,0,0.12); }
@@ -96,15 +95,23 @@
         .summary-table td { padding: 12px; border-bottom: 1px solid #cbd5e1; font-weight: bold; color: #000000; }
         .total-row { background: #f8fafc !important; font-size: 15px; color: #064e3b; font-weight: bold; }
 
+        .expiry-alert-badge { background: #fee2e2; color: #ef4444; border: 1px solid #fca5a5; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+
         .bill-header-print { display: none; }
         .print-text-val { display: none; font-weight: bold; }
 
+        /* THE 0PX HYBRID ANTI-FLEX PRIVILEGED SYSTEM ENVIRONMENT PRINT ENGINE */
         @media print {
-            body, #dashboardScreen, .workspace, .main-content, .card-box, #newSaleView, #salesReturnView { display: block !important; position: relative !important; width: 100% !important; height: auto !important; overflow: visible !important; margin: 0 !important; padding: 0 !important; background: white !important; box-shadow: none !important; border: none !important; }
+            body, #dashboardScreen, .workspace, .main-content, .card-box, #newSaleView, #salesReturnView, #salesReturnHistoryView {
+                display: block !important; position: relative !important; width: 100% !important; height: auto !important; overflow: visible !important; margin: 0 !important; padding: 0 !important; background: white !important; box-shadow: none !important; border: none !important;
+            }
             .sidebar, .top-navbar, #loginScreen { display: none !important; }
             .view-panel { display: none !important; }
             .view-panel.active { display: block !important; width: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; }
-            #terminalTitleLabel, .search-section, .btn-container, .btn-danger, #billingBody td:last-child, #newSaleView thead th:last-child, .meta-grid input, .qty-input, .disc-input, .ret-input, .hotkey-banner-strip, #salesReturnTableBody td:last-child, #salesReturnView thead th:last-child { display: none !important; }
+
+            #terminalTitleLabel, .search-section, .btn-container, .btn-danger, #billingBody td:last-child, #newSaleView thead th:last-child, .meta-grid input, .qty-input, .disc-input, .ret-input, .hotkey-banner-strip, #returnBody td:last-child, #salesReturnTableBody td:last-child, #salesReturnView thead th:last-child, .no-print-area {
+                display: none !important;
+            }
             .print-text-val { display: inline-block !important; color: #000000 !important; font-size: 13px !important; }
             .bill-header-print { display: flex !important; align-items: center; justify-content: space-between; border-bottom: 2px solid #064e3b; padding-bottom: 12px; margin-bottom: 15px; }
             table { width: 100% !important; border-collapse: collapse !important; }
@@ -228,6 +235,7 @@
                 <div class="submenu-item" onclick="executeSidebarReportNavigation('alert', this)">⚠️ Expiry Alert (≤6M)</div>
                 <div class="submenu-item" onclick="executeSidebarReportNavigation('expired', this)">🚨 Strictly Expired</div>
                 <div class="submenu-item" onclick="executeSidebarReportNavigation('sale_rep', this)">🧾 Sale Audit Ledger</div>
+                <div class="submenu-item" onclick="executeSidebarReportNavigation('return_rep', this)">🔄 Sales Return Ledger</div>
                 <div class="submenu-item" onclick="executeSidebarReportNavigation('company_list', this)">🏢 Master Catalog List</div>
             </div>
         </div>
@@ -295,16 +303,16 @@
                         <div style="display:flex; align-items:center; gap:15px;"><img src="logo.jpg" style="width:75px; height:auto;"><div><h2 style="color:#064e3b; font-size:20px;">PharmaVigour Operations</h2><p style="font-size:11px; color:#475569;">Credit Note Manifest Node</p></div></div>
                         <div style="text-align:right; font-size:12px; line-height:1.5;"><p><strong>CREDIT NOTE / RETURN RECEIPTS</strong></p><p id="print_return_outlet">Outlet Branch Node</p></div>
                     </div>
-                    <div id="returnTerminalTitle" class="panel-title" style="color:#b45309;">🔄 Sales Return & Reconciled Credit Note Module</div>
+                    <div id="returnTerminalTitle" class="panel-title search-section" style="color:#b45309;">🔄 Sales Return & Reconciled Credit Note Module</div>
                     <div class="search-section" style="margin-bottom:25px; display:flex; gap:12px; align-items:center;">
                         <input type="text" id="returnInvoiceRefInput" style="padding:10px; width:280px; border:2px solid #b45309; border-radius:6px; font-weight:bold; outline:none;" placeholder="Enter Original Invoice (e.g. PV-2026-00481)">
                         <button class="btn btn-primary" style="background:#b45309; border-color:#92400e;" onclick="fetchSalesVoucherManifestForReturnDeduction()">Fetch Invoice Record</button>
                     </div>
                     <div class="meta-grid" style="background:#fffbeb; border-color:#fde68a;">
-                        <div class="form-group"><label>Original Customer</label><span class="print-text-val" id="lbl_retPatient" style="padding-top:8px;">---</span></div>
-                        <div class="form-group"><label>Contact Ref</label><span class="print-text-val" id="lbl_retContact" style="padding-top:8px;">---</span></div>
-                        <div class="form-group"><label>Assigned Clinician</label><span class="print-text-val" id="lbl_retDoctor" style="padding-top:8px;">---</span></div>
-                        <div class="form-group"><label>Return Date Tracker</label><span class="print-text-val" id="lbl_retTimestamp" style="padding-top:8px;">---</span></div>
+                        <div class="form-group"><label>Original Customer</label><span class="print-text-val" id="lbl_retPatient" style="padding-top:8px; display:inline-block !important;">---</span></div>
+                        <div class="form-group"><label>Contact Ref</label><span class="print-text-val" id="lbl_retContact" style="padding-top:8px; display:inline-block !important;">---</span></div>
+                        <div class="form-group"><label>Assigned Clinician</label><span class="print-text-val" id="lbl_retDoctor" style="padding-top:8px; display:inline-block !important;">---</span></div>
+                        <div class="form-group"><label>Return Date Tracker</label><span class="print-text-val" id="lbl_retTimestamp" style="padding-top:8px; display:inline-block !important;">---</span></div>
                     </div>
                     <div style="overflow-x: auto; margin-top:20px;">
                         <table>
@@ -337,6 +345,28 @@
                         <div style="display:flex; gap:10px; align-items:center;"><label style="font-size:12px; font-weight:bold; color:#064e3b;">SEARCH BY DATE:</label><input type="date" id="saleDateFilterInput" style="padding:6px 10px; border:2px solid #064e3b; border-radius:4px; font-size:13px; outline:none;" onchange="renderSalesBookTable()"><button onclick="document.getElementById('saleDateFilterInput').value=''; renderSalesBookTable();" style="padding:6px 12px; background:#e2e8f0; border:none; border-radius:4px; font-size:12px; font-weight:bold; cursor:pointer;">Show All Forever</button></div>
                     </div>
                     <table><thead><tr><th>Invoice Reference</th><th>Timestamp (Date & Time)</th><th>Patient Demographics</th><th>Consulting Clinician</th><th>Net Settlement Value</th><th style="text-align:center;">POS Action</th></tr></thead><tbody id="salesBookTableBody"></tbody></table>
+                </div>
+            </div>
+
+            <!-- 🔄 NEW: SALES RETURN HISTORY LEDGER -->
+            <div id="salesReturnHistoryView" class="view-panel">
+                <div class="card-box">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:20px; border-bottom:2px solid #f1f5f9; padding-bottom:10px;">
+                        <div class="panel-title" style="border:none; margin:0; padding:0;">Network Sales Return & Credit Note Ledger</div>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <label style="font-size:12px; font-weight:bold; color:#064e3b;">SEARCH BY DATE:</label>
+                            <input type="date" id="returnDateFilterInput" style="padding:6px 10px; border:2px solid #064e3b; border-radius:4px; font-size:13px; outline:none;" onchange="renderSalesReturnHistoryTable()">
+                            <button onclick="document.getElementById('returnDateFilterInput').value=''; renderSalesReturnHistoryTable();" style="padding:6px 12px; background:#e2e8f0; border:none; border-radius:4px; font-size:12px; font-weight:bold; cursor:pointer;">Show All Forever</button>
+                        </div>
+                    </div>
+                    <div class="meta-grid" style="background:#fffbeb; border-color:#fde68a; grid-template-columns: 1fr 1fr;">
+                        <div class="form-group"><label>Total Returns Processed</label><h3 id="lbl_totalReturnCount" style="color:#b45309; font-size:24px; margin:0;">0</h3></div>
+                        <div class="form-group"><label>Total Refund Disbursed</label><h3 id="lbl_totalRefundValue" style="color:#dc2626; font-size:24px; margin:0;">₹ 0.00</h3></div>
+                    </div>
+                    <table>
+                        <thead><tr><th>Return Ref ID</th><th>Original Invoice</th><th>Timestamp</th><th>Patient Demographics</th><th>Refund Issued</th><th style="text-align:center;">Action</th></tr></thead>
+                        <tbody id="salesReturnHistoryTableBody"></tbody>
+                    </table>
                 </div>
             </div>
 
@@ -449,12 +479,14 @@
     const IMMUTABLE_PURCHASE_SEED = [{ voucher: "PV-PUR-00101", supplier: "Wholesalers Ltd.", date: "15/06/2026", value: 24500.00 }];
     const IMMUTABLE_CREDIT_SEED = [{ id: "CR-101", customer: "Master Sujoy Mitra", phone: "9830111222", due: 450.00, last_date: "10/06/2026", status: "PENDING" }];
     const IMMUTABLE_NRX_SEED = [{ id: "NRX-882", date: "23/06/2026", patient: "Rahul Chakraborty", doctor: "Dr. P. Maitra (WB-9901)", drug: "REXIPRA LS TAB 10'S", qty: 2 }];
+    const IMMUTABLE_RETURNS_SEED = [];
 
     if (!localStorage.getItem('PV_OS_STOCK')) { localStorage.setItem('PV_OS_STOCK', JSON.stringify(IMMUTABLE_STOCK_SEED)); }
     if (!localStorage.getItem('PV_OS_SALES')) { localStorage.setItem('PV_OS_SALES', JSON.stringify(IMMUTABLE_SALES_SEED)); }
     if (!localStorage.getItem('PV_OS_PURCHASES')) { localStorage.setItem('PV_OS_PURCHASES', JSON.stringify(IMMUTABLE_PURCHASE_SEED)); }
     if (!localStorage.getItem('PV_OS_CREDIT')) { localStorage.setItem('PV_OS_CREDIT', JSON.stringify(IMMUTABLE_CREDIT_SEED)); }
     if (!localStorage.getItem('PV_OS_NRX')) { localStorage.setItem('PV_OS_NRX', JSON.stringify(IMMUTABLE_NRX_SEED)); }
+    if (!localStorage.getItem('PV_OS_RETURNS')) { localStorage.setItem('PV_OS_RETURNS', JSON.stringify(IMMUTABLE_RETURNS_SEED)); }
 
     function pullUsers() { return JSON.parse(localStorage.getItem('PV_OS_USERS')); }
     function pullStock() { return JSON.parse(localStorage.getItem('PV_OS_STOCK')); }
@@ -462,6 +494,7 @@
     function pullPurchases() { return JSON.parse(localStorage.getItem('PV_OS_PURCHASES')); }
     function pullCredit() { return JSON.parse(localStorage.getItem('PV_OS_CREDIT')); }
     function pullNrx() { return JSON.parse(localStorage.getItem('PV_OS_NRX')); }
+    function pullReturns() { return JSON.parse(localStorage.getItem('PV_OS_RETURNS')) || []; }
 
     function triggerPvoWatchdogAudit() {
         let items = pullStock(); let alertCount = 0;
@@ -512,7 +545,7 @@
             else { if(adminSidEl) adminSidEl.style.display = 'none'; if(purSidEl && activeLoggedUser && !activeLoggedUser.permissions.includes('purchase')) purSidEl.style.display = 'none'; }
 
             renderInventoryLedgerTable('ALL'); renderSalesBookTable(); renderPurchaseHistoryTable(); 
-            renderCreditTable(); renderShortfallTable(); renderGovtScheduleH1Log(); renderCompanyCatalogList();
+            renderCreditTable(); renderShortfallTable(); renderGovtScheduleH1Log(); renderCompanyCatalogList(); renderSalesReturnHistoryTable();
             triggerPvoWatchdogAudit(); showView('homeView');
         } else { alert("Invalid PIN verification verification failed."); }
     }
@@ -561,6 +594,46 @@
         document.getElementById('lbl_disc').innerHTML = '₹ ' + totalDiscount.toFixed(2);
         document.getElementById('lbl_gst').innerHTML = '₹ ' + gstTotal.toFixed(2);
         document.getElementById('lbl_net').innerHTML = '₹ ' + netPay.toFixed(2);
+    }
+
+    // --- PREVENT AUTO-LOGOUT ON PRINT LOGIC FIXED ---
+    function processSaleInvoiceDeductStockCentral() {
+        if(activeCart.length === 0) return; let stockDb = pullStock(); let salesDb = pullSales(); let nrxDb = pullNrx();
+        let inputPName = document.getElementById('patientName'); let inputPContact = document.getElementById('patientContact'); let inputDoc = document.getElementById('docName');
+        let pNameEl = document.getElementById('lbl_patientName'); let pContactEl = document.getElementById('lbl_patientContact'); let docEl = document.getElementById('lbl_docName');
+        if(pNameEl && inputPName) pNameEl.innerText = inputPName.value || "Cash Walk-in"; if(pContactEl && inputPContact) pContactEl.innerText = inputPContact.value || "---"; if(docEl && inputDoc) docEl.innerText = inputDoc.value || "Self";
+        
+        calculateBillFinancialTotals(); let netEl = document.getElementById('lbl_net'); let netVal = netEl ? parseFloat(netEl.innerText.replace('₹ ', '')) : 0;
+        let pNameValSaved = inputPName ? (inputPName.value || "Cash Walk-in") : "Cash Walk-in"; let contactValSaved = inputPContact ? (inputPContact.value || "9829972091") : "9829972091"; let docValSaved = inputDoc ? (inputDoc.value || "Self") : "Self";
+
+        let nrxItemsBilled = activeCart.filter(i => i.product_name.includes("REXIPRA") || i.product_name.includes("CLAVIX"));
+        if(nrxItemsBilled.length > 0) {
+            nrxItemsBilled.forEach(ni => { nrxDb.push({ id: `NRX-${Math.floor(Math.random()*800)+200}`, date: getStandardTodayDate(), patient: pNameValSaved, doctor: `${docValSaved} (Reg: WB-POS)`, drug: ni.product_name, qty: ni.qty }); });
+            localStorage.setItem('PV_OS_NRX', JSON.stringify(nrxDb));
+        }
+
+        if(activeEditingVoucherId) {
+            originalEditingItemsBackup.forEach(orig => { let stkItem = stockDb.find(s => s.id === orig.id); if(stkItem) stkItem.stock += (parseFloat(orig.qty) || 0); });
+            activeCart.forEach(cartItm => { let stkItem = stockDb.find(s => s.id === cartItm.id); if(stkItem) stkItem.stock -= (parseFloat(cartItm.qty) || 0); });
+            let existingIdx = salesDb.findIndex(s => s.invoice === activeEditingVoucherId);
+            if(existingIdx !== -1) { salesDb[existingIdx].patient = pNameValSaved; salesDb[existingIdx].contact = contactValSaved; salesDb[existingIdx].doctor = docValSaved; salesDb[existingIdx].value = netVal; salesDb[existingIdx].items = JSON.parse(JSON.stringify(activeCart)); }
+            alert(`✔ Audit Overwrite Complete: Voucher [${activeEditingVoucherId}] updated to ₹${netVal}! Stock inventory perfectly reconciled.`); commitDb(stockDb, salesDb, null); resetTerminalToNormalNewSaleMode(); showView('saleHistoryView');
+        } else {
+            activeCart.forEach(cartItem => { let item = stockDb.find(s => s.id === cartItem.id); if(item) item.stock -= cartItem.qty; });
+            salesDb.push({ invoice: `PV-2026-00${Math.floor(Math.random()*900)+100}`, date: getStandardTodayDate(), time: getLiveCurrentTime(), patient: pNameValSaved, contact: contactValSaved, doctor: docValSaved, value: netVal, items: JSON.parse(JSON.stringify(activeCart)) }); commitDb(stockDb, salesDb, null);
+            
+            // Auto Logout Bug Fixed Here (Removed location.reload())
+            setTimeout(() => { 
+                window.print(); 
+                if(inputPName) inputPName.value = ''; 
+                if(inputPContact) inputPContact.value = ''; 
+                if(inputDoc) inputDoc.value = ''; 
+                activeCart = []; 
+                renderActiveCartTableManifest(); 
+                renderInventoryLedgerTable('ALL'); 
+                renderSalesBookTable(); 
+            }, 250);
+        }
     }
 
     // --- SALES RETURN LOGIC ---
@@ -613,18 +686,44 @@
     function commitSalesReturnReconcileStock() {
         if (!activeReturnVoucherObject) { alert("Please query and fetch a valid invoice manifest first."); return; }
         let stockDb = pullStock(); let hasQuantityToReturn = false;
+        let processedItemsLogs = [];
 
         activeReturnVoucherObject.items.forEach((item, index) => {
             let enteredQty = parseInt(document.getElementById(`retQty_${index}`).value) || 0;
+            let enteredBatch = document.getElementById(`retBatch_${index}`).value.trim();
             if (enteredQty > 0) {
                 hasQuantityToReturn = true;
                 let targetStockItem = stockDb.find(s => s.id === item.id);
                 if (targetStockItem) { targetStockItem.stock += enteredQty; }
+                processedItemsLogs.push({
+                    product_name: item.product_name,
+                    batch: enteredBatch,
+                    qty: enteredQty,
+                    rate: item.rate,
+                    discount: item.discount,
+                    gst: item.gst
+                });
             }
         });
 
         if (!hasQuantityToReturn) { alert("Validation Failed: All return quantity nodes are currently set to 0."); return; }
         localStorage.setItem('PV_OS_STOCK', JSON.stringify(stockDb));
+        
+        let returnsDb = pullReturns();
+        let refundTotal = parseFloat(document.getElementById('lbl_returnNet').innerText.replace('₹ ', ''));
+        let newReturnRecord = {
+            return_id: `RTN-${activeReturnVoucherObject.invoice}-${Math.floor(Math.random()*90)+10}`,
+            original_invoice: activeReturnVoucherObject.invoice,
+            date: getStandardTodayDate(),
+            time: getLiveCurrentTime(),
+            patient: activeReturnVoucherObject.patient,
+            doctor: activeReturnVoucherObject.doctor,
+            refund_value: refundTotal,
+            items: processedItemsLogs
+        };
+        returnsDb.push(newReturnRecord);
+        localStorage.setItem('PV_OS_RETURNS', JSON.stringify(returnsDb));
+
         document.getElementById('print_return_outlet').innerText = document.getElementById('activeOutletBadge').innerText;
         
         activeReturnVoucherObject.items.forEach((item, index) => {
@@ -634,10 +733,19 @@
             document.getElementById(`retBatch_${index}`).insertAdjacentHTML('afterend', `<span class="print-text-val">${eb}</span>`);
         });
 
+        // Auto Logout Bug Fixed Here (Removed location.reload())
         setTimeout(() => {
             window.print();
             alert("✔ Audit Inventory Reconciled: Credit Note successfully logged. Central shelving array rebalanced.");
-            location.reload();
+            document.getElementById('returnInvoiceRefInput').value = '';
+            document.getElementById('salesReturnTableBody').innerHTML = '<tr id="returnEmptyRow"><td colspan="7" style="text-align:center; padding:25px; color:#64748b; font-style:italic;">Initialize master voucher audit lookup above to fetch serialized line items.</td></tr>';
+            document.getElementById('lbl_returnNet').innerText = '₹ 0.00';
+            document.getElementById('lbl_retPatient').innerText = '---';
+            document.getElementById('lbl_retContact').innerText = '---';
+            document.getElementById('lbl_retDoctor').innerText = '---';
+            document.getElementById('lbl_retTimestamp').innerText = '---';
+            activeReturnVoucherObject = null;
+            renderSalesReturnHistoryTable();
         }, 200);
     }
 
@@ -646,6 +754,7 @@
         else if(action === 'alert') { showSubView('stockInventoryView', clickedElement); renderInventoryLedgerTable('ALERT'); }
         else if(action === 'expired') { showSubView('stockInventoryView', clickedElement); renderInventoryLedgerTable('EXPIRED'); }
         else if(action === 'sale_rep') { showSubView('saleHistoryView', clickedElement); renderSalesBookTable(); }
+        else if(action === 'return_rep') { showSubView('salesReturnHistoryView', clickedElement); renderSalesReturnHistoryTable(); }
         else if(action === 'company_list') { showSubView('companyCatalogView', clickedElement); renderCompanyCatalogList(); }
     }
 
@@ -683,13 +792,91 @@
         });
     }
 
+    // --- SALES RETURN HISTORY REPORT LOGIC ---
+    function renderSalesReturnHistoryTable() {
+        const tbody = document.getElementById('salesReturnHistoryTableBody'); if(!tbody) return; tbody.innerHTML = ''; 
+        let filterBox = document.getElementById('returnDateFilterInput'); let rawFilterDate = filterBox ? filterBox.value : ""; let targetFormattedDate = "";
+        if(rawFilterDate) { let p = rawFilterDate.split('-'); targetFormattedDate = `${p[2]}/${p[1]}/${p[0]}`; }
+        
+        let allReturns = pullReturns(); 
+        let returnsToShow = targetFormattedDate ? allReturns.filter(b => b.date === targetFormattedDate) : allReturns;
+
+        let totalCount = returnsToShow.length;
+        let totalRefund = returnsToShow.reduce((acc, curr) => acc + (parseFloat(curr.refund_value) || 0), 0);
+        
+        document.getElementById('lbl_totalReturnCount').innerText = totalCount;
+        document.getElementById('lbl_totalRefundValue').innerText = `₹ ${totalRefund.toFixed(2)}`;
+
+        if(returnsToShow.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:25px; color:#64748b; font-style:italic;">No historical sales returns found for date: ${targetFormattedDate || 'All Time'}</td></tr>`;
+        } else {
+            returnsToShow.forEach(ret => {
+                let stampBadge = `<span style="background:#fef3c7; color:#92400e; padding:4px 10px; border-radius:6px; font-weight:bold; font-size:12px; border:1px solid #fde68a;">📅 ${ret.date} &nbsp;|&nbsp; ⏰ ${ret.time}</span>`;
+                let actionBtnHtml = `<button onclick="reprintHistoricReturnVoucher('${ret.return_id}')" style="background:#064e3b; color:#fef08a; border:1px solid #d97706; padding:5px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">🖨️ Print</button>`;
+                let tr = document.createElement('tr'); 
+                tr.innerHTML = `<td><strong>${ret.return_id}</strong></td><td>${ret.original_invoice}</td><td>${stampBadge}</td><td>${ret.patient}</td><td><strong style="color:#dc2626;">₹${ret.refund_value.toFixed(2)}</strong></td><td style="text-align:center;">${actionBtnHtml}</td>`; 
+                tbody.appendChild(tr); 
+            });
+        }
+    }
+
+    function reprintHistoricReturnVoucher(returnRef) {
+        let targetReturn = pullReturns().find(r => r.return_id === returnRef);
+        if(!targetReturn) { alert("Return voucher missing from database!"); return; }
+        
+        document.getElementById('returnInvoiceRefInput').value = targetReturn.original_invoice;
+        document.getElementById('lbl_retPatient').innerText = targetReturn.patient;
+        document.getElementById('lbl_retContact').innerText = "---";
+        document.getElementById('lbl_retDoctor').innerText = targetReturn.doctor;
+        document.getElementById('lbl_retTimestamp').innerText = `${targetReturn.date} - ${targetReturn.time} (DUPLICATE COPY)`;
+
+        const tbody = document.getElementById('salesReturnTableBody');
+        tbody.innerHTML = '';
+
+        targetReturn.items.forEach((item, index) => {
+            let rowRefundVal = item.qty * item.rate * (1 - (item.discount || 0) / 100) * (1 + (item.gst || 0) / 100);
+            tbody.innerHTML += `
+                <tr>
+                    <td><strong>${item.product_name}</strong></td>
+                    <td><span style="background:#f1f5f9; padding:4px 8px; border-radius:4px; font-weight:bold;">A-01</span></td>
+                    <td><span class="print-text-val" style="display:inline-block;">${item.batch}</span></td>
+                    <td><strong>---</strong></td>
+                    <td><span class="print-text-val" style="display:inline-block;">${item.qty}</span></td>
+                    <td>₹${item.rate.toFixed(2)}</td>
+                    <td><strong id="retRowNet_${index}">₹ ${rowRefundVal.toFixed(2)}</strong></td>
+                </tr>`;
+        });
+        document.getElementById('lbl_returnNet').innerText = `₹ ${targetReturn.refund_value.toFixed(2)}`;
+        
+        showView('salesReturnView');
+        setTimeout(() => { 
+            window.print(); 
+            document.getElementById('returnInvoiceRefInput').value = '';
+            tbody.innerHTML = '<tr id="returnEmptyRow"><td colspan="7" style="text-align:center; padding:25px; color:#64748b; font-style:italic;">Initialize master voucher audit lookup above to fetch serialized line items.</td></tr>';
+            document.getElementById('lbl_returnNet').innerText = '₹ 0.00';
+            showView('salesReturnHistoryView');
+        }, 150);
+    }
+
     function renderCreditTable() {
         let tbody = document.getElementById('creditTableBody'); if(!tbody) return; tbody.innerHTML = ''; let crDb = pullCredit();
         crDb.forEach(c => { let statusBadge = c.due > 0 ? `<span style="background:#fef3c7; color:#b45309; padding:2px 8px; border-radius:4px; font-weight:bold;">PENDING</span>` : `<span style="background:#dcfce7; color:#059669; padding:2px 8px; border-radius:4px; font-weight:bold;">PAID</span>`; tbody.innerHTML += `<tr><td><strong>${c.id}</strong></td><td>${c.customer}</td><td>${c.phone}</td><td><strong style="color:${c.due>0?'#dc2626':'#059669'}; font-size:14px;">₹${c.due.toFixed(2)}</strong></td><td>${c.last_date}</td><td>${statusBadge}</td><td style="text-align:center;"><button onclick="settleCreditAccount('${c.id}')" style="background:#2563eb; color:white; border:none; padding:4px 12px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;" ${c.due===0?'disabled opacity:0.5':''}>💳 Settle</button></td></tr>`; });
     }
 
+    function addNewCreditCustomer() {
+        let cName = prompt("Enter Client Demographics Name:"); if(!cName) return; let cPhone = prompt("Enter 10-Digit Mobile ID:"); if(!cPhone || cPhone.length!==10) return; let cAmt = parseFloat(prompt("Enter Opening Credit Balance (₹):")); if(isNaN(cAmt)) return; let crDb = pullCredit(); crDb.push({ id: `CR-${Math.floor(Math.random()*800)+200}`, customer: cName, phone: cPhone, due: cAmt, last_date: getStandardTodayDate(), status: cAmt > 0 ? "PENDING" : "PAID" }); localStorage.setItem('PV_OS_CREDIT', JSON.stringify(crDb)); renderCreditTable();
+    }
+
+    function settleCreditAccount(crId) {
+        let crDb = pullCredit(); let target = crDb.find(c => c.id === crId); if(!target) return; let pay = parseFloat(prompt(`SETTLING ACCOUNT FOR [${target.customer} - ${target.phone}]\nCurrent Outstanding Due: ₹${target.due}\n\nEnter Cash/UPI Amount Received (₹):`, target.due)); if(!isNaN(pay) && pay > 0) { target.due = Math.max(0, target.due - pay); target.last_date = getStandardTodayDate(); if(target.due === 0) target.status = "PAID"; localStorage.setItem('PV_OS_CREDIT', JSON.stringify(crDb)); renderCreditTable(); alert(`✔ Account Settled: Received ₹${pay}. Remaining Outstanding: ₹${target.due}`); }
+    }
+
     function renderShortfallTable() {
         let tbody = document.getElementById('shortfallTableBody'); if(!tbody) return; tbody.innerHTML = ''; let lowItems = pullStock().filter(s => s.stock <= 50); if(lowItems.length === 0) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:25px; color:#059669; font-weight:bold; font-size:14px;">🟢 Excellent! Zero shortfall isolated. All hardware shelf levels are perfectly above 50 strips.</td></tr>`; } else { lowItems.forEach(item => { let orderQty = 100 - item.stock; let estCost = orderQty * item.rate; tbody.innerHTML += `<tr><td><strong>${item.product_name}</strong></td><td><span style="color:#dc2626; font-weight:bold; font-size:14px;">${item.stock} Strips</span></td><td>50 Strips</td><td><strong style="color:#854d0e; background:#fef08a; padding:2px 8px; border-radius:4px; font-size:14px;">+${orderQty} Strips</strong></td><td>₹${estCost.toFixed(2)}</td></tr>`; }); }
+    }
+
+    function exportShortfallWhatsappPO() {
+        let lowItems = pullStock().filter(s => s.stock <= 50); if(lowItems.length === 0) { alert("No empty stock to generate PO!"); return; } let txt = `*PHARMAVIGOUR WHOLESALE PO SHEET*\nDate: ${getStandardTodayDate()}\nStore Node: ${document.getElementById('activeOutletBadge').innerText}\n-----------------------------\n`; lowItems.forEach((i, idx) => { txt += `${idx+1}. ${i.product_name} ---> *${100 - i.stock} Strips*\n`; }); txt += `-----------------------------\n_Auto-parsed via PharmaVigour OS_`; navigator.clipboard.writeText(txt).then(() => { alert("🛒 PO Sheet parsed & copied to clipboard! Paste it directly into your Wholesale Distributor's WhatsApp chat."); }).catch(() => { prompt("Copy the parsed PO Text below for WhatsApp:", txt); });
     }
 
     function renderGovtScheduleH1Log() {
@@ -699,7 +886,7 @@
     function showView(vId) { 
         document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); 
         let targetEl = document.getElementById(vId); if(targetEl) targetEl.classList.add('active'); 
-        if(vId=='stockInventoryView') renderInventoryLedgerTable('ALL'); if(vId=='saleHistoryView') renderSalesBookTable(); if(vId=='creditLedgerView') renderCreditTable(); if(vId=='shortfallView') renderShortfallTable(); if(vId=='nrxRegisterView') renderGovtScheduleH1Log(); if(vId=='companyCatalogView') renderCompanyCatalogList();
+        if(vId=='stockInventoryView') renderInventoryLedgerTable('ALL'); if(vId=='saleHistoryView') renderSalesBookTable(); if(vId=='creditLedgerView') renderCreditTable(); if(vId=='shortfallView') renderShortfallTable(); if(vId=='nrxRegisterView') renderGovtScheduleH1Log(); if(vId=='companyCatalogView') renderCompanyCatalogList(); if(vId=='salesReturnHistoryView') renderSalesReturnHistoryTable();
     }
     function showSubView(vId, el) { showView(vId); document.querySelectorAll('.sidebar .submenu-item, .sidebar .menu-item').forEach(i => i.classList.remove('active')); if(el) el.classList.add('active'); }
     function toggleSubmenu(id) { let subEl = document.getElementById(id); if(subEl) subEl.classList.toggle('open'); }
