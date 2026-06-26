@@ -203,7 +203,7 @@
                 <div class="submenu-item" onclick="showSubView('grossChartView', this)">📊 DASH Board</div>
             </div>
             
-            <!-- PILLAR 2: PURCHASE CORE (100% FIXED DROPDOWN HTML STRUCTURE) -->
+            <!-- PILLAR 2: PURCHASE CORE (100% CLEANED DROPDOWN STRUCTURE) -->
             <div class="menu-item" id="side_purchase" onclick="toggleSubmenu('purchaseSub')">
                 <div><span class="menu-icon">📦</span><span class="menu-text">2. Purchase</span></div><span class="menu-arrow">▼</span>
             </div>
@@ -213,7 +213,7 @@
                 <div class="submenu-item" onclick="executeSidebarReportNavigation('stock', this)">Current Inventory</div>
             </div>
 
-            <!-- PILLAR 3: IDENTITY MANAGEMENT ACCESS (100% FIXED DROPDOWN HTML STRUCTURE) -->
+            <!-- PILLAR 3: IDENTITY MANAGEMENT ACCESS (100% CLEANED DROPDOWN STRUCTURE) -->
             <div class="menu-item" id="side_admin" onclick="toggleSubmenu('adminSub')" style="display:none; border-left-color:#fef08a;">
                 <div><span class="menu-icon">🛡️</span><span class="menu-text" style="color:#fef08a;">3. Admin Hub</span></div><span class="menu-arrow">▼</span>
             </div>
@@ -898,35 +898,6 @@
     function renderGovtScheduleH1Log() {
         let tbody = document.getElementById('nrxTableBody'); if(!tbody) return; tbody.innerHTML = ''; let nrxDb = pullNrx(); if(nrxDb.length === 0) return; nrxDb.forEach(log => { tbody.innerHTML += `<tr><td><strong>${log.id}</strong></td><td>${log.date}</td><td>${log.patient}</td><td>${log.doctor}</td><td><span style="background:#fee2e2; color:#b91c1c; padding:2px 6px; border-radius:4px; font-weight:bold;">🚨 ${log.drug}</span></td><td><strong>${log.qty} Strips</strong></td></tr>`; });
     }
-
-    function loadHistoricBillIntoMainPosCounter(invRef) {
-        if(!activeLoggedUser || activeLoggedUser.role !== 'superadmin') return; let target = pullSales().find(s => s.invoice === invRef); if(!target) return;
-        activeEditingVoucherId = target.invoice; let itemsToLoad = target.items ? JSON.parse(JSON.stringify(target.items)) : []; if(itemsToLoad.length === 0) { itemsToLoad = [{ id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: target.value, qty: 1, discount: 0, gst: 0 }]; } originalEditingItemsBackup = JSON.parse(JSON.stringify(itemsToLoad)); activeCart = itemsToLoad; showSubView('newSaleView', document.querySelector('#side_sale .submenu-item'));
-        document.getElementById('patientName').value = target.patient || ''; document.getElementById('patientContact').value = target.contact || '9829972091'; document.getElementById('docName').value = target.doctor || ''; document.getElementById('billDateInput').value = `${target.date || getStandardTodayDate()} - ${target.time || '12:00 PM'}`;
-        let titleEl = document.getElementById('terminalTitleLabel'); let procBtn = document.getElementById('mainProcessBtn'); let cancelBtn = document.getElementById('cancelEditModeBtn');
-        if(titleEl) { titleEl.innerText = `🛠️ ALTERING LIVE INVOICE VOUCHER: [ ${target.invoice} ]`; titleEl.style.background = "#d97706"; titleEl.style.color = "white"; } if(procBtn) { procBtn.innerText = `💾 Overwrite & Save Bill [ ${target.invoice} ]`; procBtn.style.background = "#d97706"; procBtn.style.borderColor = "#b45309"; } if(cancelBtn) { cancelBtn.style.display = 'inline-block'; } renderActiveCartTableManifest();
-    }
-
-    function resetTerminalToNormalNewSaleMode() {
-        activeEditingVoucherId = null; originalEditingItemsBackup = []; activeCart = []; document.getElementById('patientName').value = ''; document.getElementById('patientContact').value = ''; document.getElementById('docName').value = ''; document.getElementById('billDateInput').value = `${getStandardTodayDate()} - ${getLiveCurrentTime()}`;
-        let titleEl = document.getElementById('terminalTitleLabel'); let procBtn = document.getElementById('mainProcessBtn'); let cancelBtn = document.getElementById('cancelEditModeBtn');
-        if(titleEl) { titleEl.innerText = "Retail Cash Memo Core Terminal (New Sale Bill)"; titleEl.style.background = "#f1f5f9"; titleEl.style.color = "#064e3b"; } if(procBtn) { procBtn.innerText = "Complete Bill & Authorize Hardware Print "; procBtn.style.background = "#064e3b"; procBtn.style.borderColor = "#d97706"; } if(cancelBtn) { cancelBtn.style.display = 'none'; } renderActiveCartTableManifest();
-    }
-
-    function renderStaffDirectoryTable() {
-        let tbody = document.getElementById('staffDirectoryTableBody'); if(!tbody) return; tbody.innerHTML = ''; let uDb = pullUsers();
-        Object.keys(uDb).forEach(phoneKey => { let u = uDb[phoneKey]; let isMe = (activeLoggedUser && activeLoggedUser.phone === phoneKey); let actionHtml = phoneKey === '7029719074' ? `<span style="color:#ef4444; font-size:10px; font-weight:bold;">🛡️ ROOT</span>` : `<button onclick="revokeStaffAccess('${phoneKey}')" style="background:#ef4444; color:white; border:none; padding:3px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:bold;">Revoke</button>`; let tr = document.createElement('tr'); tr.innerHTML = `<td><strong>${phoneKey}</strong></td><td>${u.name} ${isMe ? '<b>(You)</b>' : ''}</td><td><span class="role-badge" style="background:${u.role==='superadmin'?'#fef08a':'#e2e8f0'}; color:${u.role==='superadmin'?'#854d0e':'#475569'};">${u.role.toUpperCase()}</span></td><td>${u.outlet}</td><td>${u.permissions.join(', ').toUpperCase()}</td><td style="text-align:center;">${actionHtml}</td>`; tbody.appendChild(tr); });
-    }
-
-    function registerNewEnterpriseStaff() {
-        if(!activeLoggedUser || activeLoggedUser.role !== 'superadmin') return;
-        let sName = document.getElementById('newStaffName').value.trim(); let sPhone = document.getElementById('newStaffPhone').value.trim(); let sPin = document.getElementById('newStaffPin').value.trim(); let sRole = document.getElementById('newStaffRole').value; let sOutlet = document.getElementById('newStaffOutlet').value;
-        let perms = ['sale']; if(document.getElementById('chkPermPur').checked || sRole==='superadmin') perms.push('purchase'); if(sRole === 'superadmin') perms.push('admin');
-        if(!sName || sPhone.length !== 10 || sPin.length !== 4 || isNaN(sPhone) || isNaN(sPin)) { alert("ERROR: Please provide a valid Name, 10-Digit Mobile ID, and 4-Digit numeric PIN."); return; }
-        let uDb = pullUsers(); if(uDb[sPhone]) { if(!confirm("Mobile ID already registered. Override their existing PIN and Store Assignment?")) return; } uDb[sPhone] = { name: sName, pin: sPin, role: sRole, outlet: sOutlet, permissions: perms }; localStorage.setItem('PV_OS_USERS', JSON.stringify(uDb)); renderStaffDirectoryTable(); document.getElementById('newStaffName').value = ''; document.getElementById('newStaffPhone').value = ''; document.getElementById('newStaffPin').value = ''; alert(`🎉 Active Directory Updated: Employee [${sName} - ${sPhone}] successfully registered for [${sOutlet}]!`);
-    }
-
-    function revokeStaffAccess(targetPhone) { let uDb = pullUsers(); if(confirm(`Permanently terminate network access for staff Mobile ID: ${targetPhone}?`)) { delete uDb[targetPhone]; localStorage.setItem('PV_OS_USERS', JSON.stringify(uDb)); renderStaffDirectoryTable(); } }
 
     function showView(vId) { 
         document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); 
