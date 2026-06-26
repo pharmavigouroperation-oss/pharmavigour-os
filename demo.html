@@ -38,17 +38,17 @@
         .role-badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; background: #fef08a; color: #854d0e; text-transform: uppercase; }
         .outlet-badge { padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; background: #2563eb; color: white; }
 
-        /* ⚡ THE CHROME FINISHED DYNAMIC SIDEBAR INTERFACE (FIXED ARROW WRAP BUG) */
+        /* THE CHROME FINISHED DYNAMIC SIDEBAR INTERFACE */
         .workspace { display: flex; flex: 1; position: relative; min-height: calc(100vh - 62px); }
         .sidebar { background: #0f172a; color: #cbd5e1; width: 60px; padding: 20px 0; display: flex; flex-direction: column; gap: 4px; box-shadow: 4px 0 15px rgba(0,0,0,0.05); position: absolute; top: 0; left: 0; bottom: 0; z-index: 1500; transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; white-space: nowrap; }
         .sidebar:hover { width: 260px; }
         
-        .menu-item { padding: 14px 20px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; flex-wrap: nowrap !important; width: 100%; border-left: 4px solid transparent; transition: background 0.2s; }
+        .menu-item { padding: 14px 20px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid transparent; transition: background 0.2s; }
         .menu-item:hover, .menu-item.active { background: #1e293b; color: #ffffff; border-left-color: #d97706; }
         .menu-icon { font-size: 16px; display: inline-block; width: 20px; text-align: center; }
         .menu-text { margin-left: 15px; opacity: 0; transition: opacity 0.2s; display: inline-block; }
         .sidebar:hover .menu-text { opacity: 1; }
-        .menu-arrow { font-size: 10px; opacity: 0; transition: opacity 0.2s; margin-left: auto; padding-left: 8px; }
+        .menu-arrow { font-size: 10px; opacity: 0; transition: opacity 0.2s; }
         .sidebar:hover .menu-arrow { opacity: 1; }
 
         .submenu-list { background: #020617; display: none; padding: 4px 0; }
@@ -194,7 +194,7 @@
             
             <!-- PILLAR 1: SALE SYSTEM MODULES -->
             <div class="menu-item active" id="side_sale" onclick="toggleSubmenu('saleSub')">
-                <div style="display:flex; align-items:center;"><span class="menu-icon">🧮</span><span class="menu-text">1. Sale</span></div><span class="menu-arrow">▼</span>
+                <div><span class="menu-icon">🧮</span><span class="menu-text">1. Sale</span></div><span class="menu-arrow">▼</span>
             </div>
             <div id="saleSub" class="submenu-list open">
                 <div class="submenu-item active" onclick="showSubView('newSaleView', this)">New Sale Bill</div>
@@ -203,9 +203,9 @@
                 <div class="submenu-item" onclick="showSubView('grossChartView', this)">📊 DASH Board</div>
             </div>
             
-            <!-- PILLAR 2: PURCHASE CORE (FIXED DROPDOWN SYMBOL) -->
+            <!-- PILLAR 2: PURCHASE CORE (100% FIXED DROPDOWN HTML STRUCTURE) -->
             <div class="menu-item" id="side_purchase" onclick="toggleSubmenu('purchaseSub')">
-                <div style="display:flex; align-items:center;"><span class="menu-icon">📦</span><span class="menu-text">2. Purchase</span></div><span class="menu-arrow">▼</span>
+                <div><span class="menu-icon">📦</span><span class="menu-text">2. Purchase</span></div><span class="menu-arrow">▼</span>
             </div>
             <div id="purchaseSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('newPurchaseView', this)">New Stock Inward</div>
@@ -213,9 +213,9 @@
                 <div class="submenu-item" onclick="executeSidebarReportNavigation('stock', this)">Current Inventory</div>
             </div>
 
-            <!-- PILLAR 3: IDENTITY MANAGEMENT ACCESS (FIXED DROPDOWN SYMBOL) -->
+            <!-- PILLAR 3: IDENTITY MANAGEMENT ACCESS (100% FIXED DROPDOWN HTML STRUCTURE) -->
             <div class="menu-item" id="side_admin" onclick="toggleSubmenu('adminSub')" style="display:none; border-left-color:#fef08a;">
-                <div style="display:flex; align-items:center;"><span class="menu-icon">🛡️</span><span class="menu-text" style="color:#fef08a;">3. Admin Hub</span></div><span class="menu-arrow">▼</span>
+                <div><span class="menu-icon">🛡️</span><span class="menu-text" style="color:#fef08a;">3. Admin Hub</span></div><span class="menu-arrow">▼</span>
             </div>
             <div id="adminSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('adminUserManageView', this)" style="color:#fde68a;">👥 Identity Access Control</div>
@@ -223,7 +223,7 @@
 
             <!-- PILLAR 4: ACCOUNTS RECEIVABLE CREDIT LEDGER -->
             <div class="menu-item" id="side_credit" onclick="toggleSubmenu('creditSub')">
-                <div style="display:flex; align-items:center;"><span class="menu-icon">📇</span><span class="menu-text">4. Credit Book</span></div><span class="menu-arrow">▼</span>
+                <div><span class="menu-icon">📇</span><span class="menu-text">4. Credit Book</span></div><span class="menu-arrow">▼</span>
             </div>
             <div id="creditSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('creditLedgerView', this)">📜 Credit Ledger</div>
@@ -231,7 +231,7 @@
 
             <!-- PILLAR 5: AUTOMATED INVENTORY SHORTFALL PO SHEET -->
             <div class="menu-item" id="side_shortfall" onclick="toggleSubmenu('shortfallSub')">
-                <div style="display:flex; align-items:center;"><span class="menu-icon">🛒</span><span class="menu-text">5. Shortfall Book</span></div><span class="menu-arrow">▼</span>
+                <div><span class="menu-icon">🛒</span><span class="menu-text">5. Shortfall Book</span></div><span class="menu-arrow">▼</span>
             </div>
             <div id="shortfallSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('shortfallView', this)">⚠️ Re-Order PO Sheet</div>
@@ -239,7 +239,7 @@
 
             <!-- PILLAR 6: STATUTORY INSPECTION REGULATORY NRX REGISTER -->
             <div class="menu-item" id="side_nrx" onclick="toggleSubmenu('nrxSub')">
-                <div style="display:flex; align-items:center;"><span class="menu-icon">🩺</span><span class="menu-text">6. NRX Register</span></div><span class="menu-arrow">▼</span>
+                <div><span class="menu-icon">🩺</span><span class="menu-text">6. NRX Register</span></div><span class="menu-arrow">▼</span>
             </div>
             <div id="nrxSub" class="submenu-list">
                 <div class="submenu-item" onclick="showSubView('nrxRegisterView', this)">🚨 Schedule H1 Log</div>
@@ -247,7 +247,7 @@
 
             <!-- PILLAR 7: COMPREHENSIVE RECONCILIATION AUDIT REPORTS -->
             <div class="menu-item" id="side_report" onclick="toggleSubmenu('reportSub')" style="border-left-color:#0ea5e9;">
-                <div style="display:flex; align-items:center;"><span class="menu-icon">📊</span><span class="menu-text">7. Report</span></div><span class="menu-arrow">▼</span>
+                <div><span class="menu-icon">📊</span><span class="menu-text">7. Report</span></div><span class="menu-arrow">▼</span>
             </div>
             <div id="reportSub" class="submenu-list">
                 <div class="submenu-item" onclick="executeSidebarReportNavigation('stock', this)">📦 All Stock Balance</div>
@@ -706,7 +706,6 @@
         } else { alert("No previous transaction record isolated for this contact index."); }
     }
 
-    // --- SALES RETURN LOGIC ---
     function fetchSalesVoucherManifestForReturnDeduction() {
         const targetRef = document.getElementById('returnInvoiceRefInput').value.trim();
         const foundInvoice = pullSales().find(s => s.invoice === targetRef);
@@ -773,7 +772,6 @@
         }, 200);
     }
 
-    // --- ⚡ FIXED RACE CONDITION FOR PRINTING SALE HISTORY ---
     function reprintHistoricInvoiceVoucher(invRef) {
         let targetBill = pullSales().find(s => s.invoice === invRef); if(!targetBill) { alert("Voucher missing from database!"); return; }
         let runningCartSnapshot = JSON.parse(JSON.stringify(activeCart)); let snapPat = document.getElementById('patientName').value; let snapCon = document.getElementById('patientContact').value; let snapDoc = document.getElementById('docName').value; let snapDate = document.getElementById('billDateInput').value;
@@ -789,7 +787,6 @@
         window.addEventListener('afterprint', restoreHook);
     }
 
-    // --- ⚡ FIXED RACE CONDITION FOR PRINTING RETURN HISTORY ---
     function reprintHistoricReturnVoucher(returnRef) {
         let targetReturn = pullReturns().find(r => r.return_id === returnRef); if(!targetReturn) { alert("Return voucher missing from database!"); return; }
         document.getElementById('returnInvoiceRefInput').value = targetReturn.original_invoice; document.getElementById('lbl_retPatient').innerText = targetReturn.patient; document.getElementById('lbl_retContact').innerText = "---"; document.getElementById('lbl_retDoctor').innerText = targetReturn.doctor; document.getElementById('lbl_retTimestamp').innerText = `${targetReturn.date} - ${targetReturn.time} (DUPLICATE COPY)`;
@@ -930,23 +927,6 @@
     }
 
     function revokeStaffAccess(targetPhone) { let uDb = pullUsers(); if(confirm(`Permanently terminate network access for staff Mobile ID: ${targetPhone}?`)) { delete uDb[targetPhone]; localStorage.setItem('PV_OS_USERS', JSON.stringify(uDb)); renderStaffDirectoryTable(); } }
-
-    function renderPurchaseCartTable() { const tbody = document.getElementById('purchaseCartBody'); const emptyRow = document.getElementById('purEmptyRow'); if(!tbody) return; tbody.querySelectorAll('tr:not(#purEmptyRow)').forEach(r => r.remove()); let delBtn = document.getElementById('deleteCsvBtn'); if(temporaryPurchaseCart.length === 0) { if(emptyRow) emptyRow.style.display = 'table-row'; if(delBtn) delBtn.style.display='none'; return; } if(emptyRow) emptyRow.style.display = 'none'; if(delBtn) delBtn.style.display='inline-block'; temporaryPurchaseCart.forEach(item => { const tr = document.createElement('tr'); tr.innerHTML = `<td><strong>${item.product_name}</strong></td><td><span style="background:#fffbeb; padding:2px 6px; border-radius:4px; font-weight:bold; color:#b45309;">${item.rack}</span></td><td>${item.batch}</td><td>${item.expiry}</td><td><strong>${item.qty} Strips</strong></td><td>₹${item.rate.toFixed(2)}</td><td>${item.gst}%</td><td><strong>₹${(item.rate * item.qty).toFixed(2)}</strong></td>`; tbody.appendChild(tr); }); }
-
-    function handleSmartCSVUpload(event) {
-        const file = event.target.files[0]; if (!file) return; const reader = new FileReader();
-        reader.onload = function(e) {
-            const lines = e.target.result.split('\n'); temporaryPurchaseCart = [];
-            for (let i = 1; i < lines.length; i++) { if (!lines[i].trim()) continue; const cols = lines[i].split(','); if (cols.length >= 7) { const name = cols[1].trim().replace(/"/g, ''); const qty = parseInt(cols[4]) || 0; const rate = parseFloat(cols[5]) || 0; if (name && name.toLowerCase() !== 'product name') temporaryPurchaseCart.push({ product_name: name, rack: cols[2] || "A-01", batch: cols[3] || "BAT-NEW", expiry: cols[6] || "12/28", rate: rate, gst: parseInt(cols[7]) || 12, qty: qty }); } } renderPurchaseCartTable();
-        }; reader.readAsText(file);
-    }
-
-    function saveEntirePurchaseCartToStock() {
-        if(temporaryPurchaseCart.length === 0) { alert("Please parse a CSV file first!"); return; } let stockDb = pullStock(); let purchasesDb = pullPurchases(); let currentInvoiceTotal = 0; let supInput = document.getElementById('supplierName'); let supName = supInput ? supInput.value : "Wholesaler";
-        temporaryPurchaseCart.forEach(item => { currentInvoiceTotal += (item.rate * item.qty); let match = stockDb.find(s => s.product_name.toLowerCase() === item.product_name.toLowerCase() && s.batch === item.batch); if(match) match.stock += item.qty; else stockDb.push({ id: stockDb.length + 101, product_name: item.product_name, rack: item.rack, batch: item.batch, expiry: item.expiry, rate: item.rate, gst: item.gst, stock: item.qty }); });
-        purchasesDb.push({ voucher: `PV-PUR-00${Math.floor(Math.random()*900)+100}`, supplier: supName, date: getStandardTodayDate(), value: currentInvoiceTotal }); commitDb(stockDb, null, purchasesDb); alert(" Success: Invoice stock successfully recorded and saved to Purchase History!"); temporaryPurchaseCart = []; renderPurchaseCartTable(); renderInventoryLedgerTable('ALL'); renderPurchaseHistoryTable(); showView('purchaseHistoryView');
-    }
-    function deleteUploadedCSVProcess() { temporaryPurchaseCart = []; renderPurchaseCartTable(); }
 
     function showView(vId) { 
         document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); 
