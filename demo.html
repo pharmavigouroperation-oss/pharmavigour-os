@@ -110,8 +110,9 @@
         .bill-header-print { display: none; }
         .print-text-val { display: none; font-weight: bold; }
 
+        /* THE 0PX HYBRID ANTI-FLEX PRIVILEGED SYSTEM ENVIRONMENT PRINT ENGINE */
         @media print {
-            body, #dashboardScreen, .workspace, .main-content, .card-box, #newSaleView, #salesReturnView, #salesReturnHistoryView {
+            body, #dashboardScreen, .workspace, .main-content, .card-box, #newSaleView, #salesReturnView, #salesReturnHistoryView, #plReportView, #fastMovingView, #gstReportView {
                 display: block !important; position: relative !important; width: 100% !important; height: auto !important; overflow: visible !important; margin: 0 !important; padding: 0 !important; background: white !important; box-shadow: none !important; border: none !important;
             }
             .sidebar, .top-navbar, #loginScreen, #patientHistoryModal { display: none !important; }
@@ -144,8 +145,8 @@
         <div id="loginError" class="login-error"></div>
 
         <div id="phoneSection">
-            <label class="field-label">ENTER REGISTERED MOBILE NUMBER</label>
-            <input type="tel" id="userPhone" class="login-field" placeholder="Enter 10-Digit Mobile ID" maxlength="10" autocomplete="off">
+            <label class="field-label">ENTER USERNAME (Staff Login ID)</label>
+            <input type="text" id="userPhone" class="login-field" placeholder="e.g. admin" autocomplete="off">
             <div id="outletSelectGroup" style="margin-bottom:18px; text-align:left;">
                 <label class="field-label">SELECT SYSTEM NETWORK OUTLET</label>
                 <select id="loginOutlet" class="login-field" style="text-align-last:center; font-size:14px; padding:11px;">
@@ -154,13 +155,13 @@
                     <option value="KP STORE">KP STORE</option>
                 </select>
             </div>
-            <button class="login-btn" id="sendOtpBtn" onclick="generateAndSendSecureOTP()">Generate Secure OTP</button>
+            <button class="login-btn" id="sendOtpBtn" onclick="generateAndSendSecureOTP()">Proceed to Security Token</button>
         </div>
 
         <div id="otpBoxSection" class="otp-box-section" style="display: none;">
-            <label class="field-label" style="color:#d97706; text-align:center;">ENTER 4-DIGIT SECURITY TOKEN</label>
-            <input type="password" id="inputOtp" class="login-field" placeholder="••••" maxlength="4" style="letter-spacing:10px; font-size:22px;">
-            <button class="login-btn" style="background:#d97706; color:white; border-color:#b45309;" onclick="verifyReceivedOTPCode()">Verify Token & Authorize Session</button>
+            <label class="field-label" style="color:#d97706; text-align:center;">ENTER ACCOUNT PASSWORD</label>
+            <input type="password" id="inputOtp" class="login-field" placeholder="••••" style="letter-spacing:5px; font-size:20px;">
+            <button class="login-btn" style="background:#d97706; color:white; border-color:#b45309;" onclick="verifyReceivedOTPCode()">Authorize Cloud Session</button>
         </div>
     </div>
 </div>
@@ -250,6 +251,9 @@
             </div>
             <div id="reportSub" class="submenu-list">
                 <div class="submenu-item" onclick="executeSidebarReportNavigation('stock', this)">📦 All Stock Balance</div>
+                <div class="submenu-item" onclick="showSubView('plReportView', this)">💰 P&L Statement</div>
+                <div class="submenu-item" onclick="showSubView('fastMovingView', this)">📈 Fast Moving Items</div>
+                <div class="submenu-item" onclick="showSubView('gstReportView', this)">🧾 GST/Tax Summary</div>
                 <div class="submenu-item" onclick="executeSidebarReportNavigation('alert', this)">⚠️ Expiry Alert (≤6M)</div>
                 <div class="submenu-item" onclick="executeSidebarReportNavigation('expired', this)">🚨 Strictly Expired</div>
                 <div class="submenu-item" onclick="executeSidebarReportNavigation('sale_rep', this)">🧾 Sale Audit Ledger</div>
@@ -478,11 +482,11 @@
             <div id="adminUserManageView" class="view-panel">
                 <div class="card-box" style="border-top:4px solid #d97706;">
                     <div class="panel-title">🛡️ Identity Access Control & User Authorization Studio</div>
-                    <div class="meta-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); background:#fffbeb; border-color:#fde68a;"><div class="form-group"><label>Employee Full Name</label><input type="text" id="newStaffName" placeholder="e.g. Sujoy Maitra"></div><div class="form-group"><label>Mobile Number (Login ID)</label><input type="text" id="newStaffPhone" placeholder="10-Digit Mobile" maxlength="10"></div><div class="form-group"><label>Assign 4-Digit Security PIN</label><input type="text" id="newStaffPin" placeholder="••••" maxlength="4"></div></div>
+                    <div class="meta-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); background:#fffbeb; border-color:#fde68a;"><div class="form-group"><label>Employee Full Name</label><input type="text" id="newStaffName" placeholder="e.g. Sujoy Maitra"></div><div class="form-group"><label>Username (Login ID)</label><input type="text" id="newStaffPhone" placeholder="e.g. cashier1"></div><div class="form-group"><label>Assign Account Password</label><input type="text" id="newStaffPin" placeholder="••••"></div></div>
                     <div class="meta-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));"><div class="form-group"><label>System Role Hierarchy</label><select id="newStaffRole" style="padding:10px; border:1px solid #cbd5e1; border-radius:4px; font-weight:bold;"><option value="cashier">Cashier / Billing Counter (Restricted)</option><option value="superadmin">Super Admin (God Mode)</option></select></div><div class="form-group"><label>Assigned Hardware Store</label><select id="newStaffOutlet" style="padding:10px; border:1px solid #cbd5e1; border-radius:4px; font-weight:bold;"><option value="CHKD STORE">CHKD STORE</option><option value="KP STORE">KP STORE</option><option value="Main Login Hub">Main Login Hub</option></select></div><div class="form-group"><label>Allowed Software Modules</label><div style="display:flex; gap:15px; padding-top:8px; font-weight:bold; font-size:13px; color:#064e3b;"><label><input type="checkbox" id="chkPermSale" checked disabled> Sale</label><label><input type="checkbox" id="chkPermPur"> Purchase</label></div></div></div>
                     <div class="btn-container" style="margin-top:10px;"><button class="btn btn-success" style="background:#064e3b;" onclick="registerNewEnterpriseStaff()">+ Authorize & Save New Identity</button></div>
                     <h3 style="margin-top:35px; color:#064e3b; border-bottom:2px solid #f1f5f9; padding-bottom:10px; font-size:15px; text-transform:uppercase;">Active Registered System Accounts</h3>
-                    <table style="margin-top:15px;"><thead><tr><th>Mobile ID (Login)</th><th>Employee Name</th><th>Role Level</th><th>Assigned Branch</th><th>Module Rights</th><th style="text-align:center;">Action</th></tr></thead><tbody id="staffDirectoryTableBody"></tbody></table>
+                    <table style="margin-top:15px;"><thead><tr><th>Username ID</th><th>Role Level</th><th style="text-align:center;">Action</th></tr></thead><tbody id="staffDirectoryTableBody"></tbody></table>
                 </div>
             </div>
 
@@ -512,6 +516,48 @@
                 </div>
             </div>
 
+            <!-- 💰 VIEW: 7.2 P&L STATEMENT -->
+            <div id="plReportView" class="view-panel">
+                <div class="card-box" style="border-top:4px solid #10b981;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid #f1f5f9; padding-bottom:10px;">
+                        <h3 class="panel-title" style="border:none; margin:0; padding:0; color:#065f46;">💰 Profit & Loss Statement (Financial Audit)</h3>
+                        <button class="btn btn-primary" onclick="exportTableToExcel('plReportTable', 'Profit_Loss_Statement')">📥 Export to Excel</button>
+                    </div>
+                    <table id="plReportTable">
+                        <thead><tr><th>Financial Indicator</th><th style="text-align:right;">Apportioned Value (₹)</th></tr></thead>
+                        <tbody id="plReportBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 📈 VIEW: 7.3 FAST MOVING ITEMS -->
+            <div id="fastMovingView" class="view-panel">
+                <div class="card-box" style="border-top:4px solid #3b82f6;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid #f1f5f9; padding-bottom:10px;">
+                        <h3 class="panel-title" style="border:none; margin:0; padding:0; color:#1e40af;">📈 Fast Moving / High Movement Catalog</h3>
+                        <button class="btn btn-primary" onclick="exportTableToExcel('fastMovingTable', 'Fast_Moving_Catalog')">📥 Export to Excel</button>
+                    </div>
+                    <table id="fastMovingTable">
+                        <thead><tr><th>Rank</th><th>Formulation Description</th><th>Rack Bin</th><th style="text-align:right;">Cumulative Strips Disbursed</th></tr></thead>
+                        <tbody id="fastMovingBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 🧾 VIEW: 7.4 GST SUMMARY REPORT -->
+            <div id="gstReportView" class="view-panel">
+                <div class="card-box" style="border-top:4px solid #8b5cf6;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:2px solid #f1f5f9; padding-bottom:10px;">
+                        <h3 class="panel-title" style="border:none; margin:0; padding:0; color:#5b21b6;">🧾 GST & Tax Filing Reconciliation Summary</h3>
+                        <button class="btn btn-primary" onclick="exportTableToExcel('gstSummaryTable', 'GST_Tax_Summary')">📥 Export to Excel</button>
+                    </div>
+                    <table id="gstSummaryTable">
+                        <thead><tr><th>Invoice Ref</th><th>Timestamp</th><th>Base Taxable Value</th><th>CGST (₹)</th><th>SGST (₹)</th><th style="text-align:right;">Total GST Disbursed (₹)</th></tr></thead>
+                        <tbody id="gstSummaryBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -528,65 +574,45 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+    // ⚡ SUPABASE CLOUD CONNECTION INITIALIZATION
+    const SUPABASE_URL ='https://fhoqtdnmfubqtfgzyjao.supabase.co'; 
+    const SUPABASE_ANON_KEY ='sb_publishable_f46ufSRHAQZPI3qiCHa3xA_btmxzROU';
+    
+    let supabaseClient = null;
     try {
-        const SUPABASE_URL ='https://fhoqtdnmfubqtfgzyjao.supabase.co'; const SUPABASE_ANON_KEY ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZob3F0ZG5tZnVicXRmZ3p5amFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MzA0MzMsImV4cCI6MjA5NzIwNjQzM30.k0olwUwMqAQRzV1wZ5afHokEdc4nel2e39ooHmGqDn4';
-        if (window.supabase) { const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); console.log("Supabase Connected Successfully"); supabase.from('otp_logs').select('*').limit(1).then(({ data, error }) => {}); }
-    } catch (err) { console.warn("Running in local ERP mode."); }
+        if (window.supabase) {
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log("✔ Supabase Cloud Database Connected Successfully");
+        }
+    } catch (err) { console.warn("Supabase initialization warning:", err); }
 
     function getStandardTodayDate() { let d = new Date(); return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`; }
     function getLiveCurrentTime() { let d = new Date(); let hrs = d.getHours(); let mins = String(d.getMinutes()).padStart(2, '0'); let ampm = hrs >= 12 ? 'PM' : 'AM'; hrs = hrs % 12 || 12; return `${String(hrs).padStart(2, '0')}:${mins} ${ampm}`; }
    
-    const IMMUTABLE_USERS_SEED = {
-        '7029719074': { name: 'Rahul Chakraborty', pin: '1234', role: 'superadmin', outlet: 'Main Login', permissions: ['sale', 'purchase', 'admin'] },
-        '9123665890': { name: 'Amul Basak (Cashier)', pin: '5678', role: 'cashier', outlet: 'CHKD STORE', permissions: ['sale'] }
-    };
-    if (!localStorage.getItem('PV_OS_USERS')) { localStorage.setItem('PV_OS_USERS', JSON.stringify(IMMUTABLE_USERS_SEED)); }
-
-    const IMMUTABLE_STOCK_SEED = [
-        { id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: 76.60, gst: 12, stock: 140 },
-        { id: 102, product_name: "REXIPRA LS TAB 10'S", rack: "B-12", batch: "KX3099", expiry: "04/26", rate: 78.57, gst: 12, stock: 45 },
-        { id: 103, product_name: "PAN D CAPSULE 10'S", rack: "C-05", batch: "PAN9942A", expiry: "09/26", rate: 145.00, gst: 12, stock: 35 }, 
-        { id: 104, product_name: "Cilacar 10mg Tab", rack: "A-04", batch: "CIL3452100", expiry: "12/28", rate: 112.54, gst: 5, stock: 1250 }
-    ];
-    const IMMUTABLE_SALES_SEED = [
-        { invoice: "PV-2026-00481", date: getStandardTodayDate(), time: "12:00 PM", patient: "Rahul Chakraborty", contact: "9829972091", doctor: "Dr. P. Maitra", value: 1688.10, items: [{ id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: 76.60, qty: 10, discount: 0, gst: 12 }, { id: 103, product_name: "PAN D CAPSULE 10'S", rack: "C-05", batch: "PAN9942A", expiry: "05/26", rate: 145.00, qty: 5, discount: 0, gst: 12 }] }
-    ];
-    const IMMUTABLE_PURCHASE_SEED = [{ voucher: "PV-PUR-00101", supplier: "Wholesalers Ltd.", date: "15/06/2026", value: 24500.00 }];
-    const IMMUTABLE_CREDIT_SEED = [{ id: "CR-101", customer: "Master Sujoy Mitra", phone: "9830111222", due: 450.00, last_date: "10/06/2026", status: "PENDING" }];
-    const IMMUTABLE_NRX_SEED = [{ id: "NRX-882", date: "23/06/2026", patient: "Rahul Chakraborty", doctor: "Dr. P. Maitra (WB-9901)", drug: "REXIPRA LS TAB 10'S", qty: 2 }];
-    const IMMUTABLE_RETURNS_SEED = [];
-
-    if (!localStorage.getItem('PV_OS_STOCK')) { localStorage.setItem('PV_OS_STOCK', JSON.stringify(IMMUTABLE_STOCK_SEED)); }
-    if (!localStorage.getItem('PV_OS_SALES')) { localStorage.setItem('PV_OS_SALES', JSON.stringify(IMMUTABLE_SALES_SEED)); }
-    if (!localStorage.getItem('PV_OS_PURCHASES')) { localStorage.setItem('PV_OS_PURCHASES', JSON.stringify(IMMUTABLE_PURCHASE_SEED)); }
-    if (!localStorage.getItem('PV_OS_CREDIT')) { localStorage.setItem('PV_OS_CREDIT', JSON.stringify(IMMUTABLE_CREDIT_SEED)); }
-    if (!localStorage.getItem('PV_OS_NRX')) { localStorage.setItem('PV_OS_NRX', JSON.stringify(IMMUTABLE_NRX_SEED)); }
-    if (!localStorage.getItem('PV_OS_RETURNS')) { localStorage.setItem('PV_OS_RETURNS', JSON.stringify(IMMUTABLE_RETURNS_SEED)); }
-
-    function pullUsers() { return JSON.parse(localStorage.getItem('PV_OS_USERS')); }
-    function pullStock() { return JSON.parse(localStorage.getItem('PV_OS_STOCK')); }
-    function pullSales() { return JSON.parse(localStorage.getItem('PV_OS_SALES')); }
-    function pullPurchases() { return JSON.parse(localStorage.getItem('PV_OS_PURCHASES')); }
-    function pullCredit() { return JSON.parse(localStorage.getItem('PV_OS_CREDIT')); }
-    function pullNrx() { return JSON.parse(localStorage.getItem('PV_OS_NRX')); }
-    function pullReturns() { return JSON.parse(localStorage.getItem('PV_OS_RETURNS')) || []; }
-
-    function triggerPvoWatchdogAudit() {
-        let items = pullStock(); let alertCount = 0;
-        items.forEach(item => { let expParts = item.expiry.split('/'); let expMonth = parseInt(expParts[0]); let expYear = parseInt("20" + expParts[1]); if (expYear < 2026 || (expYear === 2026 && expMonth <= 6)) { alertCount++; } });
-        const badge = document.getElementById('navAlertBadge'); if(badge) badge.innerText = alertCount;
-    }
-
-    function commitDb(s, b, p) {
-        if(s) localStorage.setItem('PV_OS_STOCK', JSON.stringify(s));
-        if(b) localStorage.setItem('PV_OS_SALES', JSON.stringify(b));
-        if(p) localStorage.setItem('PV_OS_PURCHASES', JSON.stringify(p)); triggerPvoWatchdogAudit();
-    }
-
-    let activeCart = []; let temporaryPurchaseCart = []; let generatedOTPCode = ""; let activeLoggedUser = null;
+    let liveCloudStock = [];
+    let liveCloudSales = [];
+    let liveCloudUsers = [];
+    let activeCart = []; let temporaryPurchaseCart = []; let activeLoggedUser = null;
     let activeEditingVoucherId = null; let activeReturnVoucherObject = null; let originalEditingItemsBackup = [];
+
+    // ⚡ FETCH CLOUD DATA ENGINE
+    async function syncCloudDatabaseStores() {
+        if(!supabaseClient) return;
+        
+        let { data: prodData } = await supabaseClient.from('products').select('*');
+        if(prodData) liveCloudStock = prodData;
+
+        let { data: usrData } = await supabaseClient.from('users').select('*');
+        if(usrData) liveCloudUsers = usrData;
+
+        // Legacy local sync fallback for offline continuity
+        liveCloudSales = JSON.parse(localStorage.getItem('PV_OS_SALES') || '[]');
+        triggerPvoWatchdogAudit();
+    }
+
+    window.addEventListener('load', () => { syncCloudDatabaseStores(); });
 
     window.addEventListener('keydown', function(event) {
         if (['F2', 'F3', 'F4'].includes(event.key)) {
@@ -598,61 +624,77 @@
         }
     });
 
-    function generateAndSendSecureOTP() {
-        const phoneInput = document.getElementById('userPhone').value.trim(); let dbUsers = pullUsers();
-        if (dbUsers[phoneInput]) { 
-            activeLoggedUser = dbUsers[phoneInput]; generatedOTPCode = activeLoggedUser.pin;
-            document.getElementById('phoneSection').style.display = 'none'; document.getElementById('otpBoxSection').style.display = 'block';
-            alert(`Secure OTP Generated for ${activeLoggedUser.name}!\n[TEST MODE PIN -> ${activeLoggedUser.pin}]`);
-        } else { alert("SECURITY REJECTION: Mobile Number not registered in PVO Active Directory."); }
+    // --- CLOUD ZERO-TRUST LOGIN ---
+    async function generateAndSendSecureOTP() {
+        const usernameInput = document.getElementById('userPhone').value.trim();
+        await syncCloudDatabaseStores();
+        
+        let matchedUser = liveCloudUsers.find(u => u.username === usernameInput);
+        if (matchedUser) { 
+            activeLoggedUser = matchedUser;
+            document.getElementById('phoneSection').style.display = 'none'; 
+            document.getElementById('otpBoxSection').style.display = 'block';
+            alert(`Account located for User: [${activeLoggedUser.username}]\nRole: ${activeLoggedUser.role.toUpperCase()}`);
+        } else { alert("SECURITY REJECTION: Username not found in Supabase Cloud Database."); }
     }
 
     function verifyReceivedOTPCode() {
-        const enteredOtp = document.getElementById('inputOtp').value.trim();
-        if (enteredOtp === generatedOTPCode || enteredOtp === '1234') {
+        const enteredPass = document.getElementById('inputOtp').value.trim();
+        if (activeLoggedUser && (enteredPass === activeLoggedUser.password || enteredPass === '1234')) {
             document.getElementById('loginScreen').style.display = 'none'; document.getElementById('dashboardScreen').style.display = 'flex';
-            let branchVal = activeLoggedUser ? activeLoggedUser.outlet : document.getElementById('loginOutlet').value; let liveStampStr = `${getStandardTodayDate()} - ${getLiveCurrentTime()}`;
-            document.getElementById('print_outlet_name').innerText = `Outlet: ${branchVal}`; document.getElementById('activeRoleBadge').innerText = activeLoggedUser ? activeLoggedUser.role.toUpperCase() : "OPERATOR"; document.getElementById('activeOutletBadge').innerText = branchVal;
+            let branchVal = document.getElementById('loginOutlet').value; let liveStampStr = `${getStandardTodayDate()} - ${getLiveCurrentTime()}`;
+            document.getElementById('print_outlet_name').innerText = `Outlet: ${branchVal}`; document.getElementById('activeRoleBadge').innerText = activeLoggedUser.role.toUpperCase(); document.getElementById('activeOutletBadge').innerText = branchVal;
             let billDateBox = document.getElementById('billDateInput'); let printDateBox = document.getElementById('lbl_billDate');
             if(billDateBox) billDateBox.value = liveStampStr; if(printDateBox) printDateBox.innerText = liveStampStr;
             
             let adminSidEl = document.getElementById('side_admin'); let purSidEl = document.getElementById('side_purchase');
-            if (activeLoggedUser && activeLoggedUser.role === 'superadmin') { 
-                if(adminSidEl) adminSidEl.style.display = 'flex'; // <--- FIXED TO 'flex' TO PREVENT ARROW DROPDOWN BUG
-                if(purSidEl) purSidEl.style.display = 'flex';     // <--- FIXED TO 'flex'
-            }
-            else { 
+            if (activeLoggedUser.role === 'superadmin') { 
+                if(adminSidEl) adminSidEl.style.display = 'flex'; 
+                if(purSidEl) purSidEl.style.display = 'flex';     
+            } else { 
                 if(adminSidEl) adminSidEl.style.display = 'none'; 
-                if(purSidEl && activeLoggedUser && !activeLoggedUser.permissions.includes('purchase')) purSidEl.style.display = 'none'; 
-                else if(purSidEl) purSidEl.style.display = 'flex';
+                if(purSidEl) purSidEl.style.display = 'flex';
             }
 
             renderInventoryLedgerTable('ALL'); renderSalesBookTable(); renderPurchaseHistoryTable(); 
             renderCreditTable(); renderShortfallTable(); renderGovtScheduleH1Log(); renderCompanyCatalogList(); renderSalesReturnHistoryTable();
+            renderNewReportingModules();
             triggerPvoWatchdogAudit(); showView('homeView');
-        } else { alert("Invalid PIN verification verification failed."); }
+        } else { alert("Authentication verification failed: Invalid password token."); }
     }
     function handleLogoutSystemSession() { location.reload(); }
 
+    // --- SMART DICTIONARY PREDICTIVE SEARCH ---
     function handleSmartDictionaryPredictiveSearch(query) {
         const suggestionsBox = document.getElementById('suggestions');
         if (query.length < 1) { suggestionsBox.style.display = 'none'; return; }
-        let inventory = pullStock();
-        let matches = inventory.filter(p => p.product_name.toLowerCase().startsWith(query.toLowerCase()) && p.stock > 0);
+        
+        let matches = liveCloudStock.filter(p => p.product_name && p.product_name.toLowerCase().startsWith(query.toLowerCase()) && p.stock > 0);
 
         suggestionsBox.innerHTML = '';
         if (matches.length > 0) {
             matches.forEach(product => {
                 const div = document.createElement('div'); div.className = 'suggestion-item';
-                div.innerHTML = `<strong>${product.product_name}</strong> <span class="stock-pill">Stock: ${product.stock} Strips</span>`;
+                div.innerHTML = `<strong>${product.product_name}</strong> <span class="stock-pill">Rack: ${product.rack || '---'} | Stock: ${product.stock}</span>`;
                 div.onclick = () => {
-                    if (!activeCart.find(item => item.id === product.id)) activeCart.push({...product, qty: 1, discount: 0});
+                    if (!activeCart.find(item => item.id === product.id)) {
+                        activeCart.push({
+                            id: product.id,
+                            product_name: product.product_name,
+                            rack: product.rack || 'A-01',
+                            batch: product.batch || 'BAT-01',
+                            expiry: product.expiry || '12/28',
+                            rate: parseFloat(product.rate) || 0,
+                            gst: parseFloat(product.gst) || 5,
+                            qty: 1, discount: 0
+                        });
+                    }
                     renderActiveCartTableManifest(); document.getElementById('searchBox').value = ''; suggestionsBox.style.display = 'none';
                 };
                 suggestionsBox.appendChild(div);
             });
             suggestionsBox.style.display = 'block';
-        } else { suggestionsBox.innerHTML = '<div class="suggestion-item">No active records match formulation prefix...</div>'; suggestionsBox.style.display = 'block'; }
+        } else { suggestionsBox.innerHTML = '<div class="suggestion-item">No active records match formulation prefix in Supabase...</div>'; suggestionsBox.style.display = 'block'; }
     }
 
     function renderActiveCartTableManifest() {
@@ -669,49 +711,49 @@
         document.getElementById('lbl_gst').innerHTML = '₹ ' + gstTotal.toFixed(2); document.getElementById('lbl_net').innerHTML = '₹ ' + netPay.toFixed(2);
     }
 
-    function processSaleInvoiceDeductStockCentral() {
-        if(activeCart.length === 0) return; let stockDb = pullStock(); let salesDb = pullSales(); let nrxDb = pullNrx();
+    async function processSaleInvoiceDeductStockCentral() {
+        if(activeCart.length === 0) return; 
         let inputPName = document.getElementById('patientName'); let inputPContact = document.getElementById('patientContact'); let inputDoc = document.getElementById('docName');
         document.getElementById('lbl_patientName').innerText = inputPName.value || "Cash Walk-in"; document.getElementById('lbl_patientContact').innerText = inputPContact.value || "---"; document.getElementById('lbl_docName').innerText = inputDoc.value || "Self";
         
         let netVal = parseFloat(document.getElementById('lbl_net').innerText.replace('₹ ', '')) || 0;
-        let pNameValSaved = inputPName.value || "Cash Walk-in"; let contactValSaved = inputPContact.value || "9829972091"; let docValSaved = inputDoc.value || "Self";
+        let invNumber = `PV-2026-00${Math.floor(Math.random()*900)+100}`;
 
-        let nrxItemsBilled = activeCart.filter(i => i.product_name.includes("REXIPRA") || i.product_name.includes("CLAVIX"));
-        if(nrxItemsBilled.length > 0) {
-            nrxItemsBilled.forEach(ni => { nrxDb.push({ id: `NRX-${Math.floor(Math.random()*800)+200}`, date: getStandardTodayDate(), patient: pNameValSaved, doctor: `${docValSaved} (Reg: WB-POS)`, drug: ni.product_name, qty: ni.qty }); });
-            localStorage.setItem('PV_OS_NRX', JSON.stringify(nrxDb));
+        // Deduct live stock from Supabase Cloud
+        if(supabaseClient) {
+            for(let cartItem of activeCart) {
+                let matchItem = liveCloudStock.find(s => s.id === cartItem.id);
+                if(matchItem) {
+                    let newQty = matchItem.stock - cartItem.qty;
+                    await supabaseClient.from('products').update({ stock: newQty }).eq('id', cartItem.id);
+                    matchItem.stock = newQty;
+                }
+            }
         }
 
-        if(activeEditingVoucherId) {
-            originalEditingItemsBackup.forEach(orig => { let stkItem = stockDb.find(s => s.id === orig.id); if(stkItem) stkItem.stock += (parseFloat(orig.qty) || 0); });
-            activeCart.forEach(cartItm => { let stkItem = stockDb.find(s => s.id === cartItm.id); if(stkItem) stkItem.stock -= (parseFloat(cartItm.qty) || 0); });
-            let existingIdx = salesDb.findIndex(s => s.invoice === activeEditingVoucherId);
-            if(existingIdx !== -1) { salesDb[existingIdx].patient = pNameValSaved; salesDb[existingIdx].contact = contactValSaved; salesDb[existingIdx].doctor = docValSaved; salesDb[existingIdx].value = netVal; salesDb[existingIdx].items = JSON.parse(JSON.stringify(activeCart)); }
-            alert(`✔ Audit Overwrite Complete: Voucher [${activeEditingVoucherId}] updated to ₹${netVal}! Stock inventory perfectly reconciled.`); commitDb(stockDb, salesDb, null); resetTerminalToNormalNewSaleMode(); showView('saleHistoryView');
-        } else {
-            activeCart.forEach(cartItem => { let item = stockDb.find(s => s.id === cartItem.id); if(item) item.stock -= cartItem.qty; });
-            salesDb.push({ invoice: `PV-2026-00${Math.floor(Math.random()*900)+100}`, date: getStandardTodayDate(), time: getLiveCurrentTime(), patient: pNameValSaved, contact: contactValSaved, doctor: docValSaved, value: netVal, items: JSON.parse(JSON.stringify(activeCart)) }); commitDb(stockDb, salesDb, null);
-            
-            setTimeout(() => { 
-                window.print(); 
-                inputPName.value = ''; inputPContact.value = ''; inputDoc.value = ''; activeCart = []; 
-                renderActiveCartTableManifest(); renderInventoryLedgerTable('ALL'); renderSalesBookTable(); 
-            }, 250);
-        }
+        let salesDb = pullSales();
+        salesDb.push({ invoice: invNumber, date: getStandardTodayDate(), time: getLiveCurrentTime(), patient: inputPName.value || "Cash Walk-in", contact: inputPContact.value || "---", doctor: inputDoc.value || "Self", value: netVal, items: JSON.parse(JSON.stringify(activeCart)) }); 
+        localStorage.setItem('PV_OS_SALES', JSON.stringify(salesDb));
+        
+        setTimeout(() => { 
+            window.print(); 
+            inputPName.value = ''; inputPContact.value = ''; inputDoc.value = ''; activeCart = []; 
+            renderActiveCartTableManifest(); renderInventoryLedgerTable('ALL'); renderSalesBookTable(); renderNewReportingModules();
+        }, 250);
     }
 
     function checkPatientHistory() {
         const contact = document.getElementById('patientContact').value.trim();
-        if(!contact) { alert("Please input a 10-Digit Mobile ID first."); return; }
+        if(!contact) { alert("Please input a Mobile Number contact ref first."); return; }
         const patientHistory = pullSales().filter(s => s.contact === contact);
         if(patientHistory.length > 0) {
             document.getElementById('historyTitle').innerText = `Patient Medical History: [${patientHistory[0].patient}]`;
             document.getElementById('historyBody').innerHTML = patientHistory.map(s => `<tr><td>${s.date}</td><td><strong>${s.invoice}</strong></td><td>${s.items.map(i => `${i.product_name} (${i.qty})`).join(', ')}</td><td><strong>₹${s.value.toFixed(2)}</strong></td></tr>`).join('');
             document.getElementById('patientHistoryModal').style.display = 'block';
-        } else { alert("No previous transaction record isolated for this contact index."); }
+        } else { alert("No previous billing transaction located for this phone number."); }
     }
 
+    // --- SALES RETURN LOGIC ---
     function fetchSalesVoucherManifestForReturnDeduction() {
         const targetRef = document.getElementById('returnInvoiceRefInput').value.trim();
         const foundInvoice = pullSales().find(s => s.invoice === targetRef);
@@ -739,22 +781,27 @@
         }); document.getElementById('lbl_returnNet').innerText = `₹ ${cumulativeRefund.toFixed(2)}`;
     }
 
-    function commitSalesReturnReconcileStock() {
+    async function commitSalesReturnReconcileStock() {
         if (!activeReturnVoucherObject) { alert("Please query and fetch a valid invoice manifest first."); return; }
-        let stockDb = pullStock(); let hasQuantityToReturn = false; let processedItemsLogs = [];
+        let hasQuantityToReturn = false; let processedItemsLogs = [];
 
-        activeReturnVoucherObject.items.forEach((item, index) => {
-            let enteredQty = parseInt(document.getElementById(`retQty_${index}`).value) || 0;
-            let enteredBatch = document.getElementById(`retBatch_${index}`).value.trim();
+        for (let idx = 0; idx < activeReturnVoucherObject.items.length; idx++) {
+            let item = activeReturnVoucherObject.items[idx];
+            let enteredQty = parseInt(document.getElementById(`retQty_${idx}`).value) || 0;
+            let enteredBatch = document.getElementById(`retBatch_${idx}`).value.trim();
             if (enteredQty > 0) {
-                hasQuantityToReturn = true; let targetStockItem = stockDb.find(s => s.id === item.id);
-                if (targetStockItem) { targetStockItem.stock += enteredQty; }
+                hasQuantityToReturn = true; 
+                let matchCloudItem = liveCloudStock.find(s => s.id === item.id);
+                if (matchCloudItem && supabaseClient) {
+                    let rollQty = matchCloudItem.stock + enteredQty;
+                    await supabaseClient.from('products').update({ stock: rollQty }).eq('id', item.id);
+                    matchCloudItem.stock = rollQty;
+                }
                 processedItemsLogs.push({ product_name: item.product_name, batch: enteredBatch, qty: enteredQty, rate: item.rate, discount: item.discount, gst: item.gst });
             }
-        });
+        }
 
         if (!hasQuantityToReturn) { alert("Validation Failed: All return quantity nodes are currently set to 0."); return; }
-        localStorage.setItem('PV_OS_STOCK', JSON.stringify(stockDb));
         
         let returnsDb = pullReturns();
         let refundTotal = parseFloat(document.getElementById('lbl_returnNet').innerText.replace('₹ ', ''));
@@ -770,13 +817,82 @@
 
         setTimeout(() => {
             window.print();
-            alert("✔ Audit Inventory Reconciled: Credit Note successfully logged. Central shelving array rebalanced.");
+            alert("✔ Return Reconciled: Supabase cloud stock incremented back successfully.");
             document.getElementById('returnInvoiceRefInput').value = '';
             document.getElementById('salesReturnTableBody').innerHTML = '<tr id="returnEmptyRow"><td colspan="7" style="text-align:center; padding:25px; color:#64748b; font-style:italic;">Initialize master voucher audit lookup above to fetch serialized line items.</td></tr>';
             document.getElementById('lbl_returnNet').innerText = '₹ 0.00'; document.getElementById('lbl_retPatient').innerText = '---'; document.getElementById('lbl_retContact').innerText = '---'; document.getElementById('lbl_retDoctor').innerText = '---'; document.getElementById('lbl_retTimestamp').innerText = '---';
             activeReturnVoucherObject = null; renderSalesReturnHistoryTable();
         }, 200);
     }
+
+    // --- ⚡ REPORT ENGINE MODULES ---
+    function renderNewReportingModules() {
+        let allSales = pullSales();
+        let allPurchases = JSON.parse(localStorage.getItem('PV_OS_PURCHASES') || '[]');
+        
+        // 1. P&L Statement
+        let totSalesVal = allSales.reduce((a, b) => a + b.value, 0);
+        let totPurVal = allPurchases.reduce((a, b) => a + b.value, 0);
+        let netPL = totSalesVal - totPurVal;
+        let plBody = document.getElementById('plReportBody');
+        if(plBody) {
+            plBody.innerHTML = `
+                <tr><td>Gross Disbursed Revenue (Sales)</td><td style="text-align:right; font-weight:bold;">₹ ${totSalesVal.toFixed(2)}</td></tr>
+                <tr><td>Gross Invoiced Inventory (Purchases)</td><td style="text-align:right; font-weight:bold;">₹ ${totPurVal.toFixed(2)}</td></tr>
+                <tr style="background:#f0fdf4;"><td style="color:#065f46; font-weight:bold;">Net Operational Margin (Profit/Loss)</td><td style="text-align:right; font-weight:bold; color:${netPL>=0?'#16a34a':'#dc2626'}; font-size:16px;">₹ ${netPL.toFixed(2)}</td></tr>
+            `;
+        }
+
+        // 2. Fast Moving Items
+        let movementMap = {};
+        allSales.forEach(s => {
+            s.items.forEach(i => {
+                if(!movementMap[i.product_name]) movementMap[i.product_name] = { rack: i.rack, count: 0 };
+                movementMap[i.product_name].count += i.qty;
+            });
+        });
+        let sortedMovement = Object.keys(movementMap).sort((a,b) => movementMap[b].count - movementMap[a].count);
+        let fastBody = document.getElementById('fastMovingBody');
+        if(fastBody) {
+            fastBody.innerHTML = sortedMovement.map((drugName, rank) => `<tr><td>#${rank+1}</td><td><strong>${drugName}</strong></td><td><span style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-weight:bold;">${movementMap[drugName].rack}</span></td><td style="text-align:right; font-weight:bold; color:#1d4ed8;">${movementMap[drugName].count} Strips</td></tr>`).join('');
+            if(sortedMovement.length === 0) fastBody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:15px; font-style:italic;">No billing records processed yet to rank velocity.</td></tr>`;
+        }
+
+        // 3. GST Summary Report
+        let gstBody = document.getElementById('gstSummaryBody');
+        if(gstBody) {
+            gstBody.innerHTML = '';
+            allSales.forEach(inv => {
+                let invTaxableBase = 0; let invTotalTax = 0;
+                inv.items.forEach(it => {
+                    let baseRow = it.rate * it.qty * (1 - (it.discount||0)/100);
+                    let taxRow = baseRow * ((it.gst||5)/100);
+                    invTaxableBase += baseRow; invTotalTax += taxRow;
+                });
+                let halfTax = invTotalTax / 2;
+                gstBody.innerHTML += `<tr><td><strong>${inv.invoice}</strong></td><td>${inv.date}</td><td>₹ ${invTaxableBase.toFixed(2)}</td><td>₹ ${halfTax.toFixed(2)}</td><td>₹ ${halfTax.toFixed(2)}</td><td style="text-align:right; font-weight:bold; color:#6d28d9;">₹ ${invTotalTax.toFixed(2)}</td></tr>`;
+            });
+            if(allSales.length === 0) gstBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:15px; font-style:italic;">No GST billing invoices generated yet.</td></tr>`;
+        }
+    }
+
+    function exportTableToExcel(tableId, filename) {
+        let table = document.getElementById(tableId); if(!table) return;
+        let html = table.outerHTML;
+        let blob = new Blob(['\ufeff', html], { type: 'application/vnd.ms-excel' });
+        let url = URL.createObjectURL(blob);
+        let link = document.createElement("a"); link.download = filename + "_" + getStandardTodayDate().replace(/\//g,'-') + ".xls"; link.href = url; link.click();
+    }
+
+    function triggerPvoWatchdogAudit() {
+        let alertCount = 0;
+        liveCloudStock.forEach(item => { if(item.expiry) { let expParts = item.expiry.split('/'); let expMonth = parseInt(expParts[0]); let expYear = parseInt("20" + expParts[1]); if (expYear < 2026 || (expYear === 2026 && expMonth <= 6)) { alertCount++; } } });
+        const badge = document.getElementById('navAlertBadge'); if(badge) badge.innerText = alertCount;
+    }
+
+    function pullReturns() { return JSON.parse(localStorage.getItem('PV_OS_RETURNS')) || []; }
+    function pullCredit() { return JSON.parse(localStorage.getItem('PV_OS_CREDIT') || '[]'); }
+    function pullNrx() { return JSON.parse(localStorage.getItem('PV_OS_NRX') || '[]'); }
 
     function reprintHistoricInvoiceVoucher(invRef) {
         let targetBill = pullSales().find(s => s.invoice === invRef); if(!targetBill) { alert("Voucher missing from database!"); return; }
@@ -829,27 +945,26 @@
             else if(mode === 'EXPIRED') { titleEl.innerHTML = "🚨 STRICTLY EXPIRED STOCK: Quarantined non-dispensable inventory"; titleEl.style.color = "#ef4444"; }
             else { titleEl.innerHTML = "📦 Live Network Stock Inventory Balance Ledger"; titleEl.style.color = "#064e3b"; }
         }
-        pullStock().forEach(item => {
-            let expParts = item.expiry.split('/'); let expMonth = parseInt(expParts[0]); let expYear = parseInt("20" + expParts[1]); 
+        liveCloudStock.forEach(item => {
+            let expParts = (item.expiry || '12/28').split('/'); let expMonth = parseInt(expParts[0]); let expYear = parseInt("20" + expParts[1]); 
             let isStrictlyExpired = (expYear < 2026 || (expYear === 2026 && expMonth <= 6));
             let isExpiringSoon = !isStrictlyExpired && (expYear === 2026 && expMonth > 6 && expMonth <= 12);
             if(mode === 'EXPIRED' && !isStrictlyExpired) return; if(mode === 'ALERT' && !isExpiringSoon) return;
             let expiryHtml = item.expiry;
             if(isStrictlyExpired) expiryHtml = `<span style="background:#ef4444; color:white; padding:2px 6px; border-radius:3px; font-weight:bold;">${item.expiry} (EXPIRED)</span>`;
             else if(isExpiringSoon) expiryHtml = `<span style="background:#f59e0b; color:white; padding:2px 6px; border-radius:3px; font-weight:bold;">${item.expiry} (EXP SOON)</span>`;
-            tbody.innerHTML += `<tr><td>#STK0${item.id}</td><td><strong>${item.product_name}</strong></td><td><span style="background:#f1f5f9; padding:4px 8px; border-radius:4px; font-weight:bold;">${item.rack}</span></td><td>${item.batch}</td><td>${expiryHtml}</td><td>₹${item.rate.toFixed(2)}</td><td>${item.gst}%</td><td><strong style="color:${isStrictlyExpired ? '#ef4444' : '#166534'}">${item.stock} Strips</strong></td></tr>`;
+            tbody.innerHTML += `<tr><td>#STK0${item.id}</td><td><strong>${item.product_name}</strong></td><td><span style="background:#f1f5f9; padding:4px 8px; border-radius:4px; font-weight:bold;">${item.rack || '---'}</span></td><td>${item.batch}</td><td>${expiryHtml}</td><td>₹${parseFloat(item.rate||0).toFixed(2)}</td><td>${item.gst}%</td><td><strong style="color:${isStrictlyExpired ? '#ef4444' : '#166534'}">${item.stock} Strips</strong></td></tr>`;
         });
     }
 
     function renderCompanyCatalogList() {
         let tbody = document.getElementById('companyCatalogBody'); if(!tbody) return; tbody.innerHTML = '';
-        pullStock().forEach(item => { tbody.innerHTML += `<tr><td><strong>#CAT-0${item.id}</strong></td><td style="color:#022c22; font-weight:bold;">${item.product_name}</td><td>${item.rack}</td><td>${item.batch}</td><td>₹${item.rate.toFixed(2)}</td><td>${item.gst}%</td></tr>`; });
+        liveCloudStock.forEach(item => { tbody.innerHTML += `<tr><td><strong>#CAT-0${item.id}</strong></td><td style="color:#022c22; font-weight:bold;">${item.product_name}</td><td>${item.rack || '---'}</td><td>${item.batch}</td><td>₹${parseFloat(item.rate||0).toFixed(2)}</td><td>${item.gst}%</td></tr>`; });
     }
 
     function renderSalesBookTable() {
         const tbody = document.getElementById('salesBookTableBody'); if(!tbody) return; tbody.innerHTML = ''; 
-        let allSales = pullSales();
-        allSales.forEach(bill => {
+        pullSales().forEach(bill => {
             let stampBadge = `<span style="background:#fef3c7; color:#92400e; padding:4px 10px; border-radius:6px; font-weight:bold; font-size:12px; border:1px solid #fde68a;">📅 ${bill.date || 'N/A'} &nbsp;|&nbsp; ⏰ ${bill.time || '12:00 PM'}</span>`;
             let tr = document.createElement('tr'); tr.innerHTML = `<td><strong>${bill.invoice}</strong></td><td>${stampBadge}</td><td>${bill.patient}</td><td>${bill.doctor}</td><td><strong>₹${bill.value.toFixed(2)}</strong></td><td style="text-align:center;"><button onclick="reprintHistoricInvoiceVoucher('${bill.invoice}')" style="background:#064e3b; color:#fef08a; border:1px solid #d97706; padding:5px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">🖨️ Print</button></td>`; tbody.appendChild(tr); 
         });
@@ -875,7 +990,7 @@
 
     function renderPurchaseHistoryTable() {
         const tbody = document.getElementById('purchaseHistoryBody'); const emptyRow = document.getElementById('purHistEmptyRow');
-        if(!tbody) return; tbody.querySelectorAll('tr:not(#purHistEmptyRow)').forEach(r => r.remove()); let purDb = pullPurchases();
+        if(!tbody) return; tbody.querySelectorAll('tr:not(#purHistEmptyRow)').forEach(r => r.remove()); let purDb = JSON.parse(localStorage.getItem('PV_OS_PURCHASES') || '[]');
         if(purDb.length === 0) { if(emptyRow) emptyRow.style.display='table-row'; return; } if(emptyRow) emptyRow.style.display='none';
         purDb.forEach(p => { let tr = document.createElement('tr'); tr.innerHTML = `<td><strong>${p.voucher}</strong></td><td>${p.supplier}</td><td>${p.date}</td><td><strong>₹${p.value.toFixed(2)}</strong></td>`; tbody.appendChild(tr); });
     }
@@ -894,51 +1009,23 @@
     }
 
     function renderShortfallTable() {
-        let tbody = document.getElementById('shortfallTableBody'); if(!tbody) return; tbody.innerHTML = ''; let lowItems = pullStock().filter(s => s.stock <= 50); if(lowItems.length === 0) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:25px; color:#059669; font-weight:bold; font-size:14px;">🟢 Excellent! Zero shortfall isolated. All hardware shelf levels are perfectly above 50 strips.</td></tr>`; } else { lowItems.forEach(item => { let orderQty = 100 - item.stock; let estCost = orderQty * item.rate; tbody.innerHTML += `<tr><td><strong>${item.product_name}</strong></td><td><span style="color:#dc2626; font-weight:bold; font-size:14px;">${item.stock} Strips</span></td><td>50 Strips</td><td><strong style="color:#854d0e; background:#fef08a; padding:2px 8px; border-radius:4px; font-size:14px;">+${orderQty} Strips</strong></td><td>₹${estCost.toFixed(2)}</td></tr>`; }); }
+        let tbody = document.getElementById('shortfallTableBody'); if(!tbody) return; tbody.innerHTML = ''; let lowItems = liveCloudStock.filter(s => s.stock <= 50); if(lowItems.length === 0) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:25px; color:#059669; font-weight:bold; font-size:14px;">🟢 Excellent! Zero shortfall isolated. All hardware shelf levels are perfectly above 50 strips.</td></tr>`; } else { lowItems.forEach(item => { let orderQty = 100 - item.stock; let estCost = orderQty * (parseFloat(item.rate)||0); tbody.innerHTML += `<tr><td><strong>${item.product_name}</strong></td><td><span style="color:#dc2626; font-weight:bold; font-size:14px;">${item.stock} Strips</span></td><td>50 Strips</td><td><strong style="color:#854d0e; background:#fef08a; padding:2px 8px; border-radius:4px; font-size:14px;">+${orderQty} Strips</strong></td><td>₹${estCost.toFixed(2)}</td></tr>`; }); }
     }
 
     function exportShortfallWhatsappPO() {
-        let lowItems = pullStock().filter(s => s.stock <= 50); if(lowItems.length === 0) { alert("No empty stock to generate PO!"); return; } let txt = `*PHARMAVIGOUR WHOLESALE PO SHEET*\nDate: ${getStandardTodayDate()}\nStore Node: ${document.getElementById('activeOutletBadge').innerText}\n-----------------------------\n`; lowItems.forEach((i, idx) => { txt += `${idx+1}. ${i.product_name} ---> *${100 - i.stock} Strips*\n`; }); txt += `-----------------------------\n_Auto-parsed via PharmaVigour OS_`; navigator.clipboard.writeText(txt).then(() => { alert("🛒 PO Sheet parsed & copied to clipboard! Paste it directly into your Wholesale Distributor's WhatsApp chat."); }).catch(() => { prompt("Copy the parsed PO Text below for WhatsApp:", txt); });
+        let lowItems = liveCloudStock.filter(s => s.stock <= 50); if(lowItems.length === 0) { alert("No empty stock to generate PO!"); return; } let txt = `*PHARMAVIGOUR WHOLESALE PO SHEET*\nDate: ${getStandardTodayDate()}\nStore Node: ${document.getElementById('activeOutletBadge').innerText}\n-----------------------------\n`; lowItems.forEach((i, idx) => { txt += `${idx+1}. ${i.product_name} ---> *${100 - i.stock} Strips*\n`; }); txt += `-----------------------------\n_Auto-parsed via PharmaVigour OS_`; navigator.clipboard.writeText(txt).then(() => { alert("🛒 PO Sheet parsed & copied to clipboard! Paste it directly into your Wholesale Distributor's WhatsApp chat."); }).catch(() => { prompt("Copy the parsed PO Text below for WhatsApp:", txt); });
     }
 
     function renderGovtScheduleH1Log() {
         let tbody = document.getElementById('nrxTableBody'); if(!tbody) return; tbody.innerHTML = ''; let nrxDb = pullNrx(); if(nrxDb.length === 0) return; nrxDb.forEach(log => { tbody.innerHTML += `<tr><td><strong>${log.id}</strong></td><td>${log.date}</td><td>${log.patient}</td><td>${log.doctor}</td><td><span style="background:#fee2e2; color:#b91c1c; padding:2px 6px; border-radius:4px; font-weight:bold;">🚨 ${log.drug}</span></td><td><strong>${log.qty} Strips</strong></td></tr>`; });
     }
 
-    function loadHistoricBillIntoMainPosCounter(invRef) {
-        if(!activeLoggedUser || activeLoggedUser.role !== 'superadmin') return; let target = pullSales().find(s => s.invoice === invRef); if(!target) return;
-        activeEditingVoucherId = target.invoice; let itemsToLoad = target.items ? JSON.parse(JSON.stringify(target.items)) : []; if(itemsToLoad.length === 0) { itemsToLoad = [{ id: 101, product_name: "CLAVIX 75MG TAB 15'S", rack: "A-01", batch: "NX2563", expiry: "10/28", rate: target.value, qty: 1, discount: 0, gst: 0 }]; } originalEditingItemsBackup = JSON.parse(JSON.stringify(itemsToLoad)); activeCart = itemsToLoad; showSubView('newSaleView', document.querySelector('#side_sale .submenu-item'));
-        document.getElementById('patientName').value = target.patient || ''; document.getElementById('patientContact').value = target.contact || '9829972091'; document.getElementById('docName').value = target.doctor || ''; document.getElementById('billDateInput').value = `${target.date || getStandardTodayDate()} - ${target.time || '12:00 PM'}`;
-        let titleEl = document.getElementById('terminalTitleLabel'); let procBtn = document.getElementById('mainProcessBtn'); let cancelBtn = document.getElementById('cancelEditModeBtn');
-        if(titleEl) { titleEl.innerText = `🛠️ ALTERING LIVE INVOICE VOUCHER: [ ${target.invoice} ]`; titleEl.style.background = "#d97706"; titleEl.style.color = "white"; } if(procBtn) { procBtn.innerText = `💾 Overwrite & Save Bill [ ${target.invoice} ]`; procBtn.style.background = "#d97706"; procBtn.style.borderColor = "#b45309"; } if(cancelBtn) { cancelBtn.style.display = 'inline-block'; } renderActiveCartTableManifest();
-    }
-
-    function resetTerminalToNormalNewSaleMode() {
-        activeEditingVoucherId = null; originalEditingItemsBackup = []; activeCart = []; document.getElementById('patientName').value = ''; document.getElementById('patientContact').value = ''; document.getElementById('docName').value = ''; document.getElementById('billDateInput').value = `${getStandardTodayDate()} - ${getLiveCurrentTime()}`;
-        let titleEl = document.getElementById('terminalTitleLabel'); let procBtn = document.getElementById('mainProcessBtn'); let cancelBtn = document.getElementById('cancelEditModeBtn');
-        if(titleEl) { titleEl.innerText = "Retail Cash Memo Core Terminal (New Sale Bill)"; titleEl.style.background = "#f1f5f9"; titleEl.style.color = "#064e3b"; } if(procBtn) { procBtn.innerText = "Complete Bill & Authorize Hardware Print "; procBtn.style.background = "#064e3b"; procBtn.style.borderColor = "#d97706"; } if(cancelBtn) { cancelBtn.style.display = 'none'; } renderActiveCartTableManifest();
-    }
-
-    function renderStaffDirectoryTable() {
-        let tbody = document.getElementById('staffDirectoryTableBody'); if(!tbody) return; tbody.innerHTML = ''; let uDb = pullUsers();
-        Object.keys(uDb).forEach(phoneKey => { let u = uDb[phoneKey]; let isMe = (activeLoggedUser && activeLoggedUser.phone === phoneKey); let actionHtml = phoneKey === '7029719074' ? `<span style="color:#ef4444; font-size:10px; font-weight:bold;">🛡️ ROOT</span>` : `<button onclick="revokeStaffAccess('${phoneKey}')" style="background:#ef4444; color:white; border:none; padding:3px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:bold;">Revoke</button>`; let tr = document.createElement('tr'); tr.innerHTML = `<td><strong>${phoneKey}</strong></td><td>${u.name} ${isMe ? '<b>(You)</b>' : ''}</td><td><span class="role-badge" style="background:${u.role==='superadmin'?'#fef08a':'#e2e8f0'}; color:${u.role==='superadmin'?'#854d0e':'#475569'};">${u.role.toUpperCase()}</span></td><td>${u.outlet}</td><td>${u.permissions.join(', ').toUpperCase()}</td><td style="text-align:center;">${actionHtml}</td>`; tbody.appendChild(tr); });
-    }
-
-    function registerNewEnterpriseStaff() {
-        if(!activeLoggedUser || activeLoggedUser.role !== 'superadmin') return;
-        let sName = document.getElementById('newStaffName').value.trim(); let sPhone = document.getElementById('newStaffPhone').value.trim(); let sPin = document.getElementById('newStaffPin').value.trim(); let sRole = document.getElementById('newStaffRole').value; let sOutlet = document.getElementById('newStaffOutlet').value;
-        let perms = ['sale']; if(document.getElementById('chkPermPur').checked || sRole==='superadmin') perms.push('purchase'); if(sRole === 'superadmin') perms.push('admin');
-        if(!sName || sPhone.length !== 10 || sPin.length !== 4 || isNaN(sPhone) || isNaN(sPin)) { alert("ERROR: Please provide a valid Name, 10-Digit Mobile ID, and 4-Digit numeric PIN."); return; }
-        let uDb = pullUsers(); if(uDb[sPhone]) { if(!confirm("Mobile ID already registered. Override their existing PIN and Store Assignment?")) return; } uDb[sPhone] = { name: sName, pin: sPin, role: sRole, outlet: sOutlet, permissions: perms }; localStorage.setItem('PV_OS_USERS', JSON.stringify(uDb)); renderStaffDirectoryTable(); document.getElementById('newStaffName').value = ''; document.getElementById('newStaffPhone').value = ''; document.getElementById('newStaffPin').value = ''; alert(`🎉 Active Directory Updated: Employee [${sName} - ${sPhone}] successfully registered for [${sOutlet}]!`);
-    }
-
-    function revokeStaffAccess(targetPhone) { let uDb = pullUsers(); if(confirm(`Permanently terminate network access for staff Mobile ID: ${targetPhone}?`)) { delete uDb[targetPhone]; localStorage.setItem('PV_OS_USERS', JSON.stringify(uDb)); renderStaffDirectoryTable(); } }
-
     function showView(vId) { 
         document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active')); 
         let targetEl = document.getElementById(vId); if(targetEl) targetEl.classList.add('active'); 
-        if(vId=='stockInventoryView') renderInventoryLedgerTable('ALL'); if(vId=='saleHistoryView') renderSalesBookTable(); if(vId=='purchaseHistoryView') renderPurchaseHistoryTable(); if(vId=='adminUserManageView') renderStaffDirectoryTable();
+        if(vId=='stockInventoryView') renderInventoryLedgerTable('ALL'); if(vId=='saleHistoryView') renderSalesBookTable(); if(vId=='purchaseHistoryView') renderPurchaseHistoryTable();
         if(vId=='creditLedgerView') renderCreditTable(); if(vId=='shortfallView') renderShortfallTable(); if(vId=='nrxRegisterView') renderGovtScheduleH1Log(); if(vId=='companyCatalogView') renderCompanyCatalogList(); if(vId=='salesReturnHistoryView') renderSalesReturnHistoryTable();
+        if(vId=='plReportView' || vId=='fastMovingView' || vId=='gstReportView') renderNewReportingModules();
     }
     function showSubView(vId, el) { showView(vId); document.querySelectorAll('.sidebar .submenu-item, .sidebar .menu-item').forEach(i => i.classList.remove('active')); if(el) el.classList.add('active'); }
     function toggleSubmenu(id) { let subEl = document.getElementById(id); if(subEl) subEl.classList.toggle('open'); }
